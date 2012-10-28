@@ -16,4 +16,7 @@ Gem::Specification.new do |gem|
   gem.name          = "light_service"
   gem.require_paths = ["lib"]
   gem.version       = LightService::VERSION
+
+  gem.add_development_dependency("rspec", "~> 2.0")
+  gem.add_development_dependency("simplecov", "~> 0.7.1")
 end
