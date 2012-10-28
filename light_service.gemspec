@@ -4,6 +4,8 @@ require File.expand_path('../lib/light_service/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Attila Domokos"]
   gem.email         = ["adomokos@gmail.com"]
+  gem.description   = %q{A service skeleton with an emphasis on simplicity}
+  gem.summary       = %q{A service skeleton with an emphasis on simplicity}
   gem.description   = %q{TODO: Write a gem description}
   gem.summary       = %q{TODO: Write a gem summary}
   gem.homepage      = ""
