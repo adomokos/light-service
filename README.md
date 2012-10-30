@@ -60,8 +60,8 @@ class CalculatesTax
 
     [
       LooksUpTaxPercentageAction,
-      CalculatesOrderTax,
-      ProvidesFreeShipping
+      CalculatesOrderTaxAction,
+      ProvidesFreeShippingAction
     ].each{ |action| action.execute(context) }
 
     context
