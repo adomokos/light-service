@@ -33,8 +33,7 @@ end
 This controller violates SRP all over. You could move the finder of tax_ranges and tax_percentage 
 into the tax model, but then you'll make your model logic heavy.
 
-This controller does 4 things in order:
-* Finds the order
+This controller does 3 things in order:
 * Looks up the tax percentage based on order total
 * Calculates the order tax
 * Provides free shipping if the tax is greater than $25
