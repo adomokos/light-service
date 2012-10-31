@@ -9,13 +9,13 @@ class TaxController < ApplicationContoller
     tax_ranges = TaxRanges.for_region(my_region)
 
     if tax_ranges.nil?
-      render 'tax_summary', :notice => 'The tax ranges were not found'
+      render :action => :edit, :notice => 'The tax ranges were not found'
     end
 
     tax_percentage = tax_ranges.for_total(@order.total)
 
     if tax_percentage.nil?
-      render 'tax_summary', :notice => 'The tax percentage  was not found'
+      render :action => :edit, :notice => 'The tax percentage  was not found'
     end
 
     @order.tax = @order.total * tax_percentage
@@ -24,7 +24,7 @@ class TaxController < ApplicationContoller
       @order.provide_free_shipping!
     end
 
-    render 'tax_summary'
+    redirect_to checkout_shipping_path(@order)
   end
 end
 ```
@@ -119,9 +119,9 @@ class TaxController < ApplicationContoller
     service_result = CalculatesTax.for_order(@order)
 
     if service_result.failure?
-      render 'tax_summary', :notice => service_result.message
+      render :action => :edit, :notice => service_result.message
     else
-      render 'tax_summary'
+      redirect_to checkout_shipping_path(@order)
     end
 
   end
