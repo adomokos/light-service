@@ -42,8 +42,8 @@ Wouldn't it be nice to see this instead?
 
 ```ruby
 [
-  LooksUpTaxPercentage
-  CalculatesOrderTax
+  LooksUpTaxPercentage,
+  CalculatesOrderTax,
   ChecksFreeShipping
 ]
 ```
