@@ -144,7 +144,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Based on the refactoring example above, just create an organizer object that calls the 
+actions in order and write code for the actions. That's it.
 
 ## Contributing
 
