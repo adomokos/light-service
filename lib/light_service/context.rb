@@ -5,10 +5,10 @@ module LightService
   end
 
   class Context
-    attr_accessor :outcome, :message_key
+    attr_accessor :outcome, :message
 
-    def initialize(outcome=::LightService::Outcomes::SUCCESS, message_key='', context={})
-      @outcome, @message_key, @context = outcome, message_key, context
+    def initialize(outcome=::LightService::Outcomes::SUCCESS, message='', context={})
+      @outcome, @message, @context = outcome, message, context
     end
 
     def self.make(context={})
@@ -44,13 +44,13 @@ module LightService
       success? == false
     end
 
-    def set_success!(message_key)
-      @message_key = message_key
+    def set_success!(message)
+      @message = message
       @outcome = ::LightService::Outcomes::SUCCESS
     end
 
-    def set_failure!(message_key)
-      @message_key = message_key
+    def set_failure!(message)
+      @message = message
       @outcome = ::LightService::Outcomes::FAILURE
     end
 
