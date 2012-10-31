@@ -21,7 +21,6 @@ class TaxController < ApplicationContoller
     @order.tax = @order.total * tax_percentage
 
     if @order.total_with_tax > 200
-      # Provide free shipping
       @order.provide_free_shipping!
     end
 
