@@ -5,7 +5,7 @@ What do you think of this code?
 ```ruby
 class TaxController < ApplicationContoller
   def update
-    @order = Order.find(243)
+    @order = Order.find(params[:id])
     tax_ranges = TaxRanges.for_region(my_region)
 
     if tax_ranges.nil?
@@ -114,7 +114,7 @@ And with all that, your controller should be super simple:
 ```ruby
 class TaxController < ApplicationContoller
   def update
-    @order = Order.find(243)
+    @order = Order.find(params[:id])
 
     service_result = CalculatesTax.for_order(@order)
 
