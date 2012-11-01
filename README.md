@@ -10,12 +10,14 @@ class TaxController < ApplicationContoller
 
     if tax_ranges.nil?
       render :action => :edit, :notice => 'The tax ranges were not found'
+      return # Avoiding the double render error
     end
 
     tax_percentage = tax_ranges.for_total(@order.total)
 
     if tax_percentage.nil?
       render :action => :edit, :notice => 'The tax percentage  was not found'
+      return # Avoiding the double render error
     end
 
     @order.tax = @order.total * tax_percentage
@@ -29,8 +31,9 @@ class TaxController < ApplicationContoller
 end
 ```
 
-This controller violates SRP all over. You could move the tax_percentage finders and calculations 
-into the tax model, but then you'll make your model logic heavy.
+This controller violates [SRP](http://en.wikipedia.org/wiki/Single_responsibility_principle) all over.
+You could move the tax_percentage finders and calculations into the tax model,
+but then you'll make your model logic heavy.
 
 This controller does 3 things in order:
 * Looks up the tax percentage based on order total
