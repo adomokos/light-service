@@ -9,14 +9,14 @@ class TaxController < ApplicationContoller
     tax_ranges = TaxRanges.for_region(my_region)
 
     if tax_ranges.nil?
-      render :action => :edit, :notice => 'The tax ranges were not found'
+      render :action => :edit, :error => "The tax ranges were not found"
       return # Avoiding the double render error
     end
 
     tax_percentage = tax_ranges.for_total(@order.total)
 
     if tax_percentage.nil?
-      render :action => :edit, :notice => 'The tax percentage  was not found'
+      render :action => :edit, :error => "The tax percentage  was not found"
       return # Avoiding the double render error
     end
 
@@ -26,12 +26,13 @@ class TaxController < ApplicationContoller
       @order.provide_free_shipping!
     end
 
-    redirect_to checkout_shipping_path(@order)
+    redirect_to checkout_shipping_path(@order), :notice => "Tax was calculated successfully"
   end
 end
 ```
 
 This controller violates [SRP](http://en.wikipedia.org/wiki/Single_responsibility_principle) all over.
+Also, imagine what it takes to test this beast.
 You could move the tax_percentage finders and calculations into the tax model,
 but then you'll make your model logic heavy.
 
@@ -105,7 +106,6 @@ class ProvidesFreeShippingAction < ::LightService::ActionBase
     order = context.fetch(:order)
 
     if order.total_with_tax > 200
-      # Provide free shipping
       order.provide_free_shipping!
     end
   end
@@ -122,9 +122,9 @@ class TaxController < ApplicationContoller
     service_result = CalculatesTax.for_order(@order)
 
     if service_result.failure?
-      render :action => :edit, :notice => service_result.message
+      render :action => :edit, :error => service_result.message
     else
-      redirect_to checkout_shipping_path(@order)
+      redirect_to checkout_shipping_path(@order), :notice => "Tax was calculated successfully"
     end
 
   end
