@@ -6,7 +6,7 @@ What do you think of this code?
 class TaxController < ApplicationContoller
   def update
     @order = Order.find(params[:id])
-    tax_ranges = TaxRanges.for_region(my_region)
+    tax_ranges = TaxRange.for_region(order.region)
 
     if tax_ranges.nil?
       render :action => :edit, :error => "The tax ranges were not found"
@@ -20,7 +20,7 @@ class TaxController < ApplicationContoller
       return # Avoiding the double render error
     end
 
-    @order.tax = @order.total * tax_percentage
+    @order.tax = (@order.total * (tax_percentage/100)).round(2)
 
     if @order.total_with_tax > 200
       @order.provide_free_shipping!
@@ -73,19 +73,20 @@ end
 
 class LooksUpTaxPercentageAction < ::LightService::ActionBase
   action_execute do |context|
-    tax_ranges = TaxRanges.for_region(my_region)
+    order = context.fetch(:order)
+    tax_ranges = TaxRange.for_region(order.region)
 
     if tax_ranges.nil?
       context.set_failure!('The tax ranges were not found')
-      return
+      next context
     end
 
     order = context.fetch(:order)
     tax_percentage = tax_ranges.for_total(order.total)
 
     if tax_percentage.nil?
-      context.set_failure!('The tax percentage  was not found')
-      return
+      context.set_failure!('The tax percentage was not found')
+      next context
     end
 
     context[:tax_percentage] = tax_percentage
@@ -95,9 +96,9 @@ end
 class CalculatesOrderTaxAction < ::LightService::ActionBase
   action_execute do |context|
     order = context.fetch(:order)
-    tax_percentage = context.fetch(tax_percentage)
+    tax_percentage = context.fetch(:tax_percentage)
 
-    order.tax = order.total * tax_percentage
+    order.tax = (order.total * (tax_percentage/100)).round(2)
   end
 end
 
