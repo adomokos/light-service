@@ -96,7 +96,7 @@ class LooksUpTaxPercentageAction
 end
 
 class CalculatesOrderTaxAction
-  include LightService::ActionBase
+  include LightService::Action
 
   executed do |context|
     order = context.fetch(:order)
@@ -107,7 +107,7 @@ class CalculatesOrderTaxAction
 end
 
 class ProvidesFreeShippingAction
-  include LightService::ActionBase
+  include LightService::Action
 
   executed do |context|
     order = context.fetch(:order)
