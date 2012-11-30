@@ -79,7 +79,7 @@ class LooksUpTaxPercentageAction
     tax_ranges = TaxRange.for_region(order.region)
 
     if tax_ranges.nil?
-      context.set_failure!('The tax ranges were not found')
+      context.set_failure!("The tax ranges were not found")
       next context
     end
 
@@ -87,7 +87,7 @@ class LooksUpTaxPercentageAction
     tax_percentage = tax_ranges.for_total(order.total)
 
     if tax_percentage.nil?
-      context.set_failure!('The tax percentage was not found')
+      context.set_failure!("The tax percentage was not found")
       next context
     end
 
