@@ -59,7 +59,7 @@ and executes them one-by-one. Then you need to create the actions which will onl
 ```ruby
 class CalculatesTax
   def self.for_order(order)
-    context = ::LightService::Context.make(:order => order)
+    context = LightService::Context.make(:order => order)
 
     [
       LooksUpTaxPercentageAction,
@@ -71,8 +71,10 @@ class CalculatesTax
   end
 end
 
-class LooksUpTaxPercentageAction < ::LightService::ActionBase
-  action_execute do |context|
+class LooksUpTaxPercentageAction
+  include LightService::Action
+
+  executed do |context|
     order = context.fetch(:order)
     tax_ranges = TaxRange.for_region(order.region)
 
@@ -93,8 +95,10 @@ class LooksUpTaxPercentageAction < ::LightService::ActionBase
   end
 end
 
-class CalculatesOrderTaxAction < ::LightService::ActionBase
-  action_execute do |context|
+class CalculatesOrderTaxAction
+  include LightService::ActionBase
+
+  executed do |context|
     order = context.fetch(:order)
     tax_percentage = context.fetch(:tax_percentage)
 
@@ -102,8 +106,10 @@ class CalculatesOrderTaxAction < ::LightService::ActionBase
   end
 end
 
-class ProvidesFreeShippingAction < ::LightService::ActionBase
-  action_execute do |context|
+class ProvidesFreeShippingAction
+  include LightService::ActionBase
+
+  executed do |context|
     order = context.fetch(:order)
 
     if order.total_with_tax > 200

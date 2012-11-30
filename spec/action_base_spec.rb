@@ -1,9 +1,11 @@
 require 'spec_helper'
 
 module LightService
-  describe ActionBase do
-    class DummyAction < ::LightService::ActionBase
-      action_execute do |context|
+  describe Action do
+    class DummyAction
+      include LightService::Action
+
+      executed do |context|
         context[:test_key] = "test_value"
       end
     end

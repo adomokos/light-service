@@ -1,5 +1,7 @@
-class LooksUpTaxPercentageAction < ::LightService::ActionBase
-  action_execute do |context|
+class LooksUpTaxPercentageAction
+  include LightService::Action
+
+  executed do |context|
     order = context.fetch(:order)
     tax_ranges = TaxRange.for_region(order.region)
 
@@ -18,4 +20,5 @@ class LooksUpTaxPercentageAction < ::LightService::ActionBase
 
     context[:tax_percentage] = tax_percentage
   end
+
 end
