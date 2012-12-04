@@ -1,4 +1,4 @@
-[[https://raw.github.com/adomokos/light_service/master/light_service.png]]
+![Light Service](https://raw.github.com/adomokos/light_service/master/light_service.png)
 
 # LightService
 
