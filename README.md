@@ -1,4 +1,4 @@
-[[light_service.png]]
+[[https://raw.github.com/adomokos/light_service/master/light_service.png]]
 
 # LightService
 
