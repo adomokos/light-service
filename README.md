@@ -1,7 +1,5 @@
 ![Light Service](https://raw.github.com/adomokos/light_service/master/light_service.png)
 
-# LightService
-
 What do you think of this code?
 
 ```ruby
