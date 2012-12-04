@@ -1,3 +1,5 @@
+[[light_service.png]]
+
 # LightService
 
 What do you think of this code?
