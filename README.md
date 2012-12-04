@@ -41,7 +41,7 @@ This controller does 3 things in order:
 * Calculates the order tax
 * Provides free shipping if the total with tax is greater than $200
 
-The order of this tasks matters: you can't calculate the order tax without the percentage.
+The order of these tasks matters: you can't calculate the order tax without the percentage.
 Wouldn't it be nice to see this instead?
 
 ```ruby
