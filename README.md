@@ -78,32 +78,25 @@ class LooksUpTaxPercentageAction
     order = context.fetch(:order)
     tax_ranges = TaxRange.for_region(order.region)
 
-    if tax_ranges.nil?
-      context.set_failure!("The tax ranges were not found")
-      next context
-    end
+    next context if is_object_nil?(tax_ranges, context, 'The tax ranges were not found')
 
     order = context.fetch(:order)
     tax_percentage = tax_ranges.for_total(order.total)
 
-    if tax_percentage.nil?
-      context.set_failure!("The tax percentage was not found")
-      next context
-    end
+    next context if is_object_nil?(tax_percentage, context, 'The tax percentage was not found')
 
     context[:tax_percentage] = tax_percentage
   end
-end
 
-class CalculatesOrderTaxAction
-  include LightService::Action
+  def self.is_object_nil?(object, context, message)
+    if object.nil?
+      context.set_failure!(message)
+      return true
+    end
 
-  executed do |context|
-    order = context.fetch(:order)
-    tax_percentage = context.fetch(:tax_percentage)
-
-    order.tax = (order.total * (tax_percentage/100)).round(2)
+    false
   end
+
 end
 
 class ProvidesFreeShippingAction
