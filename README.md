@@ -1,5 +1,7 @@
 ![Light Service](https://raw.github.com/adomokos/light_service/master/light_service.png)
 
+[![Build Status](https://secure.travis-ci.org/adomokos/light_service.png)](http://travis-ci.org/adomokos/light_service)
+
 What do you think of this code?
 
 ```ruby
@@ -124,7 +126,7 @@ class TaxController < ApplicationContoller
     if service_result.failure?
       render :action => :edit, :error => service_result.message
     else
-      redirect_to checkout_shipping_path(@order), :notice => "Tax was calculated successfully."
+      redirect_to checkout_shipping_path(@order), :notice => "Tax was calculated successfully"
     end
 
   end
