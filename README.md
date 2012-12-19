@@ -124,7 +124,7 @@ class TaxController < ApplicationContoller
     if service_result.failure?
       render :action => :edit, :error => service_result.message
     else
-      redirect_to checkout_shipping_path(@order), :notice => "Tax was calculated successfully"
+      redirect_to checkout_shipping_path(@order), :notice => "Tax was calculated successfully."
     end
 
   end
