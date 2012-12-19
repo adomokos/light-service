@@ -52,7 +52,7 @@ Wouldn't it be nice to see this instead?
 ]
 ```
 
-This should tell you the "story" of what's going on in this workflow.
+This block of code should tell you the "story" of what's going on in this workflow.
 With the help of LightService you can write code this way. First you need an organizer object that sets up the actions in order
 and executes them one-by-one. Then you need to create the actions which will only have one method and will do only one thing.
 
