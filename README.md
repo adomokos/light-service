@@ -1,4 +1,4 @@
-![Light Service](https://raw.github.com/adomokos/light_service/master/light-service.png)
+![Light Service](https://raw.github.com/adomokos/light-service/master/light-service.png)
 
 [![Build Status](https://secure.travis-ci.org/adomokos/light_service.png)](http://travis-ci.org/adomokos/light_service)
 
