@@ -2,7 +2,9 @@ module LightService
   module Organizer
     protected
       def with(data = {})
-        @context = LightService::Context.make(data)
+        @context = data.kind_of?(::LightService::Context) ?
+                     data :
+                     LightService::Context.make(data)
         self
       end
 
