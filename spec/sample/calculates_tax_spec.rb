@@ -13,11 +13,12 @@ describe CalculatesTax do
                             .with(:order => order) \
                             .and_return context
 
-    LooksUpTaxPercentageAction.stub(:execute).with(context)
-    CalculatesOrderTaxAction.stub(:execute).with(context)
-    ProvidesFreeShippingAction.stub(:execute).with(context)
+    LooksUpTaxPercentageAction.stub(:execute).with(context).and_return context
+    CalculatesOrderTaxAction.stub(:execute).with(context).and_return context
+    ProvidesFreeShippingAction.stub(:execute).with(context).and_return context
 
     result = CalculatesTax.for_order(order)
+
     result.should eq context
   end
 end

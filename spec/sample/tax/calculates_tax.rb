@@ -1,13 +1,12 @@
 class CalculatesTax
+  extend LightService::Organizer
+
   def self.for_order(order)
-    context = ::LightService::Context.make(:order => order)
-
-    [
-      LooksUpTaxPercentageAction,
-      CalculatesOrderTaxAction,
-      ProvidesFreeShippingAction
-    ].each{ |action| action.execute(context) }
-
-    context
+    with(order: order).reduce \
+      [
+        LooksUpTaxPercentageAction,
+        CalculatesOrderTaxAction,
+        ProvidesFreeShippingAction
+      ]
   end
 end
