@@ -18,7 +18,6 @@ class AddsOneAction
 
   executed do |context|
     number = context.fetch :number
-
     number += 1
 
     context[:number] = number
@@ -30,7 +29,6 @@ class AddsTwoAction
 
   executed do |context|
     number = context.fetch :number
-
     number += 2
 
     context[:number] = number
@@ -42,7 +40,6 @@ class AddsThreeAction
 
   executed do |context|
     number = context.fetch :number
-
     number += 3
 
     context[:number] = number
