@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative 'sample/provides_free_shipping_action'
+require_relative 'tax/provides_free_shipping_action'
 
 describe ProvidesFreeShippingAction do
   let(:order) { double('order') }

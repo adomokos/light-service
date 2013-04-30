@@ -1,8 +1,8 @@
 require 'spec_helper'
-require_relative 'sample/calculates_tax'
-require_relative 'sample/looks_up_tax_percentage_action'
-require_relative 'sample/calculates_order_tax_action'
-require_relative 'sample/provides_free_shipping_action'
+require_relative 'tax/calculates_tax'
+require_relative 'tax/looks_up_tax_percentage_action'
+require_relative 'tax/calculates_order_tax_action'
+require_relative 'tax/provides_free_shipping_action'
 
 describe CalculatesTax do
   let(:order) { double('order') }

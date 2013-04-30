@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative 'sample/looks_up_tax_percentage_action'
+require_relative 'tax/looks_up_tax_percentage_action'
 
 class TaxRange; end
 

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative 'sample/calculates_order_tax_action'
+require_relative 'tax/calculates_order_tax_action'
 
 describe CalculatesOrderTaxAction do
   let(:order) { double('order') }
