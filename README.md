@@ -60,16 +60,15 @@ and executes them one-by-one. Then you need to create the actions which will onl
 
 ```ruby
 class CalculatesTax
+  extend LightService::Organizer
+
   def self.for_order(order)
-    context = LightService::Context.make(:order => order)
-
-    [
-      LooksUpTaxPercentageAction,
-      CalculatesOrderTaxAction,
-      ProvidesFreeShippingAction
-    ].each{ |action| action.execute(context) }
-
-    context
+    with(order: order).reduce \
+      [
+        LooksUpTaxPercentageAction,
+        CalculatesOrderTaxAction,
+        ProvidesFreeShippingAction
+      ]
   end
 end
 
