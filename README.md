@@ -59,6 +59,7 @@ With the help of LightService you can write code this way. First you need an org
 and executes them one-by-one. Then you need to create the actions which will only have one method and will do only one thing.
 
 This is how the organizer and actions interact with eachother:
+
 ![Light Service](https://raw.github.com/adomokos/light-service/master/resources/organizer_and_actions.png)
 
 ```ruby
