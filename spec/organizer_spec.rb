@@ -16,7 +16,7 @@ describe LightService::Organizer do
     end
   end
 
-  let(:context) { ::LightService::Context.make(user: user) }
+  let!(:context) { ::LightService::Context.new(user: user) }
   let(:user) { double(:user) }
 
   context "when #with is called with hash" do
@@ -34,12 +34,13 @@ describe LightService::Organizer do
 
   context "when #with is called with Context" do
     it "does not create a context" do
-      LightService::Context.stub(:new).and_return context
+      LightService::Context.stub(:new).with(user: user).and_return(context)
+      LightService::Context.should_not_receive(:make)
 
       AnAction.should_receive(:execute) \
               .with(context) \
               .and_return context
-      AnOrganizer.some_method_with(context)
+      AnOrganizer.some_method_with(user)
     end
   end
 
