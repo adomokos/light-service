@@ -148,7 +148,7 @@ class TaxController < ApplicationContoller
 end
 ```
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
-simple and elegant Rails code where I told the story of how Light Service was born.
+simple and elegant Rails code where I told the story of how Light Service was extracted from the projects I had worked on.
 
 ## Installation
 
