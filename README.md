@@ -169,6 +169,32 @@ Or install it yourself as:
 Based on the refactoring example above, just create an organizer object that calls the 
 actions in order and write code for the actions. That's it.
 
+Here's how to use a `LightService::Action` as a `LightService::Organizer`:
+
+```ruby
+require 'light-service'
+ 
+module Yoyo
+  class PushesLead
+    include LightService::Action
+    extend LightService::Organizer
+ 
+    executed do |context|
+      lead = context.fetch(:lead)
+      fail ArgumentError if lead.nil?
+ 
+      integration = context.fetch(:integration)
+      fail ArgumentError if integration.nil?
+ 
+      with(context).reduce([
+        PreparesLeadForImport,
+        RemoteClient::ImportsGuestCard
+      ])
+    end
+  end
+end
+```
+
 ## Contributing
 
 1. Fork it
