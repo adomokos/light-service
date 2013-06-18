@@ -66,7 +66,7 @@ This is how the organizer and actions interact with eachother:
 
 ```ruby
 class CalculatesTax
-  extend LightService::Organizer
+  include LightService::Organizer
 
   def self.for_order(order)
     with(order: order).reduce \
@@ -183,7 +183,7 @@ require 'light-service'
 module Yoyo
   class PushesLead
     include LightService::Action
-    extend LightService::Organizer
+    include LightService::Organizer
  
     executed do |context|
       lead = context.fetch(:lead)

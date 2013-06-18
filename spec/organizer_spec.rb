@@ -4,7 +4,7 @@ describe LightService::Organizer do
   class AnAction; end
 
   class AnOrganizer
-    extend LightService::Organizer
+    include LightService::Organizer
 
     def self.some_method(user)
       with(user: user).reduce [AnAction]

@@ -1,5 +1,5 @@
 class CalculatesTax
-  extend LightService::Organizer
+  include LightService::Organizer
 
   def self.for_order(order)
     with(order: order).reduce \
