@@ -201,6 +201,38 @@ module Yoyo
 end
 ```
 
+Calling `set_failure!` on the context will stop execution of the remaining actions, in some cases you may want the same behaviour but not due to failure, in that case use `skip_all!`. `skip_all!` optionally takes a message argument.
+
+```ruby
+# organizer class registered to execute 2 actions
+class AddComment
+  extend LightService::Organizer
+
+  def self.to_post(args = {})
+    with(args).reduce [
+      SaveCommentAction,
+      PublishCommentAction
+    ]
+  end
+end
+
+# action to save comment data, conditionally will bypass the remaining actions
+class SaveCommentAction
+  include LightService::Action
+
+  executed do |context|
+    comment = context.fetch(:comment)
+    post = context.fetch(:post)
+    post.comments << comment
+    
+    unless comment.commenter.can_auto_approve_own_comment
+      # calling skip_all! will bypass PublishCommentAction execution
+      context.skip_all!
+    end
+  end
+end
+```
+
 ## Contributing
 
 1. Fork it

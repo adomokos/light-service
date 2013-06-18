@@ -8,7 +8,7 @@ module LightService
     module Macros
       def executed
         define_singleton_method "execute" do |context|
-          return context if context.failure?
+          return context if context.failure? || context.skip_all?
 
           yield(context)
 
