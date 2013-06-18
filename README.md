@@ -160,7 +160,7 @@ This gem requires ruby 1.9.x
 
 Add this line to your application's Gemfile:
 
-    gem 'light_service'
+    gem 'light-service'
 
 And then execute:
 
@@ -168,7 +168,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install light_service
+    $ gem install light-service
 
 ## Usage
 
