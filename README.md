@@ -175,33 +175,7 @@ Or install it yourself as:
 Based on the refactoring example above, just create an organizer object that calls the 
 actions in order and write code for the actions. That's it.
 
-Here's how to use a `LightService::Action` as a `LightService::Organizer`:
-
-```ruby
-require 'light-service'
- 
-module Yoyo
-  class PushesLead
-    include LightService::Action
-    include LightService::Organizer
- 
-    executed do |context|
-      lead = context.fetch(:lead)
-      fail ArgumentError if lead.nil?
- 
-      integration = context.fetch(:integration)
-      fail ArgumentError if integration.nil?
- 
-      with(context).reduce([
-        PreparesLeadForImport,
-        RemoteClient::ImportsGuestCard
-      ])
-    end
-  end
-end
-```
-
-Calling `set_failure!` on the context will stop execution of the remaining actions, in some cases you may want the same behaviour but not due to failure, in that case use `skip_all!`. `skip_all!` optionally takes a message argument.
+### Another example:
 
 ```ruby
 # organizer class registered to execute 2 actions
@@ -210,25 +184,60 @@ class AddComment
 
   def self.to_post(args = {})
     with(args).reduce [
-      SaveCommentAction,
-      PublishCommentAction
+      SaveComment,
+      PublishComment
     ]
   end
 end
 
-# action to save comment data, conditionally will bypass the remaining actions
-class SaveCommentAction
+# action to save comment data
+class SaveComment
   include LightService::Action
 
   executed do |context|
     comment = context.fetch(:comment)
     post = context.fetch(:post)
     post.comments << comment
-    
-    unless comment.commenter.can_auto_approve_own_comment
-      # calling skip_all! will bypass PublishCommentAction execution
-      context.skip_all!
-    end
+    post.save
+  end
+end
+
+class PublishComment
+  include LightService::Action
+
+  executed do |context|
+    comment = context.fetch(:comment)
+    comment.publish!
+  end
+end
+```
+
+## 2 ways to stop the chain of Actions
+
+1. Use `set_failure!` for stopping execution when it is due to failure.
+2. If you want to skip succeeding actions that is not due to a failure, use `skip_all!`.
+
+Using the `SaveComment` example...
+
+```ruby
+class SaveComment
+  include LightService::Action
+
+  executed do |context|
+    comment = context.fetch(:comment)
+    post = context.fetch(:post)
+    post.comments << comment
+    post.save
+  end
+
+  unless comment.commenter.can_auto_approve_own_comment
+    # calling skip_all! will bypass PublishCommentAction execution
+    context.skip_all!
+  end
+
+  if post.errors.any?
+    # calling set_failure! will bypass PublishCommentAction execution
+    context.set_failure!
   end
 end
 ```
