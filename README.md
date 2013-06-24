@@ -175,42 +175,7 @@ Or install it yourself as:
 Based on the refactoring example above, just create an organizer object that calls the 
 actions in order and write code for the actions. That's it.
 
-### Another example:
-
-```ruby
-# organizer class registered to execute 2 actions
-class AddComment
-  extend LightService::Organizer
-
-  def self.to_post(args = {})
-    with(args).reduce [
-      SaveComment,
-      PublishComment
-    ]
-  end
-end
-
-# action to save comment data
-class SaveComment
-  include LightService::Action
-
-  executed do |context|
-    comment = context.fetch(:comment)
-    post = context.fetch(:post)
-    post.comments << comment
-    post.save
-  end
-end
-
-class PublishComment
-  include LightService::Action
-
-  executed do |context|
-    comment = context.fetch(:comment)
-    comment.publish!
-  end
-end
-```
+For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki).
 
 ## Contributing
 
