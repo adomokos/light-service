@@ -212,36 +212,6 @@ class PublishComment
 end
 ```
 
-## 2 ways to stop the chain of Actions
-
-1. Use `set_failure!` for stopping execution when it is due to failure.
-2. If you want to skip succeeding actions that is not due to a failure, use `skip_all!`.
-
-Using the `SaveComment` example...
-
-```ruby
-class SaveComment
-  include LightService::Action
-
-  executed do |context|
-    comment = context.fetch(:comment)
-    post = context.fetch(:post)
-    post.comments << comment
-    post.save
-  end
-
-  unless comment.commenter.can_auto_approve_own_comment
-    # calling skip_all! will bypass PublishCommentAction execution
-    context.skip_all!
-  end
-
-  if post.errors.any?
-    # calling set_failure! will bypass PublishCommentAction execution
-    context.set_failure!
-  end
-end
-```
-
 ## Contributing
 
 1. Fork it
