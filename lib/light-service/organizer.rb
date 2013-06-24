@@ -11,9 +11,7 @@ module LightService
     end
 
     def with(data = {})
-      @context = data.kind_of?(::LightService::Context) ?
-                 data :
-                 LightService::Context.make(data)
+      @context = LightService::Context.make(data)
       self
     end
 

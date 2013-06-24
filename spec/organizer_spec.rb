@@ -31,17 +31,4 @@ describe LightService::Organizer do
       AnOrganizer.some_method(user)
     end
   end
-
-  context "when #with is called with Context" do
-    it "does not create a context" do
-      LightService::Context.stub(:new).with(user: user).and_return(context)
-      LightService::Context.should_not_receive(:make)
-
-      AnAction.should_receive(:execute) \
-              .with(context) \
-              .and_return context
-      AnOrganizer.some_method_with(user)
-    end
-  end
-
 end

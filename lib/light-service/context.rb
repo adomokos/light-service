@@ -12,7 +12,7 @@ module LightService
     end
 
     def self.make(context={})
-      Context.new(::LightService::Outcomes::SUCCESS, '', context)
+      Context.new(::LightService::Outcomes::SUCCESS, '', Hash(context))
     end
 
     def add_to_context(values)
@@ -33,6 +33,10 @@ module LightService
 
     # It's really there for testing and debugging
     def context_hash
+      @context.dup
+    end
+
+    def to_hash
       @context.dup
     end
 
