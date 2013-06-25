@@ -15,6 +15,12 @@ module LightService
       Context.new(::LightService::Outcomes::SUCCESS, '', Hash(context))
     end
 
+    # backport for ruby-2.0.0 Kernel#Hash, based on specification
+    def self.Hash(context)
+      return {} if (context == nil) || (context == [])
+      context.to_hash rescue fail(TypeError, "can't convert #{context.inspect} to Hash")
+    end
+
     def add_to_context(values)
       @context.merge! values
     end
@@ -66,6 +72,5 @@ module LightService
       @message = message
       @skip_all = true
     end
-
   end
 end
