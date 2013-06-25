@@ -12,7 +12,13 @@ module LightService
     end
 
     def self.make(context={})
-      Context.new(::LightService::Outcomes::SUCCESS, '', context)
+      Context.new(::LightService::Outcomes::SUCCESS, '', Hash(context))
+    end
+
+    # backport for ruby-2.0.0 Kernel#Hash, based on specification
+    def self.Hash(context)
+      return {} if (context == nil) || (context == [])
+      context.to_hash rescue fail(TypeError, "can't convert #{context.inspect} to Hash")
     end
 
     def add_to_context(values)
@@ -33,6 +39,10 @@ module LightService
 
     # It's really there for testing and debugging
     def context_hash
+      @context.dup
+    end
+
+    def to_hash
       @context.dup
     end
 
@@ -62,6 +72,5 @@ module LightService
       @message = message
       @skip_all = true
     end
-
   end
 end
