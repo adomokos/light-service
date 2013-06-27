@@ -8,7 +8,7 @@ module LightService
     attr_accessor :outcome, :message
 
     def initialize(outcome=::LightService::Outcomes::SUCCESS, message='', context={})
-      @outcome, @message, @context = outcome, message, context
+      @outcome, @message, @context = outcome, message, context.to_hash
     end
 
     def self.make(context={})
@@ -33,6 +33,10 @@ module LightService
 
     # It's really there for testing and debugging
     def context_hash
+      @context.dup
+    end
+
+    def to_hash
       @context.dup
     end
 

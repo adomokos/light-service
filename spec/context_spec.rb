@@ -16,11 +16,34 @@ module LightService
       service_result[:test].should eq 1
     end
 
-    it "initializes the object with make" do
-      service_result = Context.make({:test => 1})
-      service_result.should be_success
-      service_result.message.should eq ""
-      service_result[:test].should eq 1
+    describe ".make" do
+      it "initializes the object with make" do
+        service_result = Context.make({:test => 1})
+        service_result.should be_success
+        service_result.message.should eq ""
+        service_result[:test].should eq 1
+      end
+
+      it "should try to coerce @context into a hash" do
+        a_hash = {test: 1}
+        service_result = Context.make(a_hash)
+        service_result.context_hash.should == {test: 1}
+
+        a_context = Context.make(test: 1)
+        service_result = Context.make(a_context)
+        service_result.context_hash.should == {test: 1}
+
+        expect { Context.make(nil)       }.to raise_error(NoMethodError)
+        expect { Context.make([])        }.to raise_error(NoMethodError)
+        expect { Context.make([1, 2, 3]) }.to raise_error(NoMethodError)
+      end
+    end
+
+    describe "#to_hash" do
+      it "converts into the context_hash" do
+        Context.make(test: 1).to_hash.should == {test: 1}
+        Context.make({}).to_hash.should == {}
+      end
     end
 
     context "when created" do
