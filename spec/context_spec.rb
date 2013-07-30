@@ -7,6 +7,8 @@ module LightService
     it "initializes the object with default arguments" do
       service_result = Context.new
       service_result.should be_success
+      service_result.message.should eq ''
+      service_result.to_hash.should eq({})
     end
 
     it "initializes the object with the context" do
