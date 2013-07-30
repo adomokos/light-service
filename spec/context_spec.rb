@@ -29,11 +29,11 @@ module LightService
       it "should try to coerce @context into a hash" do
         a_hash = {test: 1}
         service_result = Context.make(a_hash)
-        service_result.context_hash.should == {test: 1}
+        service_result.instance_variable_get('@context').should == {test: 1}
 
         a_context = Context.make(test: 1)
         service_result = Context.make(a_context)
-        service_result.context_hash.should == {test: 1}
+        service_result.instance_variable_get('@context').should == {test: 1}
 
         expect { Context.make(nil)       }.to raise_error(NoMethodError)
         expect { Context.make([])        }.to raise_error(NoMethodError)
@@ -42,7 +42,7 @@ module LightService
     end
 
     describe "#to_hash" do
-      it "converts into the context_hash" do
+      it "converts context into a hash" do
         Context.make(test: 1).to_hash.should == {test: 1}
         Context.make({}).to_hash.should == {}
       end
@@ -70,14 +70,14 @@ module LightService
     end
 
     it "lets setting a group of context values" do
-      subject.context_hash.should include(:test => 1)
-      subject.context_hash.keys.length.should == 1
+      subject.to_hash.should include(:test => 1)
+      subject.to_hash.keys.length.should == 1
 
       subject.add_to_context(:test => 1, :two => 2)
 
-      subject.context_hash.keys.length.should == 2
-      subject.context_hash.should include(:test => 1)
-      subject.context_hash.should include(:two => 2)
+      subject.to_hash.keys.length.should == 2
+      subject.to_hash.should include(:test => 1)
+      subject.to_hash.should include(:two => 2)
     end
   end
 

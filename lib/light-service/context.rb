@@ -31,8 +31,9 @@ module LightService
       @context.fetch(index)
     end
 
-    # It's really there for testing and debugging
+    # Deprecated: Please use `to_hash` instead
     def context_hash
+      warn 'DEPRECATED: Please use `to_hash` instead'
       @context.dup
     end
 
