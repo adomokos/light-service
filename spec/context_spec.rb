@@ -24,18 +24,24 @@ module LightService
         service_result[:test].should eq 1
       end
 
-      it "should try to coerce @context into a hash" do
-        a_hash = {test: 1}
-        service_result = Context.make(a_hash)
-        service_result.instance_variable_get('@context').should == {test: 1}
+      context "when passing valid parameters" do
+        subject { Context.make(params).to_hash }
 
-        a_context = Context.make(test: 1)
-        service_result = Context.make(a_context)
-        service_result.instance_variable_get('@context').should == {test: 1}
+        let(:params) { {test: 1} }
+        it { should eq({test: 1}) }
 
-        expect { Context.make(nil)       }.to raise_error(NoMethodError)
-        expect { Context.make([])        }.to raise_error(NoMethodError)
-        expect { Context.make([1, 2, 3]) }.to raise_error(NoMethodError)
+        let(:params) { Context.make(test: 1) }
+        it { should eq({test: 1}) }
+      end
+
+      context "when passing invalid parameters" do
+        subject { lambda {Context.make(invalid_params)} }
+
+        let(:invalid_params) { nil }
+        it { should raise_error(NoMethodError) }
+
+        let(:invalid_params) { [] }
+        it { should raise_error(NoMethodError) }
       end
     end
 
