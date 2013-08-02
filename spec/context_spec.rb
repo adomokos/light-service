@@ -2,13 +2,13 @@ require "spec_helper"
 
 module LightService
   describe Context do
-    subject { Context.new(Outcomes::SUCCESS, "some_message", {:test => 1}) }
+    subject { Context.new({:test => 1}, Outcomes::SUCCESS, "some_message") }
 
     it "initializes the object with default arguments" do
-      service_result = Context.new
+      service_result = Context.new({test: 1})
       service_result.should be_success
-      service_result.message.should eq ''
-      service_result.to_hash.should eq({})
+      service_result.message.should eq ""
+      service_result[:test].should eq 1
     end
 
     it "initializes the object with the context" do
