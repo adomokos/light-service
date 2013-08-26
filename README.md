@@ -7,7 +7,7 @@
 What do you think of this code?
 
 ```ruby
-class TaxController < ApplicationContoller
+class TaxController < ApplicationController
   def update
     @order = Order.find(params[:id])
     tax_ranges = TaxRange.for_region(order.region)
