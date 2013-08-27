@@ -4,41 +4,27 @@ module LightService
     FAILURE = 1
   end
 
-  class Context
+  class Context < Hash
     attr_accessor :outcome, :message
 
-    def initialize(outcome=::LightService::Outcomes::SUCCESS, message='', context={})
-      @outcome, @message, @context = outcome, message, context.to_hash
+    def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='')
+      @outcome, @message = outcome, message
+      context.to_hash.each {|k,v| self[k] = v}
     end
 
     def self.make(context={})
-      Context.new(::LightService::Outcomes::SUCCESS, '', context)
+      Context.new(context, ::LightService::Outcomes::SUCCESS, '')
     end
 
     def add_to_context(values)
-      @context.merge! values
+      self.merge! values
     end
 
-    def [](index)
-      @context[index]
-    end
-
-    def []=(index, value)
-      @context[index] = value
-    end
-
-    def fetch(index)
-      @context.fetch(index)
-    end
-
+    # It's really there for testing and debugging
     # Deprecated: Please use `to_hash` instead
     def context_hash
       warn 'DEPRECATED: Please use `to_hash` instead'
-      @context.dup
-    end
-
-    def to_hash
-      @context.dup
+      self.dup
     end
 
     def success?
@@ -67,6 +53,5 @@ module LightService
       @message = message
       @skip_all = true
     end
-
   end
 end

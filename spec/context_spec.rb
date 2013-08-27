@@ -2,13 +2,13 @@ require "spec_helper"
 
 module LightService
   describe Context do
-    subject { Context.new(Outcomes::SUCCESS, "some_message", {:test => 1}) }
+    subject { Context.new({:test => 1}, Outcomes::SUCCESS, "some_message") }
 
     it "initializes the object with default arguments" do
-      service_result = Context.new
+      service_result = Context.new({test: 1})
       service_result.should be_success
-      service_result.message.should eq ''
-      service_result.to_hash.should eq({})
+      service_result.message.should eq ""
+      service_result[:test].should eq 1
     end
 
     it "initializes the object with the context" do
@@ -29,11 +29,11 @@ module LightService
       it "should try to coerce @context into a hash" do
         a_hash = {test: 1}
         service_result = Context.make(a_hash)
-        service_result.instance_variable_get('@context').should == {test: 1}
+        service_result.should == {test: 1}
 
         a_context = Context.make(test: 1)
         service_result = Context.make(a_context)
-        service_result.instance_variable_get('@context').should == {test: 1}
+        service_result.should == {test: 1}
 
         expect { Context.make(nil)       }.to raise_error(NoMethodError)
         expect { Context.make([])        }.to raise_error(NoMethodError)
