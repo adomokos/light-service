@@ -8,12 +8,23 @@ module LightService
     module Macros
       def executed
         define_singleton_method "execute" do |context|
-          return context if context.failure? || context.skip_all?
+          action_context = create_action_context(context)
+          return action_context if action_context.failure? || action_context.skip_all?
 
-          yield(context)
+          yield(action_context)
 
-          context
+          action_context
         end
+      end
+
+      private
+
+      def create_action_context(context)
+        if context.respond_to? :failure?
+          return context
+        end
+
+        LightService::Context.make(context)
       end
     end
 

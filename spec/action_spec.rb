@@ -63,5 +63,14 @@ module LightService
 
       result.to_hash.should eq ({:test_key => "test_value"})
     end
+
+    context "can take hash as an argument" do
+      it "creates LightService::Context implicitly" do
+        result = DummyAction.execute(some_key: "some value")
+
+        expect(result).to be_success
+        expect(result.keys).to eq([:some_key, :test_key])
+      end
+    end
   end
 end
