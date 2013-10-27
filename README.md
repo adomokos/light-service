@@ -1,4 +1,4 @@
-![Light Service](https://raw.github.com/adomokos/light-service/master/resources/light-service.png)
+![LightService](https://raw.github.com/adomokos/light-service/master/resources/light-service.png)
 
 [![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
 
@@ -36,7 +36,7 @@ end
 ```
 
 This controller violates [SRP](http://en.wikipedia.org/wiki/Single_responsibility_principle) all over.
-Also, imagine what it takes to test this beast.
+Also, imagine what would it take to test this beast.
 You could move the tax_percentage finders and calculations into the tax model,
 but then you'll make your model logic heavy.
 
@@ -62,7 +62,7 @@ and executes them one-by-one. Then you need to create the actions which will onl
 
 This is how the organizer and actions interact with eachother:
 
-![Light Service](https://raw.github.com/adomokos/light-service/master/resources/organizer_and_actions.png)
+![LightService](https://raw.github.com/adomokos/light-service/master/resources/organizer_and_actions.png)
 
 ```ruby
 class CalculatesTax
@@ -150,7 +150,7 @@ class TaxController < ApplicationContoller
 end
 ```
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
-simple and elegant Rails code where I told the story of how Light Service was extracted from the projects I had worked on.
+simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
 ## Requirements
 
@@ -187,4 +187,4 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 
 ## License
 
-Light Service is released under the [MIT License](http://www.opensource.org/licenses/MIT).
+LightService is released under the [MIT License](http://www.opensource.org/licenses/MIT).
