@@ -10,6 +10,7 @@ module LightService
     def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='')
       @outcome, @message = outcome, message
       context.to_hash.each {|k,v| self[k] = v}
+      self
     end
 
     def self.make(context={})
