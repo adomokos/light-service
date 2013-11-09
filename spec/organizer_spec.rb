@@ -11,12 +11,12 @@ describe LightService::Organizer do
     end
 
     def self.some_method_with(user)
-      context = LightService::Context.new(user: user)
+      context = LightService::Context.make(user: user)
       with(context).reduce [AnAction]
     end
   end
 
-  let!(:context) { ::LightService::Context.new(user: user) }
+  let(:context) { ::LightService::Context.make(user: user) }
   let(:user) { double(:user) }
 
   context "when #with is called with hash" do
@@ -25,10 +25,10 @@ describe LightService::Organizer do
               .with(context) \
               .and_return context
     end
-    it "creates a Context" do
-      LightService::Context.should_receive(:make).and_return context
 
-      AnOrganizer.some_method(user)
+    it "creates a Context" do
+      result = AnOrganizer.some_method(user)
+      expect(result).to eq(context)
     end
   end
 end
