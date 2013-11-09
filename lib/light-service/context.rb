@@ -14,7 +14,7 @@ module LightService
     end
 
     def self.make(context={})
-      Context.new(context, ::LightService::Outcomes::SUCCESS, '')
+      self.new(context, ::LightService::Outcomes::SUCCESS, '')
     end
 
     def add_to_context(values)
