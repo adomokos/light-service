@@ -16,6 +16,8 @@ module LightService
     end
 
     def reduce(*actions)
+      raise "No action(s) were provided" if actions.empty?
+
       if actions.is_a? Array
         actions.flatten!
       end
