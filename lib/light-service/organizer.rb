@@ -15,7 +15,11 @@ module LightService
       self
     end
 
-    def reduce(actions=[])
+    def reduce(*actions)
+      if actions.is_a? Array
+        actions.flatten!
+      end
+
       actions.reduce(@context) { |context, action| action.execute(context) }
     end
   end

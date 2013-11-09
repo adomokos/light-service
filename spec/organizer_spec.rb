@@ -2,17 +2,18 @@ require 'spec_helper'
 
 describe LightService::Organizer do
   class AnAction; end
+  class AnotherAction; end
 
   class AnOrganizer
     include LightService::Organizer
 
     def self.some_method(user)
-      with(user: user).reduce [AnAction]
+      with(user: user).reduce([AnAction, AnotherAction])
     end
 
     def self.some_method_with(user)
       context = LightService::Context.make(user: user)
-      with(context).reduce [AnAction]
+      with(context).reduce(AnAction, AnotherAction)
     end
   end
 
@@ -24,10 +25,29 @@ describe LightService::Organizer do
       AnAction.should_receive(:execute) \
               .with(context) \
               .and_return context
+      AnotherAction.should_receive(:execute) \
+              .with(context) \
+              .and_return context
     end
 
     it "creates a Context" do
       result = AnOrganizer.some_method(user)
+      expect(result).to eq(context)
+    end
+  end
+
+  context "when #with is called with Context" do
+    before do
+      AnAction.should_receive(:execute) \
+              .with(context) \
+              .and_return context
+      AnotherAction.should_receive(:execute) \
+              .with(context) \
+              .and_return context
+    end
+
+    it "creates a Context" do
+      result = AnOrganizer.some_method_with(user)
       expect(result).to eq(context)
     end
   end
