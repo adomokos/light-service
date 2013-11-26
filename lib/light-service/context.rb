@@ -14,6 +14,7 @@ module LightService
     end
 
     def self.make(context={})
+      return context if context.is_a?(Context)
       self.new(context, ::LightService::Outcomes::SUCCESS, '')
     end
 
