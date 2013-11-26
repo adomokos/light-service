@@ -48,6 +48,15 @@ module LightService
         let(:invalid_params) { [] }
         it { should raise_error(NoMethodError) }
       end
+
+      context "data is a context" do
+        let(:original_context) { Context.new }
+
+        it "returns the same context object" do
+          new_context = Context.make(original_context)
+          expect(new_context.object_id).to eq(original_context.object_id)
+        end
+      end
     end
 
     describe "#to_hash" do
