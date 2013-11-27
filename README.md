@@ -185,6 +185,8 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
+Huge thanks to the [Contributors](https://github.com/adomokos/light-service/graphs/contributors)!
+
 ## License
 
 LightService is released under the [MIT License](http://www.opensource.org/licenses/MIT).
