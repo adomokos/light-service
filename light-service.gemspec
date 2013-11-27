@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["adomokos@gmail.com"]
   gem.description   = %q{A service skeleton with an emphasis on simplicity}
   gem.summary       = %q{A service skeleton with an emphasis on simplicity}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/adomokos/light-service"
   gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($\)
