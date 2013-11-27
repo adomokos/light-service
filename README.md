@@ -191,7 +191,7 @@ Huge thanks to the [contributors](https://github.com/adomokos/light-service/grap
 
 ### 0.0.12
 * You can invoke the actions by passing in a [list of actions](https://github.com/adomokos/light-service/blob/c393995a6bc52f1f67535cd242e144350057431c/spec/organizer_spec.rb#L16) or an array of actions.
-* `Context#make` will not create a new Context if it's already a Context. Thanks to @ramontayag and @padi for their commit.
+* `Context#make` will not create a new Context if it's already a Context. Thanks to [@ramontayag](https://github.com/ramontayag) and [@padi](https://github.com/padi) for their commit.
 
 ## License
 
