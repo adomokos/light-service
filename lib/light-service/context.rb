@@ -14,6 +14,10 @@ module LightService
     end
 
     def self.make(context={})
+      unless context.is_a? Hash or context.is_a? ::LightService::Context
+        raise ArgumentError, 'Argument must be Hash or LightService::Context'
+      end
+
       return context if context.is_a?(Context)
       self.new(context, ::LightService::Outcomes::SUCCESS, '')
     end
@@ -55,5 +59,6 @@ module LightService
       @message = message
       @skip_all = true
     end
+
   end
 end

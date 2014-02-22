@@ -2,109 +2,68 @@ require "spec_helper"
 
 module LightService
   describe Context do
-    subject { Context.new({:test => 1}, Outcomes::SUCCESS, "some_message") }
 
-    it "initializes the object with default arguments" do
-      service_result = Context.new({test: 1})
-
-      expect(service_result).to be_success
-      expect(service_result.message).to eq ''
-      expect(service_result[:test]).to eq 1
-    end
-
-    it "initializes the object with the context" do
-      service_result = Context.new.tap { |o| o.add_to_context({test: 1})}
-
-      expect(service_result).to be_success
-      expect(service_result.message).to eq ''
-      expect(service_result[:test]).to eq 1
-    end
-
-    describe ".make" do
-      it "initializes the object with make" do
-        service_result = Context.make({test: 1})
-
-        expect(service_result).to be_success
-        expect(service_result.message).to eq ""
-        expect(service_result[:test]).to eq 1
+    describe "can be made" do
+      context "with no arguments" do
+        subject { Context.make }
+        it { should be_success }
+        its(:message) { should be_empty }
       end
 
-      context "when passing valid parameters" do
-        subject { Context.make(params).to_hash }
-
-        let(:params) { {test: 1} }
-        it { should eq({test: 1}) }
-
-        let(:params) { Context.make(test: 1) }
-        it { should eq({test: 1}) }
+      context "with a hash" do
+        it "has the hash values" do
+          context = Context.make(:one => 1)
+          expect(context[:one]).to eq(1)
+        end
       end
 
-      context "when passing invalid parameters" do
-        subject { lambda {Context.make(invalid_params)} }
-
-        let(:invalid_params) { nil }
-        it { should raise_error(NoMethodError) }
-
-        let(:invalid_params) { [] }
-        it { should raise_error(NoMethodError) }
-      end
-
-      context "data is a context" do
-        let(:original_context) { Context.new }
-
-        it "returns the same context object" do
-          new_context = Context.make(original_context)
-          expect(new_context.object_id).to eq(original_context.object_id)
+      context "with FAILURE" do
+        it "is failed" do
+          context = Context.new({}, ::LightService::Outcomes::FAILURE, '')
+          expect(context).to be_failure
         end
       end
     end
 
-    describe "#to_hash" do
-      it "converts context into a hash" do
-        Context.make(test: 1).to_hash.should == {test: 1}
-        Context.make({}).to_hash.should == {}
+    describe "can't be made" do
+      specify "with invalid parameters" do
+        expect{Context.make([])}.to raise_error(ArgumentError)
       end
     end
 
-    context "when created" do
-      it { should be_success }
+    it "can be asked for success?" do
+      context = Context.new({}, ::LightService::Outcomes::SUCCESS)
+      expect(context.success?).to be_true
     end
 
-    it "allows to set success" do
-      subject.set_success!('the success')
-
-      expect(subject).to be_success
-      expect(subject).not_to be_failure
-      expect(subject.message) == 'the success'
+    it "can be asked for failure?" do
+      context = Context.new({}, ::LightService::Outcomes::FAILURE)
+      expect(context.failure?).to be_true
     end
 
-    it "allows to set failure" do
-      subject.set_failure!('the failure')
-
-      expect(subject).not_to be_success
-      expect(subject).to be_failure
-      expect(subject.message).to eq('the failure')
+    it "can be asked for skip_all?" do
+      context = Context.make
+      context.skip_all!
+      expect(context.skip_all?).to be_true
     end
 
-    it "allows to set skip_all" do
-      subject.skip_all!('the reason to skip')
-
-      expect(subject).to be_skip_all
-      expect(subject).to be_success
-      expect(subject).not_to be_failure
-      expect(subject.message).to eq('the reason to skip')
+    it "can be pushed into a SUCCESS state" do
+      context = Context.make
+      context.set_success!("a happy end")
+      expect(context).to be_success
     end
 
-    it "lets setting a group of context values" do
-      subject.to_hash.should include(test: 1)
-      subject.to_hash.keys.length.should == 1
-
-      subject.add_to_context(test: 1, two: 2)
-
-      expect(subject.to_hash.keys.length).to eq(2)
-      expect(subject.to_hash).to include(test: 1)
-      expect(subject.to_hash).to include(two: 2)
+    it "can be pushed into a FAILURE state" do
+      context = Context.make
+      context.set_failure!("a sad end")
+      expect(context).to be_failure
     end
+
+    it "can set a flag to skip all subsequent actions" do
+      context = Context.make
+      context.skip_all!
+      expect(context).to be_skip_all
+    end
+
   end
-
 end
