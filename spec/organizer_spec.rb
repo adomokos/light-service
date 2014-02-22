@@ -7,18 +7,12 @@ describe LightService::Organizer do
   class AnOrganizer
     include LightService::Organizer
 
-    def self.some_method(user)
-      with(user: user).reduce([AnAction, AnotherAction])
+    def self.do_something(action_arguments)
+      with(action_arguments).reduce([AnAction, AnotherAction])
     end
 
-    def self.some_method_with(user)
-      context = LightService::Context.make(user: user)
-      with(context).reduce(AnAction, AnotherAction)
-    end
-
-    def self.some_method_with_no_actions(user)
-      context = LightService::Context.make(user: user)
-      with(context).reduce
+    def self.do_something_with_no_actions(action_arguments)
+      with(action_arguments).reduce
     end
   end
 
@@ -35,8 +29,8 @@ describe LightService::Organizer do
               .and_return context
     end
 
-    it "creates a Context" do
-      result = AnOrganizer.some_method(user)
+    it "implicitly creates a Context" do
+      result = AnOrganizer.do_something(:user => user)
       expect(result).to eq(context)
     end
   end
@@ -51,15 +45,15 @@ describe LightService::Organizer do
               .and_return context
     end
 
-    it "creates a Context" do
-      result = AnOrganizer.some_method_with(user)
+    it "uses that Context without recreating it" do
+      result = AnOrganizer.do_something(context)
       expect(result).to eq(context)
     end
   end
 
   context "when no Actions are specified" do
     it "throws a Runtime error" do
-      expect { AnOrganizer.some_method_with_no_actions(user) }.to \
+      expect { AnOrganizer.do_something_with_no_actions(context) }.to \
               raise_error RuntimeError, "No action(s) were provided"
     end
   end
