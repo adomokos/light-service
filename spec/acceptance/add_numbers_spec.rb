@@ -3,13 +3,12 @@ require 'spec_helper'
 class Organizer
   include LightService::Organizer
 
-  def self.add_number(number)
-    with(number: number).reduce \
-      [
-        AddsOneAction,
-        AddsTwoAction,
-        AddsThreeAction
-      ]
+  def self.add_numbers(number)
+    with(:number => number).reduce(
+      AddsOneAction,
+      AddsTwoAction,
+      AddsThreeAction
+    )
   end
 end
 
@@ -48,7 +47,9 @@ end
 
 describe Organizer do
   it "Adds 1 2 3 and through to 1" do
-    result = Organizer.add_number 1
-    result.fetch(:number).should == 7
+    result = Organizer.add_numbers 1
+    number = result.fetch(:number)
+
+    expect(number).to eq(7)
   end
 end
