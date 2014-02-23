@@ -18,7 +18,7 @@ module LightService
       end
     end
 
-    let(:context) { ::LightService::Context.new }
+    let(:context) { ::LightService::Context.make }
 
     context "when the action context has failure" do
       it "returns immediately" do
