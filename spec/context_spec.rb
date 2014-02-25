@@ -53,10 +53,24 @@ module LightService
       expect(context).to be_success
     end
 
+    it "can be pushed into a SUCCESS state without a message" do
+      context = Context.make
+      context.succeed!
+      expect(context).to be_success
+      expect(context.message).to be_nil
+    end
+
     it "can be pushed into a FAILURE state" do
       context = Context.make
       context.fail!("a sad end")
       expect(context).to be_failure
+    end
+
+    it "can be pushed into a FAILURE state without a message" do
+      context = Context.make
+      context.fail!
+      expect(context).to be_failure
+      expect(context.message).to be_nil
     end
 
     it "can set a flag to skip all subsequent actions" do
