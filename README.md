@@ -189,9 +189,13 @@ Huge thanks to the [contributors](https://github.com/adomokos/light-service/grap
 
 ## Release Notes
 
+### 0.2.1
+* [Improving](https://github.com/adomokos/light-service/commit/fc7043241396b4a2556e9664c13c6929f8330025) deprecation warning for the renamed methods
+* Making the message an optional argument for `succeed!` and `fail!` methods
+
 ### 0.2.0
-* [Renaming](https://github.com/adomokos/light-service/commit/8d40ff7d393a157a8a558f9e4e021b8731550834) the `set_success!` and `set_failure!` methods to `succeed!` and `fail!`.
-* [Throwing](https://github.com/adomokos/light-service/commit/5ef315b8aeeafc99e38676adad3c11df5d93b0e3) an ArgumentError if the `make` method's argument is not Hash or LightService::Context.
+* [Renaming](https://github.com/adomokos/light-service/commit/8d40ff7d393a157a8a558f9e4e021b8731550834) the `set_success!` and `set_failure!` methods to `succeed!` and `fail!`
+* [Throwing](https://github.com/adomokos/light-service/commit/5ef315b8aeeafc99e38676adad3c11df5d93b0e3) an ArgumentError if the `make` method's argument is not Hash or LightService::Context
 
 ## License
 
