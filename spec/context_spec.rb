@@ -49,13 +49,13 @@ module LightService
 
     it "can be pushed into a SUCCESS state" do
       context = Context.make
-      context.set_success!("a happy end")
+      context.succeed!("a happy end")
       expect(context).to be_success
     end
 
     it "can be pushed into a FAILURE state" do
       context = Context.make
-      context.set_failure!("a sad end")
+      context.fail!("a sad end")
       expect(context).to be_failure
     end
 

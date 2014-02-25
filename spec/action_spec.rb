@@ -22,7 +22,7 @@ module LightService
 
     context "when the action context has failure" do
       it "returns immediately" do
-        context.set_failure!("an error")
+        context.fail!("an error")
 
         DummyAction.execute(context)
 

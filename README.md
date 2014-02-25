@@ -97,7 +97,7 @@ class LooksUpTaxPercentageAction
 
   def self.object_is_nil?(object, context, message)
     if object.nil?
-      context.set_failure!(message)
+      context.fail!(message)
       return true
     end
 

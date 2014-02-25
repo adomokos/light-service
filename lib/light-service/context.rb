@@ -46,11 +46,21 @@ module LightService
     end
 
     def set_success!(message)
+      warn 'DEPRECATED: Please use `succeed!` instead'
+      succeed!(message)
+    end
+
+    def succeed!(message)
       @message = message
       @outcome = ::LightService::Outcomes::SUCCESS
     end
 
     def set_failure!(message)
+      warn 'DEPRECATED: Please use `fail!` instead'
+      fail!(message)
+    end
+
+    def fail!(message)
       @message = message
       @outcome = ::LightService::Outcomes::FAILURE
     end
