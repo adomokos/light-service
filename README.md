@@ -189,9 +189,9 @@ Huge thanks to the [contributors](https://github.com/adomokos/light-service/grap
 
 ## Release Notes
 
-### 0.0.12
-* You can invoke the actions by passing in a [list of actions](https://github.com/adomokos/light-service/blob/c393995a6bc52f1f67535cd242e144350057431c/spec/organizer_spec.rb#L16) or an array of actions.
-* `Context#make` will not create a new Context if it's already a Context. Thanks to [@ramontayag](https://github.com/ramontayag) and [@padi](https://github.com/padi) for their commit.
+### 0.2.0
+* [Renaming](https://github.com/adomokos/light-service/commit/8d40ff7d393a157a8a558f9e4e021b8731550834) the `set_success!` and `set_failure!` methods to `succeed!` and `fail!`.
+* [Throwing](https://github.com/adomokos/light-service/commit/5ef315b8aeeafc99e38676adad3c11df5d93b0e3) an ArgumentError if the `make` method's argument is not Hash or LightService::Context.
 
 ## License
 
