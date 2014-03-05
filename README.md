@@ -1,7 +1,6 @@
 ![LightService](https://raw.github.com/adomokos/light-service/master/resources/light-service.png)
 
 [![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
-
 [![Code Climate](https://codeclimate.com/github/adomokos/light-service.png)](https://codeclimate.com/github/adomokos/light-service)
 
 What do you think of this code?
