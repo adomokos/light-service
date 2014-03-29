@@ -71,14 +71,14 @@ class CalculatesTax
   def self.for_order(order)
     with(order: order).reduce \
       [
-        LooksUpTaxPercentageAction,
-        CalculatesOrderTaxAction,
-        ProvidesFreeShippingAction
+        LooksUpTaxPercentage,
+        CalculatesOrderTax,
+        ProvidesFreeShipping
       ]
   end
 end
 
-class LooksUpTaxPercentageAction
+class LooksUpTaxPercentage
   include LightService::Action
 
   executed do |context|
@@ -106,7 +106,7 @@ class LooksUpTaxPercentageAction
 
 end
 
-class CalculatesOrderTaxAction
+class CalculatesOrderTax
   include ::LightService::Action
 
   executed do |context|
@@ -118,7 +118,7 @@ class CalculatesOrderTaxAction
 
 end
 
-class ProvidesFreeShippingAction
+class ProvidesFreeShipping
   include LightService::Action
 
   executed do |context|
