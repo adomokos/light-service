@@ -49,11 +49,11 @@ The order of these tasks matters: you can't calculate the order tax without the 
 Wouldn't it be nice to see this instead?
 
 ```ruby
-[
-  LooksUpTaxPercentage,
-  CalculatesOrderTax,
-  ChecksFreeShipping
-]
+(
+  LooksUpTaxPercentageAction,
+  CalculatesOrderTaxAction,
+  ChecksFreeShippingAction
+)
 ```
 
 This block of code should tell you the "story" of what's going on in this workflow.
@@ -69,12 +69,11 @@ class CalculatesTax
   include LightService::Organizer
 
   def self.for_order(order)
-    with(order: order).reduce \
-      [
+    with(:order => order).reduce(
         LooksUpTaxPercentageAction,
         CalculatesOrderTaxAction,
         ProvidesFreeShippingAction
-      ]
+      )
   end
 end
 
