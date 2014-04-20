@@ -18,7 +18,49 @@ module LightService
       end
     end
 
+    class ExpectantAction
+      include LightService::Action
+      expects :tea, :milk
+
+      executed do |context|
+        context[:color] = tea
+        context[:thickness] = milk
+      end
+    end
+
+    class PromisingAction
+      include LightService::Action
+      promises :milk_tea
+    end
+
     let(:context) { ::LightService::Context.make }
+
+    context "when the action expects keys in the context" do
+      context "keys exist" do
+        it "creates methods to access the values in the context" do
+          resulting_context = ExpectantAction.execute(
+            tea: "black",
+            milk: "full cream",
+          )
+          expect(resulting_context[:color]).to eq "black"
+          expect(resulting_context[:thickness]).to eq "full cream"
+        end
+      end
+
+      context "keys do not exist" do
+        it "raisees an error" do
+          expect {
+            ExpectantAction.execute(tea: "black")
+          }.to raise_error(ArgumentError, "expected :milk to be in the context")
+        end
+      end
+    end
+
+    describe ".promises_keys" do
+      it "returns the keys it promises to set in the context" do
+        expect(PromisingAction.promises_keys).to eq [:milk_tea]
+      end
+    end
 
     context "when the action context has failure" do
       it "returns immediately" do

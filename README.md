@@ -79,9 +79,9 @@ end
 
 class LooksUpTaxPercentageAction
   include LightService::Action
+  expects :order
 
   executed do |context|
-    order = context.fetch(:order)
     tax_ranges = TaxRange.for_region(order.region)
 
     next context if object_is_nil?(tax_ranges, context, 'The tax ranges were not found')
@@ -107,11 +107,9 @@ end
 
 class CalculatesOrderTaxAction
   include ::LightService::Action
+  expects :order, :tax_percentage
 
   executed do |context|
-    order = context.fetch(:order)
-    tax_percentage = context.fetch(:tax_percentage)
-
     order.tax = (order.total * (tax_percentage/100)).round(2)
   end
 
@@ -119,10 +117,9 @@ end
 
 class ProvidesFreeShippingAction
   include LightService::Action
+  expects :order
 
   executed do |context|
-    order = context.fetch(:order)
-
     if order.total_with_tax > 200
       order.provide_free_shipping!
     end
