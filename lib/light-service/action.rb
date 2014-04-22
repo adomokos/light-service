@@ -6,20 +6,14 @@ module LightService
     end
 
     module Macros
-      def expects(*args)
-        @expects_keys = args
-      end
+      attr_reader :expected_keys, :promised_keys
 
-      def expects_keys
-        @expects_keys ||= []
+      def expects(*args)
+        @expected_keys = args
       end
 
       def promises(*args)
-        @promises_keys = args
-      end
-
-      def promises_keys
-        @promises_keys ||= []
+        @promised_keys = args
       end
 
       def executed
@@ -27,7 +21,7 @@ module LightService
           action_context = create_action_context(context)
           return action_context if action_context.failure? || action_context.skip_all?
 
-          define_expectation_accessors action_context
+          define_expectation_accessors(action_context)
 
           yield(action_context)
 
@@ -46,14 +40,21 @@ module LightService
       end
 
       def define_expectation_accessors(context)
-        expects_keys.each do |x|
-          if context.has_key?(x)
-            define_singleton_method x do
-              context.fetch(x)
-            end
-          else
-            fail ArgumentError, "expected :#{x} to be in the context"
+        verify_expected_keys_are_in_context(context)
+
+        context.keys.map do |key|
+          define_singleton_method key do
+            context.fetch(key)
           end
+        end
+      end
+
+      def verify_expected_keys_are_in_context(context)
+        expected_keys = self.expected_keys || context.keys
+
+        not_found_keys = expected_keys - context.keys
+        unless not_found_keys.empty?
+          fail ArgumentError, "expected :#{not_found_keys} to be in the context"
         end
       end
 
