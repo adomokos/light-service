@@ -1,4 +1,7 @@
 module LightService
+  class ExpectedKeysNotInContextError < StandardError; end
+  class PromisedKeysNotInContextError < StandardError; end
+
   module Action
 
     def self.included(base_class)
@@ -25,7 +28,7 @@ module LightService
 
           yield(action_context)
 
-          action_context
+          verify_promised_keys_are_in_context(action_context)
         end
       end
 
@@ -54,8 +57,19 @@ module LightService
 
         not_found_keys = expected_keys - context.keys
         unless not_found_keys.empty?
-          fail ArgumentError, "expected :#{not_found_keys} to be in the context"
+          fail ExpectedKeysNotInContextError, "expected :#{not_found_keys} to be in the context"
         end
+      end
+
+      def verify_promised_keys_are_in_context(context)
+        promised_keys = self.promised_keys || context.keys
+
+        not_found_keys = promised_keys - context.keys
+        unless not_found_keys.empty?
+          fail PromisedKeysNotInContextError, "promised :#{not_found_keys} to be in the context"
+        end
+
+        context
       end
 
     end

@@ -27,7 +27,7 @@ module LightService
       it "raises an error" do
         expect {
           DummyActionForKeysToExpect.execute(:tea => "black")
-        }.to raise_error(ArgumentError, "expected :[:milk] to be in the context")
+        }.to raise_error(ExpectedKeysNotInContextError, "expected :[:milk] to be in the context")
       end
     end
   end

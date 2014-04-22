@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module LightService
-  describe ":expects macro" do
+  describe ":promises macro" do
     class DummyActionForKeysToPromise
       include LightService::Action
       expects :tea, :milk
@@ -12,9 +12,11 @@ module LightService
       end
     end
 
-    describe ".promises_keys" do
-      it "returns the keys it promises to set in the context" do
-        expect(DummyActionForKeysToPromise.promised_keys).to eq [:milk_tea]
+    context "when the promised key is not in the context" do
+      it "raises an ArgumentError" do
+        expect {
+          DummyActionForKeysToPromise.execute(:tea => "black", :milk => "full cream")
+        }.to raise_error(PromisedKeysNotInContextError, "promised :[:milk_tea] to be in the context")
       end
     end
   end
