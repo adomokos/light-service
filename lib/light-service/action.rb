@@ -53,20 +53,23 @@ module LightService
       end
 
       def verify_expected_keys_are_in_context(context)
-        expected_keys = self.expected_keys || context.keys
-
-        not_found_keys = expected_keys - context.keys
-        unless not_found_keys.empty?
+        verify_keys_are_in_context(self.expected_keys, context) do |not_found_keys|
           fail ExpectedKeysNotInContextError, "expected :#{not_found_keys} to be in the context"
         end
       end
 
       def verify_promised_keys_are_in_context(context)
-        promised_keys = self.promised_keys || context.keys
-
-        not_found_keys = promised_keys - context.keys
-        unless not_found_keys.empty?
+        verify_keys_are_in_context(self.promised_keys, context) do |not_found_keys|
           fail PromisedKeysNotInContextError, "promised :#{not_found_keys} to be in the context"
+        end
+      end
+
+      def verify_keys_are_in_context(keys, context)
+        keys ||= context.keys
+
+        not_found_keys = keys - context.keys
+        unless not_found_keys.empty?
+          yield not_found_keys
         end
 
         context
