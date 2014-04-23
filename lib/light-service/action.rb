@@ -21,14 +21,13 @@ module LightService
           action_context = create_action_context(context)
           return action_context if stop_processing?(action_context)
 
-          context_key_verifier = ContextKeyVerifier.new(action_context, self.expected_keys, self.promised_keys)
-          context_key_verifier.verify_expected_keys_are_in_context
+          ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, self.expected_keys)
 
           define_expectation_accessors(context)
 
           yield(action_context)
 
-          context_key_verifier.verify_promised_keys_are_in_context
+          ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, self.promised_keys)
         end
       end
 
