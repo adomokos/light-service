@@ -8,7 +8,7 @@ module LightService
       promises :milk_tea
 
       executed do |context|
-        context[:milk_tea] = "#{self.tea} - #{self.milk}"
+        context[:milk_tea] = "#{self.tea} - #{milk}"
       end
     end
 
@@ -25,9 +25,10 @@ module LightService
 
     context "when expected keys are not in the context" do
       it "raises an error" do
+        exception_error_text = "expected :milk to be in the context"
         expect {
           DummyActionForKeysToExpect.execute(:tea => "black")
-        }.to raise_error(ExpectedKeysNotInContextError, "expected :[:milk] to be in the context")
+        }.to raise_error(ExpectedKeysNotInContextError, exception_error_text)
       end
     end
   end

@@ -54,13 +54,13 @@ module LightService
 
       def verify_expected_keys_are_in_context(context)
         verify_keys_are_in_context(self.expected_keys, context) do |not_found_keys|
-          fail ExpectedKeysNotInContextError, "expected :#{not_found_keys} to be in the context"
+          fail ExpectedKeysNotInContextError, "expected #{format_keys(not_found_keys)} to be in the context"
         end
       end
 
       def verify_promised_keys_are_in_context(context)
         verify_keys_are_in_context(self.promised_keys, context) do |not_found_keys|
-          fail PromisedKeysNotInContextError, "promised :#{not_found_keys} to be in the context"
+          fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context"
         end
       end
 
@@ -73,6 +73,10 @@ module LightService
         end
 
         context
+      end
+
+      def format_keys(keys)
+        keys.map{|k| ":#{k}"}.join(', ')
       end
 
     end

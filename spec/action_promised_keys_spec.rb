@@ -5,7 +5,7 @@ module LightService
     class DummyActionForKeysToPromise
       include LightService::Action
       expects :tea, :milk
-      promises :milk_tea
+      promises :milk_tea, :something_else
 
       executed do |context|
         context[:some_tea] = "#{self.tea} - #{self.milk}"
@@ -14,9 +14,10 @@ module LightService
 
     context "when the promised key is not in the context" do
       it "raises an ArgumentError" do
+        exception_error_text = "promised :milk_tea, :something_else to be in the context"
         expect {
           DummyActionForKeysToPromise.execute(:tea => "black", :milk => "full cream")
-        }.to raise_error(PromisedKeysNotInContextError, "promised :[:milk_tea] to be in the context")
+        }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
     end
   end
