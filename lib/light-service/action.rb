@@ -1,7 +1,4 @@
 module LightService
-  class ExpectedKeysNotInContextError < StandardError; end
-  class PromisedKeysNotInContextError < StandardError; end
-
   module Action
 
     def self.included(base_class)
@@ -24,11 +21,14 @@ module LightService
           action_context = create_action_context(context)
           return action_context if action_context.failure? || action_context.skip_all?
 
-          define_expectation_accessors(action_context)
+          context_key_verifier = ContextKeyVerifier.new(action_context, self.expected_keys, self.promised_keys)
+          context_key_verifier.verify_expected_keys_are_in_context
+
+          define_expectation_accessors(context)
 
           yield(action_context)
 
-          verify_promised_keys_are_in_context(action_context)
+          context_key_verifier.verify_promised_keys_are_in_context
         end
       end
 
@@ -43,42 +43,12 @@ module LightService
       end
 
       def define_expectation_accessors(context)
-        verify_expected_keys_are_in_context(context)
-
         context.keys.map do |key|
           define_singleton_method key do
             context.fetch(key)
           end
         end
       end
-
-      def verify_expected_keys_are_in_context(context)
-        verify_keys_are_in_context(self.expected_keys, context) do |not_found_keys|
-          fail ExpectedKeysNotInContextError, "expected #{format_keys(not_found_keys)} to be in the context"
-        end
-      end
-
-      def verify_promised_keys_are_in_context(context)
-        verify_keys_are_in_context(self.promised_keys, context) do |not_found_keys|
-          fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context"
-        end
-      end
-
-      def verify_keys_are_in_context(keys, context)
-        keys ||= context.keys
-
-        not_found_keys = keys - context.keys
-        unless not_found_keys.empty?
-          yield not_found_keys
-        end
-
-        context
-      end
-
-      def format_keys(keys)
-        keys.map{|k| ":#{k}"}.join(', ')
-      end
-
     end
 
   end
