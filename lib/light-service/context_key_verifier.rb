@@ -20,6 +20,8 @@ class ContextKeyVerifier
     end
   end
 
+  private
+
   def verify_keys_are_in_context(keys)
     keys ||= @context.keys
 
