@@ -19,7 +19,7 @@ module LightService
       def executed
         define_singleton_method "execute" do |context = {}|
           action_context = create_action_context(context)
-          return action_context if action_context.failure? || action_context.skip_all?
+          return action_context if stop_processing?(action_context)
 
           context_key_verifier = ContextKeyVerifier.new(action_context, self.expected_keys, self.promised_keys)
           context_key_verifier.verify_expected_keys_are_in_context
@@ -48,6 +48,10 @@ module LightService
             context.fetch(key)
           end
         end
+      end
+
+      def stop_processing?(context)
+        context.failure? || context.skip_all?
       end
     end
 
