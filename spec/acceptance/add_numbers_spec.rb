@@ -14,9 +14,10 @@ end
 
 class AddsOneAction
   include LightService::Action
+  expects :number
 
   executed do |context|
-    number = context.fetch :number
+    number = self.number
     number += 1
 
     context[:number] = number
@@ -25,9 +26,10 @@ end
 
 class AddsTwoAction
   include LightService::Action
+  expects :number
 
   executed do |context|
-    number = context.fetch :number
+    number = self.number
     number += 2
 
     context[:number] = number
@@ -36,9 +38,10 @@ end
 
 class AddsThreeAction
   include LightService::Action
+  expects :number
 
   executed do |context|
-    number = context.fetch :number
+    number = self.number
     number += 3
 
     context[:number] = number
