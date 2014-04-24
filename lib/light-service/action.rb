@@ -34,7 +34,7 @@ module LightService
       private
 
       def create_action_context(context)
-        if context.respond_to? :failure?
+        if context.is_a? ::LightService::Context
           return context
         end
 
