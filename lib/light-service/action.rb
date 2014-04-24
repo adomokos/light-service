@@ -23,7 +23,7 @@ module LightService
 
           ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, self.expected_keys)
 
-          define_expectation_readers(context)
+          define_expectations_readers(context)
           define_promises_accessors(context)
 
           yield(action_context)
@@ -43,7 +43,7 @@ module LightService
         LightService::Context.make(context)
       end
 
-      def define_expectation_readers(context)
+      def define_expectations_readers(context)
         context.keys.map do |key|
           define_singleton_method key do
             context.fetch(key)
