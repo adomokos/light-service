@@ -32,7 +32,7 @@ module LightService
           self.milk_tea += " hello"
         end
       end
-      it "it sets in the context if it was set with not nil" do
+      it "sets in the context if it was set with not nil" do
         result_context = DummyActionSetsItemInContext.execute(:tea => "black",
                                                               :milk => "full cream")
         expect(result_context).to be_success
@@ -48,7 +48,7 @@ module LightService
           self.milk_tea = nil
         end
       end
-      it "it sets in the context if it was set with nil" do
+      it "sets in the context if it was set with nil" do
         result_context = DummyActionNilNotSetInContext.execute(:tea => "black",
                                                               :milk => "full cream")
         expect(result_context).to be_success
