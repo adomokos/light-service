@@ -20,5 +20,41 @@ module LightService
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
     end
+
+    context "when the promised key is in the context" do
+      class DummyActionSetsItemInContext
+        include LightService::Action
+        expects :tea, :milk
+        promises :milk_tea
+
+        executed do |context|
+          self.milk_tea = "#{self.tea} - #{self.milk}"
+          self.milk_tea += " hello"
+        end
+      end
+      it "it sets in the context if it was set with not nil" do
+        result_context = DummyActionSetsItemInContext.execute(:tea => "black",
+                                                              :milk => "full cream")
+        expect(result_context).to be_success
+        expect(result_context[:milk_tea]).to eq("black - full cream hello")
+      end
+
+      class DummyActionNilNotSetInContext
+        include LightService::Action
+        expects :tea, :milk
+        promises :milk_tea
+
+        executed do |context|
+          self.milk_tea = nil
+        end
+      end
+      it "it sets in the context if it was set with nil" do
+        result_context = DummyActionNilNotSetInContext.execute(:tea => "black",
+                                                              :milk => "full cream")
+        expect(result_context).to be_success
+        expect(result_context[:milk_tea]).to be_nil
+      end
+
+    end
   end
 end

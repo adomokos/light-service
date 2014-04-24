@@ -23,10 +23,12 @@ module LightService
 
           ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, self.expected_keys)
 
-          define_expectation_accessors(context)
+          define_expectation_readers(context)
+          define_promises_accessors(context)
 
           yield(action_context)
 
+          set_promises_in_context(action_context)
           ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, self.promised_keys)
         end
       end
@@ -41,7 +43,7 @@ module LightService
         LightService::Context.make(context)
       end
 
-      def define_expectation_accessors(context)
+      def define_expectation_readers(context)
         context.keys.map do |key|
           define_singleton_method key do
             context.fetch(key)
@@ -49,9 +51,28 @@ module LightService
         end
       end
 
+      def define_promises_accessors(context)
+        return unless promised_keys
+        promised_keys.each do |key|
+          instance_variable_set("@#{key}", VALUE_NOT_SET)
+          self.class.send(:attr_accessor, key)
+        end
+      end
+
+      def set_promises_in_context(context)
+        return unless promised_keys
+        promised_keys.map do |key|
+          value = instance_variable_get("@#{key}")
+          next if value == VALUE_NOT_SET
+          context[key] = value
+        end
+      end
+
       def stop_processing?(context)
         context.failure? || context.skip_all?
       end
+
+      VALUE_NOT_SET = "___value_was_no_set___"
     end
 
   end
