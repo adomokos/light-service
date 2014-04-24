@@ -61,7 +61,7 @@ module LightService
 
       def set_promises_in_context(context)
         return unless promised_keys
-        promised_keys.map do |key|
+        promised_keys.each do |key|
           value = instance_variable_get("@#{key}")
           next if value == VALUE_NOT_SET
           context[key] = value
