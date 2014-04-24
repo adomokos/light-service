@@ -22,5 +22,4 @@ class LooksUpTaxPercentageAction
 
     false
   end
-
 end
