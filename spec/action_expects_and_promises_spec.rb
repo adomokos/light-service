@@ -38,7 +38,7 @@ module LightService
       end
     end
 
-    describe "expected keys have a reader" do
+    describe "expected keys" do
       class FooAction
         include LightService::Action
         expects :baz
@@ -56,7 +56,7 @@ module LightService
       end
     end
 
-    describe "promised keys have an accessor" do
+    describe "promised keys" do
       class FooAction
         include LightService::Action
         expects :baz
@@ -67,7 +67,7 @@ module LightService
           self.bar = self.baz + 2
         end
       end
-      it "puts it in the context" do
+      it "puts the value through the accessor into the context" do
         result = FooAction.execute(:baz => 3)
         expect(result).to be_success
         expect(result[:bar]).to eq(5)
