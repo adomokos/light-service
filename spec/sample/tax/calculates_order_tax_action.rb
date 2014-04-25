@@ -5,5 +5,4 @@ class CalculatesOrderTaxAction
   executed do |context|
     order.tax = (order.total * (tax_percentage/100)).round(2)
   end
-
 end
