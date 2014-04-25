@@ -6,8 +6,6 @@ module LightService
     end
 
     module Macros
-      attr_reader :expected_keys, :promised_keys
-
       def expects(*args)
         @expected_keys = args
       end
@@ -21,7 +19,7 @@ module LightService
           action_context = create_action_context(context)
           return action_context if stop_processing?(action_context)
 
-          ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, self.expected_keys)
+          ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, @expected_keys)
 
           define_expectations_readers(context)
           define_promises_accessors(context)
@@ -29,7 +27,7 @@ module LightService
           yield(action_context)
 
           set_promises_in_context(action_context)
-          ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, self.promised_keys)
+          ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, @promised_keys)
         end
       end
 
@@ -52,16 +50,16 @@ module LightService
       end
 
       def define_promises_accessors(context)
-        return unless promised_keys
-        promised_keys.each do |key|
+        return unless @promised_keys
+        @promised_keys.each do |key|
           instance_variable_set("@#{key}", VALUE_NOT_SET)
           self.class.send(:attr_accessor, key)
         end
       end
 
       def set_promises_in_context(context)
-        return unless promised_keys
-        promised_keys.each do |key|
+        return unless @promised_keys
+        @promised_keys.each do |key|
           value = instance_variable_get("@#{key}")
           next if value == VALUE_NOT_SET
           context[key] = value
