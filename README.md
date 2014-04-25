@@ -148,7 +148,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 
 ## Expects and Promises
 Let me introduce to you the `expects` and `promises` macros. Think of these as a rule set of inputs/outputs for the action.
-`expects` describes what keys it needs in order to execute and `promises` makes sure the keys are in the context after the
+`expects` describes what keys it needs to execute and `promises` makes sure the keys are in the context after the
 action is reduced. If either of them are violated, a custom exception is thrown.
 
 This is how it's used:
@@ -167,7 +167,7 @@ class FooAction
 end
 ```
 
-The `expects` macro does a bit more for you: it pulls the value with the expected key from the context and 
+The `expects` macro does a bit more for you: it pulls the value with the expected key from the context, and
 makes it available to you through a reader. You can refactor the action like this:
 
 ```ruby
@@ -183,8 +183,8 @@ class FooAction
 end
 ```
 
-The `promises` macro will not only check if the context has the keys you promised, it also sets it for you in the context if
-you use the accessor with the same name you used with the promise. The code above can be further simplified:
+The `promises` macro will not only check if the context has the promised keys, it also sets it for you in the context if
+you use the accessor with the same name. The code above can be further simplified:
 
 ```ruby
 class FooAction
