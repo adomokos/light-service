@@ -70,7 +70,7 @@ module LightService
         context.failure? || context.skip_all?
       end
 
-      VALUE_NOT_SET = "___value_was_no_set___"
+      VALUE_NOT_SET = "___value_was_not_set___"
     end
 
   end
