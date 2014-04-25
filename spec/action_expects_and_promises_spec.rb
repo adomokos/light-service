@@ -73,6 +73,5 @@ module LightService
         expect(result[:bar]).to eq(5)
       end
     end
-
   end
 end
