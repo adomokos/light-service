@@ -42,7 +42,7 @@ module LightService
       end
 
       def define_expectations_readers(context)
-        context.keys.map do |key|
+        context.keys.each do |key|
           define_singleton_method key do
             context.fetch(key)
           end
