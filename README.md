@@ -146,6 +146,60 @@ end
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
+## Expects and Promises
+Let me introduce to you the `expects` and `promises` macros. Think of these as a rule set of inputs/outputs for the action.
+`expects` describes what keys it needs in order to execute and `promises` makes sure the keys are in the context after the
+action is reduced. If either of them are violated, a custom exception is thrown.
+
+When you look at action like this:
+```ruby
+class FooAction
+  include LightService::Action
+  expects :baz
+  promises :bar
+
+  executed do |context|
+    baz = context.fetch :baz
+
+    bar = baz + 2
+    context[:bar] = bar
+  end
+end
+```
+
+The `expects` macro does a bit more for you: it pulls the value with the expected key from the context and 
+makes it available to you through a reader. You can refactor the action like this:
+
+```ruby
+class FooAction
+  include LightService::Action
+  expects :baz
+  promises :bar
+
+  executed do |context|
+    bar = self.baz + 2
+    context[:bar] = bar
+  end
+end
+```
+
+The `promises` macro will not only check if the context has the keys you promised, it also sets it for you in the context if
+you use the accessor with the same name you used with the promise. The code above can be further simplified:
+
+```ruby
+class FooAction
+  include LightService::Action
+  expects :baz
+  promises :bar
+
+  executed do |context|
+    self.bar = self.baz + 2
+  end
+end
+```
+
+Take a look at this spec to see the refactoring in action.
+
 ## Requirements
 
 This gem requires ruby 1.9.x
