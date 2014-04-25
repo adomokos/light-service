@@ -151,7 +151,7 @@ Let me introduce to you the `expects` and `promises` macros. Think of these as a
 `expects` describes what keys it needs in order to execute and `promises` makes sure the keys are in the context after the
 action is reduced. If either of them are violated, a custom exception is thrown.
 
-When you look at action like this:
+This is how it's used:
 ```ruby
 class FooAction
   include LightService::Action
