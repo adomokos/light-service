@@ -198,7 +198,7 @@ class FooAction
 end
 ```
 
-Take a look at this spec to see the refactoring in action.
+Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
 ## Requirements
 
