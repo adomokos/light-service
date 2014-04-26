@@ -79,5 +79,19 @@ module LightService
       expect(context).to be_skip_all
     end
 
+    context "stopping additional processing in an action" do
+      let(:context) { Context.make }
+
+      it "flags processing to stop on failure" do
+        context.fail!("on purpose")
+        expect(context.stop_processing?).to be_true
+      end
+
+      it "flags processing to stop when remaining actions should be skipped" do
+        context.skip_all!
+        expect(context.stop_processing?).to be_true
+      end
+    end
+
   end
 end

@@ -70,5 +70,8 @@ module LightService
       @skip_all = true
     end
 
+    def stop_processing?
+      failure? || skip_all?
+    end
   end
 end
