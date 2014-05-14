@@ -21,7 +21,7 @@ module LightService
     end
 
     context "when expected keys are not in context" do
-      class FooAction
+      class FooNoExpectedKeyAction
         include LightService::Action
         expects :baz
 
@@ -34,12 +34,13 @@ module LightService
       end
       it "throws an ExpectedKeysNotInContextError" do
         # FooAction invoked with nothing in the context
-        expect { FooAction.execute }.to raise_error(ExpectedKeysNotInContextError)
+        expect { FooNoExpectedKeyAction.execute }.to \
+          raise_error(ExpectedKeysNotInContextError)
       end
     end
 
     describe "expected keys" do
-      class FooAction
+      class FooWithReaderAction
         include LightService::Action
         expects :baz
 
@@ -50,14 +51,31 @@ module LightService
         end
       end
       it "can be accessed through a reader" do
-        result = FooAction.execute(:baz => 3)
+        result = FooWithReaderAction.execute(:baz => 3)
         expect(result).to be_success
         expect(result[:bar]).to eq(5)
       end
     end
 
+    context "when promised keys are not in context" do
+      class FooNoPromisedKeyAction
+        include LightService::Action
+        expects :baz
+        promises :bar
+
+        executed do |context|
+          # I am not adding anything to the context
+        end
+      end
+      it "throws a PromisedKeysNotInContextError" do
+        # FooAction invoked with nothing placed in the context
+        expect { FooNoPromisedKeyAction.execute(:baz => 3) }.to \
+          raise_error(PromisedKeysNotInContextError)
+      end
+    end
+
     describe "promised keys" do
-      class FooAction
+      class FooWithExpectsAndPromisesAction
         include LightService::Action
         expects :baz
         promises :bar
@@ -68,7 +86,7 @@ module LightService
         end
       end
       it "puts the value through the accessor into the context" do
-        result = FooAction.execute(:baz => 3)
+        result = FooWithExpectsAndPromisesAction.execute(:baz => 3)
         expect(result).to be_success
         expect(result[:bar]).to eq(5)
       end
