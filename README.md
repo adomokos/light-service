@@ -236,6 +236,9 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 Huge thanks to the [contributors](https://github.com/adomokos/light-service/graphs/contributors)!
 
 ## Release Notes
+### 0.3.0
+* Adding the `expects` and `promises` macros - Read more about it in [this blog post](http://www.adomokos.com/2014/05/expects-and-promises-in-lightservice.html)
+
 ### 0.2.2
 * Adding the gem version icon to README
 * Actions can be invoked now [without arguments](https://github.com/adomokos/light-service/commit/244d5f03b9dbf61c97c1fdb865e6587f9aea177d), this makes it super easy to play with an action in the command line
