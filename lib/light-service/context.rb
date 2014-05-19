@@ -5,10 +5,10 @@ module LightService
   end
 
   class Context < Hash
-    attr_accessor :outcome, :message
+    attr_accessor :outcome, :message, :error_code
 
-    def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='')
-      @outcome, @message = outcome, message
+    def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='', error_code=nil)
+      @outcome, @message, @error_code = outcome, message, error_code
       context.to_hash.each {|k,v| self[k] = v}
       self
     end
@@ -55,13 +55,14 @@ module LightService
       @outcome = ::LightService::Outcomes::SUCCESS
     end
 
-    def set_failure!(message)
+    def set_failure!(message, error_code)
       warn '`set_failure!` is DEPRECATED: please use `fail!` instead'
-      fail!(message)
+      fail!(message, error_code)
     end
 
-    def fail!(message=nil)
+    def fail!(message=nil, error_code=nil)
       @message = message
+      @error_code = error_code
       @outcome = ::LightService::Outcomes::FAILURE
     end
 
