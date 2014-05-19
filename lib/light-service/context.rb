@@ -55,14 +55,18 @@ module LightService
       @outcome = ::LightService::Outcomes::SUCCESS
     end
 
-    def set_failure!(message, error_code)
+    def set_failure!(message)
       warn '`set_failure!` is DEPRECATED: please use `fail!` instead'
-      fail!(message, error_code)
+      fail!(message)
     end
 
-    def fail!(message=nil, error_code=nil)
-      @message = message
-      @error_code = error_code
+    def fail!(options=nil)
+      if options.is_a? Hash
+        @message = options[:message]
+        @error_code = options[:error_code]
+      else
+        @message = options
+      end
       @outcome = ::LightService::Outcomes::FAILURE
     end
 
