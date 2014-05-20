@@ -33,12 +33,12 @@ module LightService
 
     it "can be asked for success?" do
       context = Context.new({}, ::LightService::Outcomes::SUCCESS)
-      expect(context.success?).to be_true
+      expect(context).to be_success
     end
 
     it "can be asked for failure?" do
       context = Context.new({}, ::LightService::Outcomes::FAILURE)
-      expect(context.failure?).to be_true
+      expect(context).to be_failure
     end
 
     it "can be asked for skip_all?" do
@@ -83,7 +83,7 @@ module LightService
       context = Context.make
       context.fail!(:error_code => 10005)
       expect(context).to be_failure
-      expect(context.error_code).to eq(10005) 
+      expect(context.error_code).to eq(10005)
     end
 
     it "can set a flag to skip all subsequent actions" do
