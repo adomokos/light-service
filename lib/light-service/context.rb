@@ -19,7 +19,7 @@ module LightService
       end
 
       return context if context.is_a?(Context)
-      self.new(context, ::LightService::Outcomes::SUCCESS, '')
+      self.new(context)
     end
 
     def add_to_context(values)
