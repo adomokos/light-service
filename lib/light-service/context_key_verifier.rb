@@ -30,7 +30,7 @@ module LightService
       end
 
       def format_keys(keys)
-        keys.map{|k| ":#{k}"}.join(', ')
+        keys.map { |k| ":#{k}"}.join(', ')
       end
     end
   end
