@@ -60,17 +60,30 @@ module LightService
       expect(context.message).to be_nil
     end
 
-    it "can be pushed into a FAILURE state" do
-      context = Context.make
-      context.fail!("a sad end")
-      expect(context).to be_failure
-    end
-
     it "can be pushed into a FAILURE state without a message" do
       context = Context.make
       context.fail!
       expect(context).to be_failure
       expect(context.message).to be_nil
+    end
+
+    it "can be pushed into a FAILURE state without an options hash" do
+      context = Context.make
+      context.fail!("a sad end")
+      expect(context).to be_failure
+    end
+
+    it "can be pushed into a FAILURE state with a message in an options hash" do
+      context = Context.make
+      context.fail!(:message => "a sad end")
+      expect(context).to be_failure
+    end
+
+    it "can be pushed into a FAILURE state with an error code in an options hash" do
+      context = Context.make
+      context.fail!(:error_code => 10005)
+      expect(context).to be_failure
+      expect(context.error_code).to eq(10005) 
     end
 
     it "can set a flag to skip all subsequent actions" do

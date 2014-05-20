@@ -5,10 +5,10 @@ module LightService
   end
 
   class Context < Hash
-    attr_accessor :outcome, :message
+    attr_accessor :outcome, :message, :error_code
 
-    def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='')
-      @outcome, @message = outcome, message
+    def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='', error_code=nil)
+      @outcome, @message, @error_code = outcome, message, error_code
       context.to_hash.each {|k,v| self[k] = v}
       self
     end
@@ -60,8 +60,13 @@ module LightService
       fail!(message)
     end
 
-    def fail!(message=nil)
-      @message = message
+    def fail!(options=nil)
+      if options.is_a? Hash
+        @message = options[:message]
+        @error_code = options[:error_code]
+      else
+        @message = options
+      end
       @outcome = ::LightService::Outcomes::FAILURE
     end
 
