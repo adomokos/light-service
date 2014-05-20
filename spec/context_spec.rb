@@ -13,6 +13,7 @@ module LightService
       context "with a hash" do
         it "has the hash values" do
           context = Context.make(:one => 1)
+
           expect(context[:one]).to eq(1)
         end
       end
@@ -20,6 +21,7 @@ module LightService
       context "with FAILURE" do
         it "is failed" do
           context = Context.new({}, ::LightService::Outcomes::FAILURE, '')
+
           expect(context).to be_failure
         end
       end
@@ -33,29 +35,34 @@ module LightService
 
     it "can be asked for success?" do
       context = Context.new({}, ::LightService::Outcomes::SUCCESS)
+
       expect(context).to be_success
     end
 
     it "can be asked for failure?" do
       context = Context.new({}, ::LightService::Outcomes::FAILURE)
+
       expect(context).to be_failure
     end
 
     it "can be asked for skip_all?" do
       context = Context.make
       context.skip_all!
+
       expect(context.skip_all?).to be_true
     end
 
     it "can be pushed into a SUCCESS state" do
       context = Context.make
       context.succeed!("a happy end")
+
       expect(context).to be_success
     end
 
     it "can be pushed into a SUCCESS state without a message" do
       context = Context.make
       context.succeed!
+
       expect(context).to be_success
       expect(context.message).to be_nil
     end
@@ -63,25 +70,30 @@ module LightService
     it "can be pushed into a FAILURE state without a message" do
       context = Context.make
       context.fail!
+
       expect(context).to be_failure
       expect(context.message).to be_nil
     end
 
-    it "can be pushed into a FAILURE state without an options hash" do
+    it "can be pushed into a FAILURE state with a message" do
       context = Context.make
       context.fail!("a sad end")
+
       expect(context).to be_failure
     end
 
     it "can be pushed into a FAILURE state with a message in an options hash" do
       context = Context.make
       context.fail!(:message => "a sad end")
+
       expect(context).to be_failure
+      expect(context.error_code).to be_nil
     end
 
     it "can be pushed into a FAILURE state with an error code in an options hash" do
       context = Context.make
       context.fail!(:error_code => 10005)
+
       expect(context).to be_failure
       expect(context.error_code).to eq(10005)
     end
@@ -89,6 +101,7 @@ module LightService
     it "can set a flag to skip all subsequent actions" do
       context = Context.make
       context.skip_all!
+
       expect(context).to be_skip_all
     end
 
