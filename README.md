@@ -200,6 +200,43 @@ end
 
 Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
+## Error Codes
+
+You can do a more structured error handling by using error codes in the context.
+If something goes wrong in your actions, you can fail the process by setting the context to failure:
+
+```ruby
+class FooAction
+  include LightService::Action
+
+  executed do |context|
+    context.fail!("I don't like what happened here.")
+  end
+end
+```
+
+However, you might need to handle the errors coming from your action pipeline differently.
+Using an error code can help you check what type of expected error occurred from the organizer 
+or action invocation point.
+
+```ruby
+class FooAction
+  include LightService::Action
+
+  executed do |context|
+    unless (service_call.success?)
+      context.fail!("Service call failed", 1001)
+    end
+
+    # Do something else
+
+    unless (entity.save)
+      context.fail!("Saving the entity failed", 2001)
+    end
+  end
+end
+```
+
 ## Requirements
 
 This gem requires ruby 1.9.x
