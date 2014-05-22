@@ -84,17 +84,19 @@ module LightService
 
     it "can be pushed into a FAILURE state with a message in an options hash" do
       context = Context.make
-      context.fail!(:message => "a sad end")
+      context.fail!("a sad end")
 
       expect(context).to be_failure
+      expect(context.message).to eq("a sad end")
       expect(context.error_code).to be_nil
     end
 
     it "can be pushed into a FAILURE state with an error code in an options hash" do
       context = Context.make
-      context.fail!(:error_code => 10005)
+      context.fail!("a sad end", 10005)
 
       expect(context).to be_failure
+      expect(context.message).to eq("a sad end")
       expect(context.error_code).to eq(10005)
     end
 

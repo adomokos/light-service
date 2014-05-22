@@ -202,8 +202,8 @@ Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the 
 
 ## Error Codes
 
-You can do a more structured error handling by using error codes in the context.
-If something goes wrong in your actions, you can fail the process by setting the context to failure:
+You can add some more structure to your error handling by taking advantage of error codes in the context.
+Normally, when something goes wrong in your actions, you fail the process by setting the context to failure:
 
 ```ruby
 class FooAction
@@ -216,8 +216,8 @@ end
 ```
 
 However, you might need to handle the errors coming from your action pipeline differently.
-Using an error code can help you check what type of expected error occurred from the organizer 
-or action invocation point.
+Using an error code can help you check what type of expected error occurred in the organizer
+or in the actions.
 
 ```ruby
 class FooAction
@@ -273,6 +273,8 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 Huge thanks to the [contributors](https://github.com/adomokos/light-service/graphs/contributors)!
 
 ## Release Notes
+### 0.3.2
+* Fixing documentation and using separate arguments instead of a hash when setting the context to failure
 ### 0.3.1
 * Adding [error codes](https://github.com/adomokos/light-service#error-codes) to the context
 

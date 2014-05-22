@@ -60,13 +60,9 @@ module LightService
       fail!(message)
     end
 
-    def fail!(options=nil)
-      if options.is_a? Hash
-        @message = options[:message]
-        @error_code = options[:error_code]
-      else
-        @message = options
-      end
+    def fail!(message=nil, error_code=nil)
+      @message = message
+      @error_code = error_code
       @outcome = ::LightService::Outcomes::FAILURE
     end
 
