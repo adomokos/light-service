@@ -45,8 +45,8 @@ module LightService
         expects :baz
 
         executed do |context|
-          # Notice how I use `self.baz` here
-          bar = self.baz + 2
+          # Notice how I use `context.baz` here
+          bar = context.baz + 2
           context[:bar] = bar
         end
       end
@@ -81,8 +81,8 @@ module LightService
         promises :bar
 
         executed do |context|
-          # Notice how I use `self.bar` here
-          self.bar = self.baz + 2
+          # Notice how I use `context.bar` here
+          context.bar = context.baz + 2
         end
       end
       it "puts the value through the accessor into the context" do
