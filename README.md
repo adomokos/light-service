@@ -83,14 +83,14 @@ class LooksUpTaxPercentageAction
   promises :tax_percentage
 
   executed do |context|
-    tax_ranges = TaxRange.for_region(self.order.region)
-    self.tax_percentage = 0
+    tax_ranges = TaxRange.for_region(context.order.region)
+    context.tax_percentage = 0
 
     next context if object_is_nil?(tax_ranges, context, 'The tax ranges were not found')
 
-    self.tax_percentage = tax_ranges.for_total(self.order.total)
+    context.tax_percentage = tax_ranges.for_total(context.order.total)
 
-    next context if object_is_nil?(self.tax_percentage, context, 'The tax percentage was not found')
+    next context if object_is_nil?(context.tax_percentage, context, 'The tax percentage was not found')
   end
 
   def self.object_is_nil?(object, context, message)
@@ -177,7 +177,7 @@ class FooAction
   promises :bar
 
   executed do |context|
-    bar = self.baz + 2
+    bar = context.baz + 2
     context[:bar] = bar
   end
 end
@@ -193,7 +193,7 @@ class FooAction
   promises :bar
 
   executed do |context|
-    self.bar = self.baz + 2
+    context.bar = context.baz + 2
   end
 end
 ```
@@ -257,7 +257,7 @@ Or install it yourself as:
 
 ## Usage
 
-Based on the refactoring example above, just create an organizer object that calls the 
+Based on the refactoring example above, just create an organizer object that calls the
 actions in order and write code for the actions. That's it.
 
 For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki).
