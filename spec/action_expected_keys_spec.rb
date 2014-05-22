@@ -8,7 +8,7 @@ module LightService
       promises :milk_tea
 
       executed do |context|
-        context[:milk_tea] = "#{self.tea} - #{milk}"
+        context.milk_tea = "#{context.tea} - #{context.milk}"
       end
     end
 

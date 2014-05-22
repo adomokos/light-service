@@ -74,5 +74,13 @@ module LightService
     def stop_processing?
       failure? || skip_all?
     end
+
+    def define_accessor_methods_for_keys(keys)
+      return if keys.nil?
+      keys.each do |key|
+        define_singleton_method("#{key}") { self.fetch(key) }
+        define_singleton_method("#{key}=") { |value| self[key] = value }
+      end
+    end
   end
 end

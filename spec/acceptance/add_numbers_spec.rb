@@ -18,10 +18,7 @@ class AddsOneAction
   promises :number
 
   executed do |context|
-    number = self.number
-    number += 1
-
-    self.number = number
+    context.number += 1
   end
 end
 
@@ -31,10 +28,7 @@ class AddsTwoAction
   promises :number
 
   executed do |context|
-    number = self.number
-    number += 2
-
-    self.number = number
+    context.number += 2
   end
 end
 
@@ -44,10 +38,7 @@ class AddsThreeAction
   promises :number
 
   executed do |context|
-    number = self.number
-    number += 3
-
-    self.number = number
+    context.number += 3
   end
 end
 

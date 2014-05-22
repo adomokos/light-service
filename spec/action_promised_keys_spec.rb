@@ -8,7 +8,7 @@ module LightService
       promises :milk_tea, :something_else
 
       executed do |context|
-        context[:some_tea] = "#{self.tea} - #{self.milk}"
+        context[:some_tea] = "#{context.tea} - #{context.milk}"
       end
     end
 
@@ -28,8 +28,8 @@ module LightService
         promises :milk_tea
 
         executed do |context|
-          self.milk_tea = "#{self.tea} - #{self.milk}"
-          self.milk_tea += " hello"
+          context.milk_tea = "#{context.tea} - #{context.milk}"
+          context.milk_tea += " hello"
         end
       end
       it "sets in the context if it was set with not nil" do
@@ -45,7 +45,7 @@ module LightService
         promises :milk_tea
 
         executed do |context|
-          self.milk_tea = nil
+          context.milk_tea = nil
         end
       end
       it "sets in the context if it was set with nil" do
