@@ -273,8 +273,12 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 Huge thanks to the [contributors](https://github.com/adomokos/light-service/graphs/contributors)!
 
 ## Release Notes
+### 0.3.3
+* Switching the promises and expects keys accessors from Action to Context
+
 ### 0.3.2
-* Fixing documentation and using separate arguments instead of a hash when setting the context to failure
+* Fixing documentation and using separate arguments instead of a hash when setting the context to failure with error code
+
 ### 0.3.1
 * Adding [error codes](https://github.com/adomokos/light-service#error-codes) to the context
 
