@@ -14,6 +14,10 @@ describe LightService::Organizer do
     def self.do_something_with_no_actions(action_arguments)
       with(action_arguments).reduce
     end
+
+    def self.do_something_with_no_starting_context
+      reduce([AnAction, AnotherAction])
+    end
   end
 
   let(:context) { ::LightService::Context.make(user: user) }
@@ -54,7 +58,21 @@ describe LightService::Organizer do
   context "when no Actions are specified" do
     it "throws a Runtime error" do
       expect { AnOrganizer.do_something_with_no_actions(context) }.to \
-              raise_error RuntimeError, "No action(s) were provided"
+        raise_error RuntimeError, "No action(s) were provided"
+    end
+  end
+
+  context "when no starting context is specified" do
+    it "does not throw an error" do
+      AnAction.should_receive(:execute).
+        with({}).
+        and_return(context)
+      AnotherAction.should_receive(:execute).
+        with(context).
+        and_return(context)
+
+      expect { AnOrganizer.do_something_with_no_starting_context }.
+        not_to raise_error
     end
   end
 end
