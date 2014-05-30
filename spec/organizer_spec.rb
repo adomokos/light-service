@@ -21,10 +21,10 @@ describe LightService::Organizer do
 
   context "when #with is called with hash" do
     before do
-      AnAction.should_receive(:execute) \
+      expect(AnAction).to receive(:execute) \
               .with(context) \
               .and_return context
-      AnotherAction.should_receive(:execute) \
+      expect(AnotherAction).to receive(:execute) \
               .with(context) \
               .and_return context
     end
@@ -37,10 +37,10 @@ describe LightService::Organizer do
 
   context "when #with is called with Context" do
     before do
-      AnAction.should_receive(:execute) \
+      expect(AnAction).to receive(:execute) \
               .with(context) \
               .and_return context
-      AnotherAction.should_receive(:execute) \
+      expect(AnotherAction).to receive(:execute) \
               .with(context) \
               .and_return context
     end

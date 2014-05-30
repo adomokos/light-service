@@ -9,16 +9,16 @@ describe CalculatesTax do
   let(:context) { double('context') }
 
   it "calls the actions in order" do
-    ::LightService::Context.stub(:make) \
+    allow(::LightService::Context).to receive(:make) \
                             .with(:order => order) \
                             .and_return context
 
-    LooksUpTaxPercentageAction.stub(:execute).with(context).and_return context
-    CalculatesOrderTaxAction.stub(:execute).with(context).and_return context
-    ProvidesFreeShippingAction.stub(:execute).with(context).and_return context
+    allow(LooksUpTaxPercentageAction).to receive(:execute).with(context).and_return context
+    allow(CalculatesOrderTaxAction).to receive(:execute).with(context).and_return context
+    allow(ProvidesFreeShippingAction).to receive(:execute).with(context).and_return context
 
     result = CalculatesTax.for_order(order)
 
-    result.should eq context
+    expect(result).to eq context
   end
 end

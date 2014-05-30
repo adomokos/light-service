@@ -19,35 +19,35 @@ describe LooksUpTaxPercentageAction do
 
   context "when the tax_ranges were not found" do
     it "sets the context to failure" do
-      TaxRange.stub(:for_region).with(region).and_return nil
+      allow(TaxRange).to receive(:for_region).with(region).and_return nil
       LooksUpTaxPercentageAction.execute(context)
 
-      context.should be_failure
-      context.message.should eq "The tax ranges were not found"
+      expect(context).to be_failure
+      expect(context.message).to eq "The tax ranges were not found"
     end
   end
 
   context "when the tax_percentage is not found" do
     it "sets the context to failure" do
-      TaxRange.stub(:for_region).with(region).and_return tax_ranges
+      allow(TaxRange).to receive(:for_region).with(region).and_return tax_ranges
       tax_ranges.stub(:for_total => nil)
 
       LooksUpTaxPercentageAction.execute(context)
 
-      context.should be_failure
-      context.message.should eq "The tax percentage was not found"
+      expect(context).to be_failure
+      expect(context.message).to eq "The tax percentage was not found"
     end
   end
 
   context "when the tax_percentage is found" do
     it "sets the tax_percentage in context" do
-      TaxRange.stub(:for_region).with(region).and_return tax_ranges
+      allow(TaxRange).to receive(:for_region).with(region).and_return tax_ranges
       tax_ranges.stub(:for_total => 25)
 
       LooksUpTaxPercentageAction.execute(context)
 
-      context.should be_success
-      context.fetch(:tax_percentage).should eq 25
+      expect(context).to be_success
+      expect(context.fetch(:tax_percentage)).to eq 25
     end
   end
 end
