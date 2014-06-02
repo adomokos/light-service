@@ -10,7 +10,7 @@ describe CalculatesOrderTaxAction do
 
   it "calculates the tax based on the tax percentage" do
     order.stub(:total => 100)
-    order.should_receive(:tax=).with 7.2
+    expect(order).to receive(:tax=).with 7.2
     CalculatesOrderTaxAction.execute(context)
   end
 end

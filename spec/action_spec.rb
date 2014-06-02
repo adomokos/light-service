@@ -31,7 +31,7 @@ module LightService
 
         DummyAction.execute(context)
 
-        context.to_hash.keys.should be_empty
+        expect(context.to_hash.keys).to be_empty
       end
     end
 
@@ -39,7 +39,7 @@ module LightService
       it "executes the block" do
         DummyAction.execute(context)
 
-        context.to_hash.keys.should eq [:test_key]
+        expect(context.to_hash.keys).to eq [:test_key]
       end
     end
 
@@ -49,7 +49,7 @@ module LightService
 
         DummyAction.execute(context)
 
-        context.to_hash.keys.should be_empty
+        expect(context.to_hash.keys).to be_empty
       end
 
       it "does not execute skipped actions" do
@@ -59,14 +59,14 @@ module LightService
 
         SkippedAction.execute(context)
 
-        context.to_hash.should eq ({:test_key => "test_value"})
+        expect(context.to_hash).to eq ({:test_key => "test_value"})
       end
     end
 
     it "returns the context" do
       result = DummyAction.execute(context)
 
-      result.to_hash.should eq ({:test_key => "test_value"})
+      expect(result.to_hash).to eq ({:test_key => "test_value"})
     end
 
     context "when invoked with hash" do
