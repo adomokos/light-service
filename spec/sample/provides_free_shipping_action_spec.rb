@@ -10,7 +10,7 @@ describe ProvidesFreeShippingAction do
 
   context "when the order total with tax is > 200" do
     specify "order gets free shipping" do
-      order.stub(:total_with_tax => 201)
+      allow(order).to receive_messages(:total_with_tax => 201)
       expect(order).to receive(:provide_free_shipping!)
 
       ProvidesFreeShippingAction.execute(context)
@@ -19,7 +19,7 @@ describe ProvidesFreeShippingAction do
 
   context "when the order total with tax is <= 200" do
     specify "order gets free shipping" do
-      order.stub(:total_with_tax => 200)
+      allow(order).to receive_messages(:total_with_tax => 200)
       expect(order).not_to receive(:provide_free_shipping!)
 
       ProvidesFreeShippingAction.execute(context)

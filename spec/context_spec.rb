@@ -6,7 +6,7 @@ module LightService
     describe "can be made" do
       context "with no arguments" do
         subject { Context.make }
-        it { should be_success }
+        it { is_expected.to be_success }
         its(:message) { should be_empty }
       end
 
@@ -49,7 +49,7 @@ module LightService
       context = Context.make
       context.skip_all!
 
-      expect(context.skip_all?).to be_true
+      expect(context.skip_all?).to be_truthy
     end
 
     it "can be pushed into a SUCCESS state" do
@@ -112,12 +112,12 @@ module LightService
 
       it "flags processing to stop on failure" do
         context.fail!("on purpose")
-        expect(context.stop_processing?).to be_true
+        expect(context.stop_processing?).to be_truthy
       end
 
       it "flags processing to stop when remaining actions should be skipped" do
         context.skip_all!
-        expect(context.stop_processing?).to be_true
+        expect(context.stop_processing?).to be_truthy
       end
     end
 
