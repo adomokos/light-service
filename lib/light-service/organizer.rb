@@ -8,6 +8,10 @@ module LightService
       def with(data)
         new.with(data)
       end
+
+      def reduce(actions)
+        new.with.reduce(actions)
+      end
     end
 
     def with(data = {})
