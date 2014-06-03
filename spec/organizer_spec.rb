@@ -63,16 +63,16 @@ describe LightService::Organizer do
   end
 
   context "when no starting context is specified" do
-    it "does not throw an error" do
-      AnAction.should_receive(:execute).
-        with({}).
-        and_return(context)
-      AnotherAction.should_receive(:execute).
-        with(context).
-        and_return(context)
+    it "creates one implicitly" do
+      expect(AnAction).to receive(:execute) \
+        .with({}) \
+        .and_return(context)
+      expect(AnotherAction).to receive(:execute) \
+        .with(context) \
+        .and_return(context)
 
-      expect { AnOrganizer.do_something_with_no_starting_context }.
-        not_to raise_error
+      expect { AnOrganizer.do_something_with_no_starting_context } \
+        .not_to raise_error
     end
   end
 end
