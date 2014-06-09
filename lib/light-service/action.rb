@@ -7,26 +7,29 @@ module LightService
 
     module Macros
       def expects(*args)
-        @_expected_keys = args
+        @expected_keys = args
       end
 
       def promises(*args)
-        @_promised_keys = args
+        @promised_keys = args
       end
+
+      attr_reader :expected_keys, :promised_keys
 
       def executed
         define_singleton_method "execute" do |context = {}|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
+          action = self
 
-          ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, @_expected_keys)
+          ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, action)
 
-          action_context.define_accessor_methods_for_keys(@_expected_keys)
-          action_context.define_accessor_methods_for_keys(@_promised_keys)
+          action_context.define_accessor_methods_for_keys(expected_keys)
+          action_context.define_accessor_methods_for_keys(promised_keys)
 
           yield(action_context)
 
-          ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, @_promised_keys)
+          ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, action)
         end
       end
 

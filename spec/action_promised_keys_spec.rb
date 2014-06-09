@@ -14,7 +14,7 @@ module LightService
 
     context "when the promised key is not in the context" do
       it "raises an ArgumentError" do
-        exception_error_text = "promised :milk_tea, :something_else to be in the context"
+        exception_error_text = "promised :milk_tea, :something_else to be in the context during LightService::DummyActionForKeysToPromise"
         expect {
           DummyActionForKeysToPromise.execute(:tea => "black", :milk => "full cream")
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)

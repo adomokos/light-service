@@ -4,15 +4,15 @@ module LightService
 
   class ContextKeyVerifier
     class << self
-      def verify_expected_keys_are_in_context(context, expected_keys)
-        verify_keys_are_in_context(context, expected_keys) do |not_found_keys|
-          fail ExpectedKeysNotInContextError, "expected #{format_keys(not_found_keys)} to be in the context"
+      def verify_expected_keys_are_in_context(context, action)
+        verify_keys_are_in_context(context, action.expected_keys) do |not_found_keys|
+          fail ExpectedKeysNotInContextError, "expected #{format_keys(not_found_keys)} to be in the context during #{action}"
         end
       end
 
-      def verify_promised_keys_are_in_context(context, promised_keys)
-        verify_keys_are_in_context(context, promised_keys) do |not_found_keys|
-          fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context"
+      def verify_promised_keys_are_in_context(context, action)
+        verify_keys_are_in_context(context, action.promised_keys) do |not_found_keys|
+          fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context during #{action}"
         end
       end
 
