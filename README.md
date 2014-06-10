@@ -278,7 +278,7 @@ Huge thanks to the [contributors](https://github.com/adomokos/light-service/grap
 * Action name is being displayed in the error message when the expected or promised key is not in the context.
 
 ### 0.3.3
-* Switching the promises and expects keys accessors from Action to Context
+* Switching the promises and expects key accessors from Action to Context
 
 ### 0.3.2
 * Fixing documentation and using separate arguments instead of a hash when setting the context to failure with error code
