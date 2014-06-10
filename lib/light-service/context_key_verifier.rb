@@ -6,13 +6,13 @@ module LightService
     class << self
       def verify_expected_keys_are_in_context(context, action)
         verify_keys_are_in_context(context, action.expected_keys) do |not_found_keys|
-          fail ExpectedKeysNotInContextError, "expected #{format_keys(not_found_keys)} to be in the context during #{action}"
+          fail ExpectedKeysNotInContextError, "expected #{format_keys(not_found_keys)} to be in the context during #{action.to_s}"
         end
       end
 
       def verify_promised_keys_are_in_context(context, action)
         verify_keys_are_in_context(context, action.promised_keys) do |not_found_keys|
-          fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context during #{action}"
+          fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context during #{action.to_s}"
         end
       end
 
