@@ -7,14 +7,20 @@ module LightService
 
     module Macros
       def expects(*args)
-        @expected_keys = args
+        @_expected_keys = args
       end
 
       def promises(*args)
-        @promised_keys = args
+        @_promised_keys = args
       end
 
-      attr_reader :expected_keys, :promised_keys
+      def expected_keys
+        @_expected_keys
+      end
+
+      def promised_keys
+        @_promised_keys
+      end
 
       def executed
         define_singleton_method "execute" do |context = {}|
