@@ -273,6 +273,10 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 Huge thanks to the [contributors](https://github.com/adomokos/light-service/graphs/contributors)!
 
 ## Release Notes
+### 0.3.4
+* The method call `with` is [now optional](https://github.com/adomokos/light-service/blob/master/spec/organizer_spec.rb#L18) in case you have nothing to put into the context.
+* Action name is being displayed in the error message when the expected or promised key is not in the context.
+
 ### 0.3.3
 * Switching the promises and expects keys accessors from Action to Context
 
