@@ -26,13 +26,6 @@ module LightService
       self.merge! values
     end
 
-    # It's really there for testing and debugging
-    # Deprecated: Please use `to_hash` instead
-    def context_hash
-      warn 'DEPRECATED: Please use `to_hash` instead'
-      self.dup
-    end
-
     def success?
       @outcome == ::LightService::Outcomes::SUCCESS
     end
