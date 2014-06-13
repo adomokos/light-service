@@ -7,13 +7,16 @@ module LightService
       expects :tea, :milk
       promises :milk_tea
 
-      executed do |context|
-        context[:some_tea] = "#{context.tea} - #{context.milk}"
-      end
     end
 
     context "when the promised key is not in the context" do
       it "raises an ArgumentError" do
+        class DummyActionForKeysToPromise
+          executed do |context|
+            context[:some_tea] = "#{context.tea} - #{context.milk}"
+          end
+        end
+
         exception_error_text = "promised :milk_tea to be in the context during LightService::DummyActionForKeysToPromise"
         expect {
           DummyActionForKeysToPromise.execute(:tea => "black", :milk => "full cream")
