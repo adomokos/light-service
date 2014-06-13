@@ -12,7 +12,7 @@ module LightService
 
       context "with a hash" do
         it "has the hash values" do
-          context = Context.make(:one => 1)
+          context = Context.make(one: 1)
 
           expect(context[:one]).to eq(1)
         end

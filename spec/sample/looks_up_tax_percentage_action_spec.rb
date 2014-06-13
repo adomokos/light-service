@@ -7,12 +7,12 @@ describe LooksUpTaxPercentageAction do
   let(:region) { double('region') }
   let(:order) do
     order = double('order')
-    allow(order).to receive_messages(:region => region)
-    allow(order).to receive_messages(:total => 200)
+    allow(order).to receive_messages(region: region)
+    allow(order).to receive_messages(total: 200)
     order
   end
   let(:context) do
-    ::LightService::Context.make(:order => order)
+    ::LightService::Context.make(order: order)
   end
   let(:tax_percentage) { double('tax_percentage') }
   let(:tax_ranges) { double('tax_ranges') }
@@ -30,7 +30,7 @@ describe LooksUpTaxPercentageAction do
   context "when the tax_percentage is not found" do
     it "sets the context to failure" do
       allow(TaxRange).to receive(:for_region).with(region).and_return tax_ranges
-      allow(tax_ranges).to receive_messages(:for_total => nil)
+      allow(tax_ranges).to receive_messages(for_total: nil)
 
       LooksUpTaxPercentageAction.execute(context)
 
@@ -42,7 +42,7 @@ describe LooksUpTaxPercentageAction do
   context "when the tax_percentage is found" do
     it "sets the tax_percentage in context" do
       allow(TaxRange).to receive(:for_region).with(region).and_return tax_ranges
-      allow(tax_ranges).to receive_messages(:for_total => 25)
+      allow(tax_ranges).to receive_messages(for_total: 25)
 
       LooksUpTaxPercentageAction.execute(context)
 

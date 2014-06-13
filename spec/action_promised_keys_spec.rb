@@ -19,7 +19,7 @@ module LightService
 
         exception_error_text = "promised :milk_tea to be in the context during LightService::DummyActionForKeysToPromise"
         expect {
-          DummyActionForKeysToPromise.execute(:tea => "black", :milk => "full cream")
+          DummyActionForKeysToPromise.execute(tea: "black", milk: "full cream")
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
 
@@ -30,8 +30,8 @@ module LightService
           end
         end
 
-        result_context = DummyActionForKeysToPromise.execute(:tea => "black",
-                                                             :milk => "full cream")
+        result_context = DummyActionForKeysToPromise.execute(tea: "black",
+                                                             milk: "full cream")
 
         expect(result_context).to be_failure
         expect(result_context.keys).not_to include(:milk_tea)
@@ -47,8 +47,8 @@ module LightService
           end
         end
 
-        result_context = DummyActionForKeysToPromise.execute(:tea => "black",
-                                                              :milk => "full cream")
+        result_context = DummyActionForKeysToPromise.execute(tea: "black",
+                                                              milk: "full cream")
         expect(result_context).to be_success
         expect(result_context[:milk_tea]).to eq("black - full cream hello")
       end
@@ -59,8 +59,8 @@ module LightService
             context.milk_tea = nil
           end
         end
-        result_context = DummyActionForKeysToPromise.execute(:tea => "black",
-                                                             :milk => "full cream")
+        result_context = DummyActionForKeysToPromise.execute(tea: "black",
+                                                             milk: "full cream")
         expect(result_context).to be_success
         expect(result_context[:milk_tea]).to be_nil
       end

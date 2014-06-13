@@ -34,7 +34,7 @@ describe LightService::Organizer do
     end
 
     it "implicitly creates a Context" do
-      result = AnOrganizer.do_something(:user => user)
+      result = AnOrganizer.do_something(user: user)
       expect(result).to eq(context)
     end
   end

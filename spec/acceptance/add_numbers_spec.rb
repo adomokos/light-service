@@ -4,7 +4,7 @@ class Organizer
   include LightService::Organizer
 
   def self.add_numbers(number)
-    with(:number => number).reduce(
+    with(number: number).reduce(
       AddsOneAction,
       AddsTwoAction,
       AddsThreeAction

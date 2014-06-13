@@ -24,9 +24,9 @@ module LightService
     context "when expected keys are in the context" do
       it "can access the keys as class methods" do
         resulting_context = DummyActionForKeysToExpect.execute(
-          :tea => "black",
-          :milk => "full cream",
-          :something => "else"
+          tea: "black",
+          milk: "full cream",
+          something: "else"
         )
         expect(resulting_context[:milk_tea]).to eq("black - full cream")
       end
@@ -36,7 +36,7 @@ module LightService
       it "raises an error" do
         exception_error_text = "expected :milk to be in the context during LightService::DummyActionForKeysToExpect"
         expect {
-          DummyActionForKeysToExpect.execute(:tea => "black")
+          DummyActionForKeysToExpect.execute(tea: "black")
         }.to raise_error(ExpectedKeysNotInContextError, exception_error_text)
       end
     end
@@ -45,7 +45,7 @@ module LightService
       it "raises an error" do
         exception_error_text = "promised :milk_tea to be in the context during LightService::DummyActionForKeysToPromiseWithError"
         expect {
-          DummyActionForKeysToPromiseWithError.execute(:tea => "black", :milk => "2%")
+          DummyActionForKeysToPromiseWithError.execute(tea: "black", milk: "2%")
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
     end
