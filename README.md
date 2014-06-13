@@ -275,6 +275,7 @@ Huge thanks to the [contributors](https://github.com/adomokos/light-service/grap
 ## Release Notes
 ### TBA
 * remove previously deprecated method Context#context_hash
+* [Skipping](https://github.com/adomokos/light-service/commit/d2bd05455a7e4f78aa448db1ea1d692f7b8b67d3) the promised keys check in the context when the context is in failure state
 
 ### 0.3.4
 * The method call `with` is [now optional](https://github.com/adomokos/light-service/blob/master/spec/organizer_spec.rb#L18) in case you have nothing to put into the context.
