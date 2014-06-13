@@ -28,14 +28,14 @@ module LightService
           return action_context if action_context.stop_processing?
           action = self
 
-          ContextKeyVerifier.verify_expected_keys_are_in_context(action_context, action)
+          Context::KeyVerifier.verify_expected_keys_are_in_context(action_context, action)
 
           action_context.define_accessor_methods_for_keys(expected_keys)
           action_context.define_accessor_methods_for_keys(promised_keys)
 
           yield(action_context)
 
-          ContextKeyVerifier.verify_promised_keys_are_in_context(action_context, action)
+          Context::KeyVerifier.verify_promised_keys_are_in_context(action_context, action)
         end
       end
 
