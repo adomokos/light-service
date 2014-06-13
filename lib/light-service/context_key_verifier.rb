@@ -11,6 +11,8 @@ module LightService
       end
 
       def verify_promised_keys_are_in_context(context, action)
+        return context if context.failure?
+
         verify_keys_are_in_context(context, action.promised_keys) do |not_found_keys|
           fail PromisedKeysNotInContextError, "promised #{format_keys(not_found_keys)} to be in the context during #{action}"
         end
