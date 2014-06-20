@@ -14,7 +14,7 @@ module LightService
         end
       end
       it "works without expects and promises" do
-        result = FooAction.execute(:baz => 3)
+        result = FooAction.execute(baz: 3)
         expect(result).to be_success
         expect(result[:bar]).to eq(5)
       end
@@ -51,7 +51,7 @@ module LightService
         end
       end
       it "can be accessed through a reader" do
-        result = FooWithReaderAction.execute(:baz => 3)
+        result = FooWithReaderAction.execute(baz: 3)
         expect(result).to be_success
         expect(result[:bar]).to eq(5)
       end
@@ -69,7 +69,7 @@ module LightService
       end
       it "throws a PromisedKeysNotInContextError" do
         # FooAction invoked with nothing placed in the context
-        expect { FooNoPromisedKeyAction.execute(:baz => 3) }.to \
+        expect { FooNoPromisedKeyAction.execute(baz: 3) }.to \
           raise_error(PromisedKeysNotInContextError)
       end
     end
@@ -86,7 +86,7 @@ module LightService
         end
       end
       it "puts the value through the accessor into the context" do
-        result = FooWithExpectsAndPromisesAction.execute(:baz => 3)
+        result = FooWithExpectsAndPromisesAction.execute(baz: 3)
         expect(result).to be_success
         expect(result[:bar]).to eq(5)
       end

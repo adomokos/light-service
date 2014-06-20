@@ -59,14 +59,14 @@ module LightService
 
         SkippedAction.execute(context)
 
-        expect(context.to_hash).to eq ({:test_key => "test_value"})
+        expect(context.to_hash).to eq ({test_key: "test_value"})
       end
     end
 
     it "returns the context" do
       result = DummyAction.execute(context)
 
-      expect(result.to_hash).to eq ({:test_key => "test_value"})
+      expect(result.to_hash).to eq ({test_key: "test_value"})
     end
 
     context "when invoked with hash" do
