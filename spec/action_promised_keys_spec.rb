@@ -64,7 +64,18 @@ module LightService
         expect(result_context).to be_success
         expect(result_context[:milk_tea]).to be_nil
       end
+    end
 
+    it "raises an error when the promised key is not in the context" do
+      class DummyActionForKeysToPromise
+        executed do |context|
+          # Putting nothing in the context
+        end
+      end
+      exception_error_text = "promised :milk_tea to be in the context during LightService::DummyActionForKeysToPromise"
+      expect {
+        DummyActionForKeysToPromise.execute(:tea => "black", :milk => "2%")
+      }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
     end
   end
 end
