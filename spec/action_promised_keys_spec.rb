@@ -65,5 +65,24 @@ module LightService
         expect(result_context[:milk_tea]).to be_nil
       end
     end
+
+    it "can collect promised keys when the `promised` macro is called multiple times" do
+      class DummyActionWithMultiplePromises
+        include LightService::Action
+        expects :coffee
+        promises :cappuccino
+        promises :latte
+
+        executed do |context|
+          context.cappuccino = "Cappucino needs #{context.coffee} and a little milk"
+          context.latte = "Latte needs #{context.coffee} and a lot of milk"
+        end
+      end
+      resulting_context = DummyActionWithMultiplePromises.execute(:coffee => "espresso")
+
+      expect(resulting_context.cappuccino).to eq("Cappucino needs espresso and a little milk")
+      expect(resulting_context.latte).to eq("Latte needs espresso and a lot of milk")
+    end
+
   end
 end

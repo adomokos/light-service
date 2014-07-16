@@ -32,5 +32,24 @@ module LightService
       end
     end
 
+    it "can collect expected keys when the `expects` macro is called multiple times" do
+      class DummyActionWithMultipleExpects
+        include LightService::Action
+        expects :tea
+        expects :milk, :chocolate
+        promises :milk_tea
+
+        executed do |context|
+          context.milk_tea = "#{context.tea} - #{context.milk} - with #{context.chocolate}"
+        end
+      end
+      resulting_context = DummyActionWithMultipleExpects.execute(
+        :tea => "black",
+        :milk => "full cream",
+        :chocolate => "dark chocolate"
+      )
+      expect(resulting_context[:milk_tea]).to eq("black - full cream - with dark chocolate")
+    end
+
   end
 end
