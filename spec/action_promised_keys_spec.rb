@@ -48,7 +48,7 @@ module LightService
         end
 
         result_context = DummyActionForKeysToPromise.execute(:tea => "black",
-                                                              :milk => "full cream")
+                                                             :milk => "full cream")
         expect(result_context).to be_success
         expect(result_context[:milk_tea]).to eq("black - full cream hello")
       end
