@@ -18,11 +18,6 @@ module LightService
       end
     end
 
-    class PromisingAction
-      include LightService::Action
-      promises :milk_tea
-    end
-
     let(:context) { ::LightService::Context.make }
 
     context "when the action context has failure" do
