@@ -23,7 +23,7 @@ module LightService
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
 
-      it "fails the context without fulfilling its promise" do
+      it "it can fail the context without fulfilling its promise" do
         class DummyActionForKeysToPromise
           executed do |context|
             context.fail!("Sorry, something bad has happened.")
@@ -39,7 +39,7 @@ module LightService
     end
 
     context "when the promised key is in the context" do
-      it "sets in the context if it was set with not nil" do
+      it "can be set with an actual value" do
         class DummyActionForKeysToPromise
           executed do |context|
             context.milk_tea = "#{context.tea} - #{context.milk}"
@@ -53,7 +53,7 @@ module LightService
         expect(result_context[:milk_tea]).to eq("black - full cream hello")
       end
 
-      it "sets in the context if it was set with nil" do
+      it "can be set with nil" do
         class DummyActionForKeysToPromise
           executed do |context|
             context.milk_tea = nil
