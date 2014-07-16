@@ -11,15 +11,6 @@ module LightService
         context.milk_tea = "#{context.tea} - #{context.milk}"
       end
     end
-    class DummyActionForKeysToPromiseWithError
-      include LightService::Action
-      expects :tea, :milk
-      promises :milk_tea
-
-      executed do |context|
-        context[:some_tea] = "#{context.tea} - #{context.milk}"
-      end
-    end
 
     context "when expected keys are in the context" do
       it "can access the keys as class methods" do
