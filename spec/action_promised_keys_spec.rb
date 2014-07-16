@@ -23,7 +23,7 @@ module LightService
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
 
-      it "it can fail the context without fulfilling its promise" do
+      it "can fail the context without fulfilling its promise" do
         class DummyActionForKeysToPromise
           executed do |context|
             context.fail!("Sorry, something bad has happened.")
