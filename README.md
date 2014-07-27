@@ -273,6 +273,9 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 Huge thanks to the [contributors](https://github.com/adomokos/light-service/graphs/contributors)!
 
 ## Release Notes
+### 0.3.6
+* [Collecting](https://github.com/adomokos/light-service/commit/29817de3ad589441788077368ad1d7e723286def) the `expects` and `promises` keys when they are called multiple times in an action
+
 ### 0.3.5
 * remove previously deprecated method Context#context_hash
 * [Skipping](https://github.com/adomokos/light-service/commit/d2bd05455a7e4f78aa448db1ea1d692f7b8b67d3) the promised keys check in the context when the context is in failure state
