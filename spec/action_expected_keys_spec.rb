@@ -6,7 +6,7 @@ module LightService
 
     context "when expected keys are in the context" do
       it "can access the keys as class methods" do
-        resulting_context = DummyActionForKeysToExpect.execute(
+        resulting_context = TestDoubles::KeysToExpectAction.execute(
           :tea => "black",
           :milk => "full cream",
           :something => "else"
@@ -17,15 +17,15 @@ module LightService
 
     context "when an expected key is not in the context" do
       it "raises an error" do
-        exception_error_text = "expected :milk to be in the context during LightService::DummyActionForKeysToExpect"
+        exception_error_text = "expected :milk to be in the context during TestDoubles::KeysToExpectAction"
         expect {
-          DummyActionForKeysToExpect.execute(:tea => "black")
+          TestDoubles::KeysToExpectAction.execute(:tea => "black")
         }.to raise_error(ExpectedKeysNotInContextError, exception_error_text)
       end
     end
 
     it "can collect expected keys when the `expects` macro is called multiple times" do
-      resulting_context = DummyActionWithMultipleExpects.execute(
+      resulting_context = TestDoubles::MultipleExpectsAction.execute(
         :tea => "black",
         :milk => "full cream",
         :chocolate => "dark chocolate"

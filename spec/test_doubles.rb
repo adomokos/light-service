@@ -1,6 +1,6 @@
 # A collection of Action and Organizer dummies used in specs
 
-module LightService
+module TestDoubles
   class AddTwoAction
     include LightService::Action
 
@@ -29,7 +29,7 @@ module LightService
     end
   end
 
-  class DummyActionForKeysToExpect
+  class KeysToExpectAction
     include LightService::Action
     expects :tea, :milk
     promises :milk_tea
@@ -39,7 +39,7 @@ module LightService
     end
   end
 
-  class DummyActionWithMultipleExpects
+  class MultipleExpectsAction
     include LightService::Action
     expects :tea
     expects :milk, :chocolate
@@ -50,13 +50,13 @@ module LightService
     end
   end
 
-  class DummyActionForKeysToPromise
+  class KeysToPromiseAction
     include LightService::Action
     expects :tea, :milk
     promises :milk_tea
   end
 
-  class DummyActionWithMultiplePromises
+  class MultiplePromisesAction
     include LightService::Action
     expects :coffee
     promises :cappuccino

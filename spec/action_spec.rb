@@ -10,7 +10,7 @@ module LightService
       it "returns immediately" do
         context.fail!("an error")
 
-        AddTwoAction.execute(context)
+        TestDoubles::AddTwoAction.execute(context)
 
         expect(context.to_hash.keys).to be_empty
       end
@@ -18,7 +18,7 @@ module LightService
 
     context "when the action context does not have failure" do
       it "executes the block" do
-        AddTwoAction.execute(context)
+        TestDoubles::AddTwoAction.execute(context)
 
         expect(context.to_hash.keys).to eq [:number]
         expect(context.fetch(:number)).to eq(2)
@@ -29,32 +29,32 @@ module LightService
       it "returns immediately" do
         context.skip_all!
 
-        AddTwoAction.execute(context)
+        TestDoubles::AddTwoAction.execute(context)
 
         expect(context.to_hash.keys).to be_empty
       end
 
       it "does not execute skipped actions" do
-        AddTwoAction.execute(context)
+        TestDoubles::AddTwoAction.execute(context)
         expect(context.to_hash).to eq ({:number => 2})
 
         context.skip_all!
 
-        AddTwoAction.execute(context)
+        TestDoubles::AddTwoAction.execute(context)
         # Since the action was skipped, the number remains 2
         expect(context.to_hash).to eq ({:number => 2})
       end
     end
 
     it "returns the context" do
-      result = AddTwoAction.execute(context)
+      result = TestDoubles::AddTwoAction.execute(context)
 
       expect(result.to_hash).to eq ({:number => 2})
     end
 
     context "when invoked with hash" do
       it "creates LightService::Context implicitly" do
-        result = AddTwoAction.execute(:some_key => "some value")
+        result = TestDoubles::AddTwoAction.execute(:some_key => "some value")
 
         expect(result).to be_success
         expect(result.keys).to eq([:some_key, :number])
@@ -63,7 +63,7 @@ module LightService
 
     context "when invoked without arguments" do
       it "creates LightService::Context implicitly" do
-        result = AddTwoAction.execute
+        result = TestDoubles::AddTwoAction.execute
 
         expect(result).to be_success
         expect(result.keys).to eq([:number])
