@@ -1,7 +1,7 @@
 # A collection of Action and Organizer dummies used in specs
 
 module TestDoubles
-  class AddTwoAction
+  class AddsTwoAction
     include LightService::Action
 
     executed do |context|
