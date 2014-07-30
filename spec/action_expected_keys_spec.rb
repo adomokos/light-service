@@ -1,16 +1,8 @@
 require 'spec_helper'
+require 'test_doubles'
 
 module LightService
   describe ":expects macro" do
-    class DummyActionForKeysToExpect
-      include LightService::Action
-      expects :tea, :milk
-      promises :milk_tea
-
-      executed do |context|
-        context.milk_tea = "#{context.tea} - #{context.milk}"
-      end
-    end
 
     context "when expected keys are in the context" do
       it "can access the keys as class methods" do
@@ -33,16 +25,6 @@ module LightService
     end
 
     it "can collect expected keys when the `expects` macro is called multiple times" do
-      class DummyActionWithMultipleExpects
-        include LightService::Action
-        expects :tea
-        expects :milk, :chocolate
-        promises :milk_tea
-
-        executed do |context|
-          context.milk_tea = "#{context.tea} - #{context.milk} - with #{context.chocolate}"
-        end
-      end
       resulting_context = DummyActionWithMultipleExpects.execute(
         :tea => "black",
         :milk => "full cream",

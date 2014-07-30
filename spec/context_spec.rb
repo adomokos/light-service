@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'test_doubles'
 
 module LightService
   describe Context do

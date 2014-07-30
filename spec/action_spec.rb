@@ -1,22 +1,8 @@
 require 'spec_helper'
+require 'test_doubles'
 
 module LightService
   describe Action do
-    class DummyAction
-      include LightService::Action
-
-      executed do |context|
-        context[:test_key] = "test_value"
-      end
-    end
-
-    class SkippedAction
-      include LightService::Action
-
-      executed do |context|
-        context[:test_key] = "set_by_skipped_action"
-      end
-    end
 
     let(:context) { ::LightService::Context.make }
 
@@ -24,7 +10,7 @@ module LightService
       it "returns immediately" do
         context.fail!("an error")
 
-        DummyAction.execute(context)
+        AddTwoAction.execute(context)
 
         expect(context.to_hash.keys).to be_empty
       end
@@ -32,9 +18,10 @@ module LightService
 
     context "when the action context does not have failure" do
       it "executes the block" do
-        DummyAction.execute(context)
+        AddTwoAction.execute(context)
 
-        expect(context.to_hash.keys).to eq [:test_key]
+        expect(context.to_hash.keys).to eq [:number]
+        expect(context.fetch(:number)).to eq(2)
       end
     end
 
@@ -42,42 +29,44 @@ module LightService
       it "returns immediately" do
         context.skip_all!
 
-        DummyAction.execute(context)
+        AddTwoAction.execute(context)
 
         expect(context.to_hash.keys).to be_empty
       end
 
       it "does not execute skipped actions" do
-        DummyAction.execute(context)
+        AddTwoAction.execute(context)
+        expect(context.to_hash).to eq ({:number => 2})
 
         context.skip_all!
 
-        SkippedAction.execute(context)
-
-        expect(context.to_hash).to eq ({:test_key => "test_value"})
+        AddTwoAction.execute(context)
+        # Since the action was skipped, the number remains 2
+        expect(context.to_hash).to eq ({:number => 2})
       end
     end
 
     it "returns the context" do
-      result = DummyAction.execute(context)
+      result = AddTwoAction.execute(context)
 
-      expect(result.to_hash).to eq ({:test_key => "test_value"})
+      expect(result.to_hash).to eq ({:number => 2})
     end
 
     context "when invoked with hash" do
       it "creates LightService::Context implicitly" do
-        result = DummyAction.execute(some_key: "some value")
+        result = AddTwoAction.execute(:some_key => "some value")
 
         expect(result).to be_success
-        expect(result.keys).to eq([:some_key, :test_key])
+        expect(result.keys).to eq([:some_key, :number])
       end
     end
+
     context "when invoked without arguments" do
       it "creates LightService::Context implicitly" do
-        result = DummyAction.execute
+        result = AddTwoAction.execute
 
         expect(result).to be_success
-        expect(result.keys).to eq([:test_key])
+        expect(result.keys).to eq([:number])
       end
     end
   end
