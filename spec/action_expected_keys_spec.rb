@@ -15,7 +15,7 @@ describe ":expects macro" do
   end
 
   context "when an expected key is not in the context" do
-    it "raises an error" do
+    it "raises an LightService::ExpectedKeysNotInContextError" do
       exception_error_text = "expected :milk to be in the context during TestDoubles::KeysToExpectAction"
       expect {
         TestDoubles::KeysToExpectAction.execute(:tea => "black")
