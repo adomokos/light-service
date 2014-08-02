@@ -8,13 +8,13 @@ module LightService
       it "raises an ArgumentError" do
         class TestDoubles::KeysToPromiseAction
           executed do |context|
-            context[:some_tea] = "#{context.tea} - #{context.milk}"
+            context[:macchiato] = "#{context.coffee} - #{context.milk}"
           end
         end
 
-        exception_error_text = "promised :milk_tea to be in the context during TestDoubles::KeysToPromiseAction"
+        exception_error_text = "promised :cappuccino to be in the context during TestDoubles::KeysToPromiseAction"
         expect {
-          TestDoubles::KeysToPromiseAction.execute(:tea => "black", :milk => "full cream")
+          TestDoubles::KeysToPromiseAction.execute(:coffee => "espresso", :milk => "2%")
         }.to raise_error(PromisedKeysNotInContextError, exception_error_text)
       end
 
@@ -25,11 +25,12 @@ module LightService
           end
         end
 
-        result_context = TestDoubles::KeysToPromiseAction.execute(:tea => "black",
-                                                             :milk => "full cream")
+        result_context = TestDoubles::KeysToPromiseAction.execute(
+                            :coffee => "espresso",
+                            :milk => "2%")
 
         expect(result_context).to be_failure
-        expect(result_context.keys).not_to include(:milk_tea)
+        expect(result_context.keys).not_to include(:cappuccino)
       end
     end
 
@@ -37,32 +38,38 @@ module LightService
       it "can be set with an actual value" do
         class TestDoubles::KeysToPromiseAction
           executed do |context|
-            context.milk_tea = "#{context.tea} - #{context.milk}"
-            context.milk_tea += " hello"
+            context.cappuccino = "#{context.coffee} - with #{context.milk} milk"
+            context.cappuccino += " hot"
           end
         end
 
-        result_context = TestDoubles::KeysToPromiseAction.execute(:tea => "black",
-                                                             :milk => "full cream")
+        result_context = TestDoubles::KeysToPromiseAction.execute(
+                            :coffee => "espresso",
+                            :milk => "2%")
+
         expect(result_context).to be_success
-        expect(result_context[:milk_tea]).to eq("black - full cream hello")
+        expect(result_context.cappuccino).to eq("espresso - with 2% milk hot")
       end
 
       it "can be set with nil" do
         class TestDoubles::KeysToPromiseAction
           executed do |context|
-            context.milk_tea = nil
+            context.cappuccino = nil
           end
         end
-        result_context = TestDoubles::KeysToPromiseAction.execute(:tea => "black",
-                                                             :milk => "full cream")
+        result_context = TestDoubles::KeysToPromiseAction.execute(
+                            :coffee => "espresso",
+                            :milk => "2%")
+
         expect(result_context).to be_success
-        expect(result_context[:milk_tea]).to be_nil
+        expect(result_context[:cappuccino]).to be_nil
       end
     end
 
     it "can collect promised keys when the `promised` macro is called multiple times" do
-      resulting_context = TestDoubles::MultiplePromisesAction.execute(:coffee => "espresso")
+      resulting_context = TestDoubles::MultiplePromisesAction.execute(
+                              :coffee => "espresso",
+                              :milk => "2%")
 
       expect(resulting_context.cappuccino).to eq("Cappucino needs espresso and a little milk")
       expect(resulting_context.latte).to eq("Latte needs espresso and a lot of milk")

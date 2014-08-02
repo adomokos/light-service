@@ -52,13 +52,13 @@ module TestDoubles
 
   class KeysToPromiseAction
     include LightService::Action
-    expects :tea, :milk
-    promises :milk_tea
+    expects :coffee, :milk
+    promises :cappuccino
   end
 
   class MultiplePromisesAction
     include LightService::Action
-    expects :coffee
+    expects :coffee, :milk
     promises :cappuccino
     promises :latte
 
