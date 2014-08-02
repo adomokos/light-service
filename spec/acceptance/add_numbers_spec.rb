@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-class Organizer
+class AdditionOrganizer
   include LightService::Organizer
 
   def self.add_numbers(number)
@@ -42,9 +42,9 @@ class AddsThreeAction
   end
 end
 
-describe Organizer do
+describe AdditionOrganizer do
   it "Adds 1 2 3 and through to 1" do
-    result = Organizer.add_numbers 1
+    result = AdditionOrganizer.add_numbers 1
     number = result.fetch(:number)
 
     expect(number).to eq(7)
