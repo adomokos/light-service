@@ -29,7 +29,7 @@ module TestDoubles
     end
   end
 
-  class KeysToExpectAction
+  class MakesTeaWithMilkAction
     include LightService::Action
     expects :tea, :milk
     promises :milk_tea
@@ -50,10 +50,14 @@ module TestDoubles
     end
   end
 
-  class KeysToPromiseAction
+  class MakesCappuccinoAction
     include LightService::Action
     expects :coffee, :milk
     promises :cappuccino
+
+    executed do |context|
+      context[:cappucino] = "#{context.coffee} - #{context.milk}"
+    end
   end
 
   class MultiplePromisesAction

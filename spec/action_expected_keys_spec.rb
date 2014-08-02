@@ -5,7 +5,7 @@ describe ":expects macro" do
 
   context "when expected keys are in the context" do
     it "can access the keys as class methods" do
-      resulting_context = TestDoubles::KeysToExpectAction.execute(
+      resulting_context = TestDoubles::MakesTeaWithMilkAction.execute(
         :tea => "black",
         :milk => "full cream",
         :something => "else"
@@ -16,9 +16,9 @@ describe ":expects macro" do
 
   context "when an expected key is not in the context" do
     it "raises an LightService::ExpectedKeysNotInContextError" do
-      exception_error_text = "expected :milk to be in the context during TestDoubles::KeysToExpectAction"
+      exception_error_text = "expected :milk to be in the context during TestDoubles::MakesTeaWithMilkAction"
       expect {
-        TestDoubles::KeysToExpectAction.execute(:tea => "black")
+        TestDoubles::MakesTeaWithMilkAction.execute(:tea => "black")
       }.to raise_error(LightService::ExpectedKeysNotInContextError, exception_error_text)
     end
   end

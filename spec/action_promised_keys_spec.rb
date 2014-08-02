@@ -5,26 +5,26 @@ describe ":promises macro" do
 
   context "when the promised key is not in the context" do
     it "raises an ArgumentError" do
-      class TestDoubles::KeysToPromiseAction
+      class TestDoubles::MakesCappuccinoAction
         executed do |context|
           context[:macchiato] = "#{context.coffee} - #{context.milk}"
         end
       end
 
-      exception_error_text = "promised :cappuccino to be in the context during TestDoubles::KeysToPromiseAction"
+      exception_error_text = "promised :cappuccino to be in the context during TestDoubles::MakesCappuccinoAction"
       expect {
-        TestDoubles::KeysToPromiseAction.execute(:coffee => "espresso", :milk => "2%")
+        TestDoubles::MakesCappuccinoAction.execute(:coffee => "espresso", :milk => "2%")
       }.to raise_error(LightService::PromisedKeysNotInContextError, exception_error_text)
     end
 
     it "can fail the context without fulfilling its promise" do
-      class TestDoubles::KeysToPromiseAction
+      class TestDoubles::MakesCappuccinoAction
         executed do |context|
           context.fail!("Sorry, something bad has happened.")
         end
       end
 
-      result_context = TestDoubles::KeysToPromiseAction.execute(
+      result_context = TestDoubles::MakesCappuccinoAction.execute(
                           :coffee => "espresso",
                           :milk => "2%")
 
@@ -35,14 +35,14 @@ describe ":promises macro" do
 
   context "when the promised key is in the context" do
     it "can be set with an actual value" do
-      class TestDoubles::KeysToPromiseAction
+      class TestDoubles::MakesCappuccinoAction
         executed do |context|
           context.cappuccino = "#{context.coffee} - with #{context.milk} milk"
           context.cappuccino += " hot"
         end
       end
 
-      result_context = TestDoubles::KeysToPromiseAction.execute(
+      result_context = TestDoubles::MakesCappuccinoAction.execute(
                           :coffee => "espresso",
                           :milk => "2%")
 
@@ -51,12 +51,12 @@ describe ":promises macro" do
     end
 
     it "can be set with nil" do
-      class TestDoubles::KeysToPromiseAction
+      class TestDoubles::MakesCappuccinoAction
         executed do |context|
           context.cappuccino = nil
         end
       end
-      result_context = TestDoubles::KeysToPromiseAction.execute(
+      result_context = TestDoubles::MakesCappuccinoAction.execute(
                           :coffee => "espresso",
                           :milk => "2%")
 
