@@ -25,7 +25,6 @@ end
 class AddsTwoAction
   include LightService::Action
   expects :number
-  promises :number
 
   executed do |context|
     context.number += 2
