@@ -10,7 +10,12 @@ module LightService; module Organizer
     def reduce(*actions)
       raise "No action(s) were provided" if actions.empty?
       actions.flatten!
-      actions.reduce(context) { |context, action| action.execute(context) }
+
+      actions.reduce(context) do |context, action|
+        result = action.execute(context)
+        yield(context, action) if block_given?
+        result
+      end
     end
   end
 end; end

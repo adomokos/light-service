@@ -35,17 +35,17 @@ end
 class AddsThreeAction
   include LightService::Action
   expects :number
-  promises :number
+  promises :product
 
   executed do |context|
-    context.number += 3
+    context.product = context.number + 3
   end
 end
 
 describe AdditionOrganizer do
   it "Adds 1 2 3 and through to 1" do
     result = AdditionOrganizer.add_numbers 1
-    number = result.fetch(:number)
+    number = result.fetch(:product)
 
     expect(number).to eq(7)
   end
