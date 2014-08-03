@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class AdditionOrganizer
-  include LightService::Organizer
+  extend LightService::Organizer
 
   def self.add_numbers(number)
     with(:number => number).reduce(
