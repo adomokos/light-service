@@ -54,9 +54,15 @@ module TestDoubles
     include LightService::Action
     expects :coffee, :milk
     promises :cappuccino
+  end
+
+  class MakesLatteAction
+    include LightService::Action
+    expects :coffee, :milk
+    promises :latte
 
     executed do |context|
-      context[:cappucino] = "#{context.coffee} - #{context.milk}"
+      context[:latte] = "#{context.coffee} - with lots of #{context.milk}"
     end
   end
 
