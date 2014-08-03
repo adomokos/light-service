@@ -3,7 +3,7 @@ require 'test_doubles'
 
 describe LightService::Organizer do
 
-  let(:context) { LightService::Context.make(user: user) }
+  let(:context) { LightService::Context.make(:user => user) }
   let(:user) { double(:user) }
 
   context "when #with is called with hash" do

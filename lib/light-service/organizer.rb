@@ -6,27 +6,12 @@ module LightService
 
     module ClassMethods
       def with(data)
-        new.with(data)
+        WithReducerFactory.make(self).with(data)
       end
 
       def reduce(actions)
-        new.with.reduce(actions)
+        WithReducerFactory.make(self).with.reduce(actions)
       end
-    end
-
-    def with(data = {})
-      @context = LightService::Context.make(data)
-      self
-    end
-
-    def reduce(*actions)
-      raise "No action(s) were provided" if actions.empty?
-      actions.flatten!
-      actions.reduce(@context) { |context, action| action.execute(context) }
-    end
-
-    def print_pipeline_for(*actions)
-      ::Organizer::PipelinePrinter.new(@context.dup).print(*actions)
     end
 
   end
