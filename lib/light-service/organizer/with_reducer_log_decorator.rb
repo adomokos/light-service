@@ -19,10 +19,6 @@ module LightService; module Organizer
       @decorated.reduce(actions)
     end
 
-    def print_pipeline_for(*actions)
-      @decorated.print_pipeline_for(actions)
-    end
-
     private
     def keys_in_context(context)
       context.keys.map {|key| ":#{key}" }.join(', ')

@@ -12,9 +12,5 @@ module LightService; module Organizer
       actions.flatten!
       actions.reduce(context) { |context, action| action.execute(context) }
     end
-
-    def print_pipeline_for(*actions)
-      ::Organizer::PipelinePrinter.new(context.dup).print(*actions)
-    end
   end
 end; end
