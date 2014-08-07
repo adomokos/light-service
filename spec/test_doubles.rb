@@ -62,7 +62,17 @@ module TestDoubles
     promises :latte
 
     executed do |context|
+      if context.milk == :very_hot
+        context.fail!("Can't make a latte from a milk that's too hot!")
+        next context
+      end
+
       context[:latte] = "#{context.coffee} - with lots of #{context.milk}"
+
+      if context.milk == "5%"
+        context.skip_all!("Can't make a latte with a fatty milk like that!")
+        next context
+      end
     end
   end
 
@@ -95,6 +105,28 @@ module TestDoubles
       with(:milk => milk, :coffee => coffee)
           .reduce(TestDoubles::AddsTwoAction,
                   TestDoubles::MakesLatteAction)
+    end
+  end
+
+  class MakesCappuccinoAddsTwoAndFails
+    include LightService::Organizer
+
+    def self.call(coffee)
+      with(:milk => :very_hot, :coffee => coffee)
+          .reduce(TestDoubles::MakesLatteAction,
+                  TestDoubles::AddsTwoAction)
+
+    end
+  end
+
+  class MakesCappuccinoSkipsAddsTwo
+    include LightService::Organizer
+
+    def self.call(coffee)
+      with(:milk => "5%", :coffee => coffee)
+          .reduce(TestDoubles::MakesLatteAction,
+                  TestDoubles::AddsTwoAction)
+
     end
   end
 end

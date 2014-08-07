@@ -10,7 +10,6 @@ describe "Logs from organizer" do
     LightService::Configuration.logger = Logger.new(strio)
 
     result = yield
-    expect(result).to be_success
 
     LightService::Configuration.logger = original_logger
 
@@ -60,6 +59,7 @@ describe "Logs from organizer" do
       expect(log_message).to include(organizer_log_message)
     end
   end
+
   context "when NOT every action expects or promises" do
     subject(:log_message) do
       collects_log do
@@ -79,4 +79,38 @@ describe "Logs from organizer" do
       expect(log_message).not_to include(organizer_log_message)
     end
   end
- end
+
+  context "when the context has failed" do
+    subject(:log_message) do
+      collects_log do
+        TestDoubles::MakesCappuccinoAddsTwoAndFails.call("espresso coffee")
+      end
+    end
+
+    it "logs it with a warning" do
+      organizer_log_message = "WARN -- : [LightService] - :-((( <TestDoubles::MakesLatteAction> has failed..."
+      expect(log_message).to include(organizer_log_message)
+      organizer_log_message = "WARN -- : [LightService] - context message: Can't make a latte from a milk that's too hot!"
+      expect(log_message).to include(organizer_log_message)
+      organizer_log_message = "[LightService] -  :-((( <TestDoubles::AddsTwoAction> has failed..."
+      expect(log_message).not_to include(organizer_log_message)
+    end
+  end
+
+  context "when the context is skipping the rest" do
+    subject(:log_message) do
+      collects_log do
+        TestDoubles::MakesCappuccinoSkipsAddsTwo.call("espresso coffee")
+      end
+    end
+
+    it "logs it with a warning" do
+      organizer_log_message = "INFO -- : [LightService] - ;-) <TestDoubles::MakesLatteAction> has decided to skip the rest of the actions"
+      expect(log_message).to include(organizer_log_message)
+      organizer_log_message = "INFO -- : [LightService] - context message: Can't make a latte with a fatty milk like that!"
+      expect(log_message).to include(organizer_log_message)
+      organizer_log_message = "INFO -- : [LightService] - ;-) <TestDoubles::AddsTwoAction> has decided to skip the rest of the actions"
+      expect(log_message).not_to include(organizer_log_message)
+    end
+  end
+end
