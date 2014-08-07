@@ -77,4 +77,24 @@ module TestDoubles
       context.latte = "Latte needs #{context.coffee} and a lot of milk"
     end
   end
+
+  class MakesTeaAndCappuccino
+    include LightService::Organizer
+
+    def self.call(tea, milk, coffee)
+      with(:tea => tea, :milk => milk, :coffee => coffee)
+          .reduce(TestDoubles::MakesTeaWithMilkAction,
+                  TestDoubles::MakesLatteAction)
+    end
+  end
+
+  class MakesCappuccinoAddsTwo
+    include LightService::Organizer
+
+    def self.call(milk, coffee)
+      with(:milk => milk, :coffee => coffee)
+          .reduce(TestDoubles::AddsTwoAction,
+                  TestDoubles::MakesLatteAction)
+    end
+  end
 end

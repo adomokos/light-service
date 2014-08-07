@@ -7,7 +7,7 @@ module LightService; module Organizer
     end
 
     def with(data = {})
-      logger.info("[LightService] - calling organizer #{organizer.to_s}")
+      logger.info("[LightService] - calling organizer <#{organizer.to_s}>")
 
       decorated.with(data)
 
@@ -17,9 +17,13 @@ module LightService; module Organizer
 
     def reduce(*actions)
       decorated.reduce(*actions) do |context, action|
-        logger.info("[LightService] - executing #{action.to_s}")
-        logger.info("[LightService] -   expects: #{extract_keys(action.expects)}") if defined? action.expects
-        logger.info("[LightService] -   promises: #{extract_keys(action.promises)}") if defined? action.promises
+        logger.info("[LightService] - executing <#{action.to_s}>")
+        if defined? action.expects and action.expects.any?
+          logger.info("[LightService] -   expects: #{extract_keys(action.expects)}")
+        end
+        if defined? action.promises and action.promises.any?
+          logger.info("[LightService] -   promises: #{extract_keys(action.promises)}") 
+        end
         logger.info("[LightService] -     keys in context: #{extract_keys(context.keys)}")
       end
     end
