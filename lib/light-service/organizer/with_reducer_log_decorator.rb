@@ -8,10 +8,6 @@ module LightService; module Organizer
       @logged = false
     end
 
-    def logged?
-      @logged
-    end
-
     def with(data = {})
       logger.info("[LightService] - calling organizer <#{organizer.to_s}>")
 
@@ -38,6 +34,10 @@ module LightService; module Organizer
     end
 
     private
+    def logged?
+      @logged
+    end
+
     def extract_keys(keys)
       keys.map {|key| ":#{key}" }.join(', ')
     end
