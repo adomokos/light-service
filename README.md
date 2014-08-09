@@ -212,7 +212,7 @@ project's config file:
 LightService::Configuration.logger = Logger.new(STDOUT)
 ```
 
-You can turn of the logger by setting it to nil or `/dev/null`.
+You can turn off the logger by setting it to nil or `/dev/null`.
 
 ```ruby
 LightService::Configuration.logger = Logger.new('/dev/null')
@@ -239,7 +239,7 @@ I, [DATE]  INFO -- : [LightService] -   promises: :latte
 I, [DATE]  INFO -- : [LightService] -     keys in context: :tea, :milk, :coffee, :milk_tea, :latte
 ```
 
-The log should give a "blue-print" of the series of actions. You can see what organizer is invoked, what actions
+The log provides a blueprint of the series of actions. You can see what organizer is invoked, what actions
 are called in what order, what do the expect and promise and most importantly what keys you have in the context
 after each action is executed.
 
