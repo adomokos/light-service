@@ -200,6 +200,71 @@ end
 
 Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
+## Logging
+
+Enable LightService's logging to better understand what goes on within the series of actions,
+what's in the context or when an action fails.
+
+Logging in LightService is turned off by default. However, turning it on is simple. Add this line to your
+project's config file:
+
+```ruby
+LightService::Configuration.logger = Logger.new(STDOUT)
+```
+
+You can turn of the logger by setting it to nil or `/dev/null`.
+
+```ruby
+LightService::Configuration.logger = Logger.new('/dev/null')
+```
+
+In case you're using LightService with Rails, feel free use Rails logger for LightService:
+
+```ruby
+LightService::Configuration.logger = Rails.logger # or config.logger in one of the config files
+```
+
+Watch the console while you are executing the workflow through the organizer. You should see something like this:
+
+```bash
+I, [DATE]  INFO -- : [LightService] - calling organizer <TestDoubles::MakesTeaAndCappuccino>
+I, [DATE]  INFO -- : [LightService] -     keys in context: :tea, :milk, :coffee
+I, [DATE]  INFO -- : [LightService] - executing <TestDoubles::MakesTeaWithMilkAction>
+I, [DATE]  INFO -- : [LightService] -   expects: :tea, :milk
+I, [DATE]  INFO -- : [LightService] -   promises: :milk_tea
+I, [DATE]  INFO -- : [LightService] -     keys in context: :tea, :milk, :coffee, :milk_tea
+I, [DATE]  INFO -- : [LightService] - executing <TestDoubles::MakesLatteAction>
+I, [DATE]  INFO -- : [LightService] -   expects: :coffee, :milk
+I, [DATE]  INFO -- : [LightService] -   promises: :latte
+I, [DATE]  INFO -- : [LightService] -     keys in context: :tea, :milk, :coffee, :milk_tea, :latte
+```
+
+The log should give a "blue-print" of the series of actions. You can see what organizer is invoked, what actions
+are called in what order, what do the expect and promise and most importantly what keys you have in the context
+after each action is executed.
+
+The logger logs its messages with "INFO" level. The exception to this is the event when an action fails the context.
+That message is logged with "WARN" level:
+
+```bash
+I, [DATE]  INFO -- : [LightService] - calling organizer <TestDoubles::MakesCappuccinoAddsTwoAndFails>
+I, [DATE]  INFO -- : [LightService] -     keys in context: :milk, :coffee
+W, [DATE]  WARN -- : [LightService] - :-((( <TestDoubles::MakesLatteAction> has failed...
+W, [DATE]  WARN -- : [LightService] - context message: Can't make a latte from a milk that's too hot!
+```
+
+The log message will show you what message was added to the context when the action pushed the
+context into a failure state.
+
+The event of skipping the rest of the actions is also captured by its logs:
+
+```bash
+I, [DATE]  INFO -- : [LightService] - calling organizer <TestDoubles::MakesCappuccinoSkipsAddsTwo>
+I, [DATE]  INFO -- : [LightService] -     keys in context: :milk, :coffee
+I, [DATE]  INFO -- : [LightService] - ;-) <TestDoubles::MakesLatteAction> has decided to skip the rest of the actions
+I, [DATE]  INFO -- : [LightService] - context message: Can't make a latte with a fatty milk like that!
+```
+
 ## Error Codes
 
 You can add some more structure to your error handling by taking advantage of error codes in the context.
