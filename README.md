@@ -274,7 +274,7 @@ Huge thanks to the [contributors](https://github.com/adomokos/light-service/grap
 
 ## Release Notes
 
-Follow the release notes in the project's [Wiki](https://github.com/adomokos/light-service/wiki/Release-Notes).
+Follow the release notes in this [document](https://github.com/adomokos/light-service/blob/master/RELEASES.md).
 
 ## License
 
