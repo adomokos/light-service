@@ -6,7 +6,8 @@ require_relative 'tax/provides_free_shipping_action'
 
 describe CalculatesTax do
   let(:order) { double('order') }
-  let(:context) { double('context') }
+  let(:context) { double('context', :keys => [:user],
+                         :failure? => false, :skip_all? => false) }
 
   it "calls the actions in order" do
     allow(::LightService::Context).to receive(:make) \

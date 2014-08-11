@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-class Organizer
-  include LightService::Organizer
+class AdditionOrganizer
+  extend LightService::Organizer
 
   def self.add_numbers(number)
     with(:number => number).reduce(
@@ -25,7 +25,6 @@ end
 class AddsTwoAction
   include LightService::Action
   expects :number
-  promises :number
 
   executed do |context|
     context.number += 2
@@ -35,17 +34,17 @@ end
 class AddsThreeAction
   include LightService::Action
   expects :number
-  promises :number
+  promises :product
 
   executed do |context|
-    context.number += 3
+    context.product = context.number + 3
   end
 end
 
-describe Organizer do
+describe AdditionOrganizer do
   it "Adds 1 2 3 and through to 1" do
-    result = Organizer.add_numbers 1
-    number = result.fetch(:number)
+    result = AdditionOrganizer.add_numbers 1
+    number = result.fetch(:product)
 
     expect(number).to eq(7)
   end

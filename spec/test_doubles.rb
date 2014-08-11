@@ -29,7 +29,7 @@ module TestDoubles
     end
   end
 
-  class KeysToExpectAction
+  class MakesTeaWithMilkAction
     include LightService::Action
     expects :tea, :milk
     promises :milk_tea
@@ -50,10 +50,30 @@ module TestDoubles
     end
   end
 
-  class KeysToPromiseAction
+  class MakesCappuccinoAction
     include LightService::Action
     expects :coffee, :milk
     promises :cappuccino
+  end
+
+  class MakesLatteAction
+    include LightService::Action
+    expects :coffee, :milk
+    promises :latte
+
+    executed do |context|
+      if context.milk == :very_hot
+        context.fail!("Can't make a latte from a milk that's too hot!")
+        next context
+      end
+
+      context[:latte] = "#{context.coffee} - with lots of #{context.milk}"
+
+      if context.milk == "5%"
+        context.skip_all!("Can't make a latte with a fatty milk like that!")
+        next context
+      end
+    end
   end
 
   class MultiplePromisesAction
@@ -65,6 +85,48 @@ module TestDoubles
     executed do |context|
       context.cappuccino = "Cappucino needs #{context.coffee} and a little milk"
       context.latte = "Latte needs #{context.coffee} and a lot of milk"
+    end
+  end
+
+  class MakesTeaAndCappuccino
+    include LightService::Organizer
+
+    def self.call(tea, milk, coffee)
+      with(:tea => tea, :milk => milk, :coffee => coffee)
+          .reduce(TestDoubles::MakesTeaWithMilkAction,
+                  TestDoubles::MakesLatteAction)
+    end
+  end
+
+  class MakesCappuccinoAddsTwo
+    include LightService::Organizer
+
+    def self.call(milk, coffee)
+      with(:milk => milk, :coffee => coffee)
+          .reduce(TestDoubles::AddsTwoAction,
+                  TestDoubles::MakesLatteAction)
+    end
+  end
+
+  class MakesCappuccinoAddsTwoAndFails
+    include LightService::Organizer
+
+    def self.call(coffee)
+      with(:milk => :very_hot, :coffee => coffee)
+          .reduce(TestDoubles::MakesLatteAction,
+                  TestDoubles::AddsTwoAction)
+
+    end
+  end
+
+  class MakesCappuccinoSkipsAddsTwo
+    include LightService::Organizer
+
+    def self.call(coffee)
+      with(:milk => "5%", :coffee => coffee)
+          .reduce(TestDoubles::MakesLatteAction,
+                  TestDoubles::AddsTwoAction)
+
     end
   end
 end

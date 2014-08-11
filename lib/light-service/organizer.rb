@@ -4,25 +4,25 @@ module LightService
       base_class.extend ClassMethods
     end
 
+    # In case this module is included
     module ClassMethods
       def with(data)
-        new.with(data)
+        WithReducerFactory.make(self).with(data)
       end
 
-      def reduce(actions)
-        new.with.reduce(actions)
+      def reduce(*actions)
+        WithReducerFactory.make(self).with.reduce(actions)
       end
     end
 
+    # Provide hooks for extending the class with these methods
     def with(data = {})
-      @context = LightService::Context.make(data)
-      self
+      WithReducerFactory.make(self).with(data)
     end
 
     def reduce(*actions)
-      raise "No action(s) were provided" if actions.empty?
-      actions.flatten!
-      actions.reduce(@context) { |context, action| action.execute(context) }
+      WithReducerFactory.make(self).with.reduce(actions)
     end
+
   end
 end
