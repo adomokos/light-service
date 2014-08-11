@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.4.0
+* Adding [logging](https://github.com/adomokos/light-service#logging) to LightService
+
 ### 0.3.6
 * [Collecting](https://github.com/adomokos/light-service/commit/29817de3ad589441788077368ad1d7e723286def) the `expects` and `promises` keys when they are called multiple times in an action
 
