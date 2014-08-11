@@ -218,12 +218,6 @@ You can turn off the logger by setting it to nil or `/dev/null`.
 LightService::Configuration.logger = Logger.new('/dev/null')
 ```
 
-In case you're using LightService with Rails, feel free use Rails logger for LightService:
-
-```ruby
-LightService::Configuration.logger = Rails.logger # or config.logger in one of the config files
-```
-
 Watch the console while you are executing the workflow through the organizer. You should see something like this:
 
 ```bash
