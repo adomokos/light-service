@@ -10,8 +10,7 @@ module LightService
     end
 
     def self._default_logger
-      logger = Logger.new("/dev/null")
-      #logger = Logger.new(STDOUT)
+      logger = ::Logger.new("/dev/null")
       logger.level = ::Logger::INFO
       logger
     end
