@@ -93,8 +93,8 @@ module TestDoubles
 
     def self.call(tea, milk, coffee)
       with(:tea => tea, :milk => milk, :coffee => coffee)
-          .reduce(TestDoubles::MakesTeaWithMilkAction,
-                  TestDoubles::MakesLatteAction)
+        .reduce(TestDoubles::MakesTeaWithMilkAction,
+                TestDoubles::MakesLatteAction)
     end
   end
 
@@ -103,8 +103,8 @@ module TestDoubles
 
     def self.call(milk, coffee)
       with(:milk => milk, :coffee => coffee)
-          .reduce(TestDoubles::AddsTwoAction,
-                  TestDoubles::MakesLatteAction)
+        .reduce(TestDoubles::AddsTwoAction,
+                TestDoubles::MakesLatteAction)
     end
   end
 
@@ -113,8 +113,8 @@ module TestDoubles
 
     def self.call(coffee)
       with(:milk => :very_hot, :coffee => coffee)
-          .reduce(TestDoubles::MakesLatteAction,
-                  TestDoubles::AddsTwoAction)
+        .reduce(TestDoubles::MakesLatteAction,
+                TestDoubles::AddsTwoAction)
 
     end
   end
@@ -124,8 +124,8 @@ module TestDoubles
 
     def self.call(coffee)
       with(:milk => "5%", :coffee => coffee)
-          .reduce(TestDoubles::MakesLatteAction,
-                  TestDoubles::AddsTwoAction)
+        .reduce(TestDoubles::MakesLatteAction,
+                TestDoubles::AddsTwoAction)
 
     end
   end
