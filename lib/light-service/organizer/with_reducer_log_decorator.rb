@@ -41,6 +41,7 @@ module LightService; module Organizer
     end
 
     private
+
     def extract_keys(keys)
       keys.map {|key| ":#{key}" }.join(', ')
     end
