@@ -19,6 +19,7 @@ module LightService; module Organizer
 
     def reduce(*actions)
       decorated.reduce(*actions) do |context, action|
+        next if no_more_logs?
         next if has_failure?(context, action)
         next if skip_all?(context, action)
 
@@ -43,9 +44,7 @@ module LightService; module Organizer
     end
 
     def has_failure?(context, action)
-      return false unless context.respond_to?(:failure?)
-      return false unless context.failure?
-      return true if logged?
+      return false unless context.respond_to?(:failure?) && context.failure?
 
       logger.warn("[LightService] - :-((( <#{action.to_s}> has failed...")
       logger.warn("[LightService] - context message: #{context.message}")
@@ -53,13 +52,15 @@ module LightService; module Organizer
     end
 
     def skip_all?(context, action)
-      return false unless context.respond_to?(:skip_all?)
-      return false unless context.skip_all?
-      return true if logged?
+      return false unless context.respond_to?(:skip_all?) && context.skip_all?
 
       logger.info("[LightService] - ;-) <#{action.to_s}> has decided to skip the rest of the actions")
       logger.info("[LightService] - context message: #{context.message}")
       @logged = true
+    end
+
+    def no_more_logs?
+      @logged
     end
   end
 end; end
