@@ -1,6 +1,8 @@
 module LightService; module Organizer
   class WithReducerLogDecorator
-    attr_reader :logger, :decorated, :organizer
+    attr_reader :logged, :logger, :decorated, :organizer
+
+    alias_method :logged?, :logged
 
     def initialize(decorated = WithReducer.new, organizer)
       @decorated, @organizer = decorated, organizer
@@ -19,9 +21,13 @@ module LightService; module Organizer
 
     def reduce(*actions)
       decorated.reduce(*actions) do |context, action|
-        next if no_more_logs?
-        next if has_failure?(context, action)
-        next if skip_all?(context, action)
+        next if logged?
+        if has_failure?(context)
+          write_failure_log(context, action) and next
+        end
+        if skip_all?(context)
+          write_skip_all_log(context, action) and next
+        end
 
         logger.info("[LightService] - executing <#{action.to_s}>")
         if defined? action.expects and action.expects.any?
@@ -35,32 +41,28 @@ module LightService; module Organizer
     end
 
     private
-    def logged?
-      @logged
-    end
-
     def extract_keys(keys)
       keys.map {|key| ":#{key}" }.join(', ')
     end
 
-    def has_failure?(context, action)
-      return false unless context.respond_to?(:failure?) && context.failure?
+    def has_failure?(context)
+      context.respond_to?(:failure?) && context.failure?
+    end
 
+    def write_failure_log(context, action)
       logger.warn("[LightService] - :-((( <#{action.to_s}> has failed...")
       logger.warn("[LightService] - context message: #{context.message}")
       @logged = true
     end
 
-    def skip_all?(context, action)
-      return false unless context.respond_to?(:skip_all?) && context.skip_all?
+    def skip_all?(context)
+      context.respond_to?(:skip_all?) && context.skip_all?
+    end
 
+    def write_skip_all_log(context, action)
       logger.info("[LightService] - ;-) <#{action.to_s}> has decided to skip the rest of the actions")
       logger.info("[LightService] - context message: #{context.message}")
       @logged = true
-    end
-
-    def no_more_logs?
-      @logged
     end
   end
 end; end
