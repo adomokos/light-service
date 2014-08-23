@@ -10,7 +10,7 @@ module LightService
             error_message = "expected #{format_keys(not_found_keys)} to be in the context during #{action}"
 
             Configuration.logger.error error_message
-            fail ExpectedKeysNotInContextError, error_message
+            fail ExpectedKeysNotInContextError, error_message, caller
           end
         end
 
@@ -21,7 +21,7 @@ module LightService
             error_message = "promised #{format_keys(not_found_keys)} to be in the context during #{action}"
 
             Configuration.logger.error error_message
-            fail PromisedKeysNotInContextError, error_message
+            fail PromisedKeysNotInContextError, error_message, caller
           end
         end
 
