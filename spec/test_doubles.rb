@@ -126,7 +126,16 @@ module TestDoubles
       with(:milk => "5%", :coffee => coffee)
         .reduce(TestDoubles::MakesLatteAction,
                 TestDoubles::AddsTwoAction)
+    end
+  end
 
+  class FailsWithNoExpectsOrPromisesFoundOnActionError
+    include LightService::Organizer
+
+    def self.call(coffee)
+      with(:milk => "5%", :coffee => coffee)
+        .reduce!(TestDoubles::MakesLatteAction,
+                 TestDoubles::AddsTwoAction)
     end
   end
 end

@@ -40,6 +40,10 @@ module LightService; module Organizer
       end
     end
 
+    def reduce!(*actions)
+      decorated.reduce!(*actions)
+    end
+
     private
 
     def extract_keys(keys)

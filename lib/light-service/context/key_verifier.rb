@@ -25,6 +25,15 @@ module LightService
           end
         end
 
+        def verify_actions_has_expects_or_promises(actions)
+          actions = actions.select { |a| a.expected_keys.empty? && a.promised_keys.empty? }
+
+          if actions.any?
+            error_message = "No expected or promised keys were found in the following actions: #{format_action_names(actions)}"
+            fail NoExpectsOrPromisesFoundOnActionError, error_message
+          end
+        end
+
         private
 
         def verify_keys_are_in_context(context, keys)
@@ -40,6 +49,10 @@ module LightService
 
         def format_keys(keys)
           keys.map { |k| ":#{k}"}.join(', ')
+        end
+
+        def format_action_names(actions)
+          actions.join(',')
         end
       end
     end

@@ -17,11 +17,11 @@ module LightService
       end
 
       def expected_keys
-        @_expected_keys
+        @_expected_keys ||= []
       end
 
       def promised_keys
-        @_promised_keys
+        @_promised_keys ||= []
       end
 
       def executed
@@ -44,7 +44,7 @@ module LightService
       private
 
       def create_action_context(context)
-        if context.is_a? ::LightService::Context
+        if context.is_a? LightService::Context
           return context
         end
 

@@ -13,6 +13,10 @@ module LightService
       def reduce(*actions)
         WithReducerFactory.make(self).with.reduce(actions)
       end
+
+      def reduce!(*actions)
+        WithReducerFactory.make(self).with.reduce!(actions)
+      end
     end
 
     # Provide hooks for extending the class with these methods
@@ -22,6 +26,10 @@ module LightService
 
     def reduce(*actions)
       WithReducerFactory.make(self).with.reduce(actions)
+    end
+
+    def reduce!(*actions)
+      WithReducerFactory.make(self).with.reduce!(actions)
     end
 
   end

@@ -69,7 +69,6 @@ module LightService
     end
 
     def define_accessor_methods_for_keys(keys)
-      return if keys.nil?
       keys.each do |key|
         define_singleton_method("#{key}") { self.fetch(key) }
         define_singleton_method("#{key}=") { |value| self[key] = value }
