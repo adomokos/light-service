@@ -9,7 +9,7 @@ describe "Logs from organizer" do
     strio = StringIO.new
     LightService::Configuration.logger = Logger.new(strio)
 
-    result = yield
+    yield
 
     LightService::Configuration.logger = original_logger
 

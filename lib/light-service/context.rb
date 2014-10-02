@@ -9,6 +9,7 @@ module LightService
 
     def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='', error_code=nil)
       @outcome, @message, @error_code = outcome, message, error_code
+      @skip_all = false
       context.to_hash.each {|k,v| self[k] = v}
       self
     end
@@ -71,6 +72,7 @@ module LightService
     def define_accessor_methods_for_keys(keys)
       return if keys.nil?
       keys.each do |key|
+        next if self.respond_to?(key.to_sym)
         define_singleton_method("#{key}") { self.fetch(key) }
         define_singleton_method("#{key}=") { |value| self[key] = value }
       end

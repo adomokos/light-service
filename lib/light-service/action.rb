@@ -17,14 +17,16 @@ module LightService
       end
 
       def expected_keys
-        @_expected_keys
+        @_expected_keys ||= []
       end
 
       def promised_keys
-        @_promised_keys
+        @_promised_keys ||= []
       end
 
       def executed
+        raise "executed macro can not be redefined"  if self.respond_to?(:execute)
+
         define_singleton_method "execute" do |context = {}|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
