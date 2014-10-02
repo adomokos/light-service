@@ -2,6 +2,7 @@ require 'logger'
 
 require "light-service/version"
 
+require 'light-service/errors'
 require 'light-service/configuration'
 require 'light-service/context'
 require 'light-service/context_key_verifier'

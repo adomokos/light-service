@@ -1,6 +1,4 @@
 module LightService
-  class FailWithRollbackError < StandardError; end
-
   module Action
 
     def self.included(base_class)
