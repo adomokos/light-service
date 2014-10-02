@@ -16,7 +16,7 @@ module LightService; module Organizer
           result = action.execute(context)
 
           yield(context, action) if block_given?
-        rescue FailWithRollbackError => e
+        rescue FailWithRollbackError
           result = reduce_rollback(actions)
         end
 
@@ -26,7 +26,7 @@ module LightService; module Organizer
 
     def reduce_rollback(actions)
       actions.reverse.reduce(context) do |context, action|
-        result = action.rollback(context)
+        action.rollback(context)
       end
     end
   end
