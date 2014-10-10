@@ -42,6 +42,29 @@ class AddsThreeWithRollbackAction
   end
 end
 
+class RollbackOrganizerWithNoRollback
+  extend LightService::Organizer
+
+  def self.for(number)
+    with(:number => number).reduce(
+      TestDoubles::AddsOneAction,
+      TestDoubles::AddsTwoAction,
+      AddsThreeWithNoRollbackAction
+    )
+  end
+end
+
+class AddsThreeWithNoRollbackAction
+  include LightService::Action
+  expects :number
+
+  executed do |context|
+    context.number = context.number + 3
+
+    context.fail_with_rollback!("I did not like this!")
+  end
+end
+
 describe RollbackOrganizer do
   it "Adds 1, 2, 3 to 1 and rolls back " do
     result = RollbackOrganizer.for 1
@@ -50,5 +73,14 @@ describe RollbackOrganizer do
     expect(result).to be_failure
     expect(result.message).to eq("I did not like this!")
     expect(number).to eq(3)
+  end
+
+  it "won't error our when actions don't define rollback" do
+    result = RollbackOrganizerWithNoRollback.for 1
+    number = result.fetch(:number)
+
+    expect(result).to be_failure
+    expect(result.message).to eq("I did not like this!")
+    expect(number).to eq(7)
   end
 end
