@@ -129,4 +129,46 @@ module TestDoubles
 
     end
   end
+
+  class AdditionOrganizer
+    extend LightService::Organizer
+
+    def self.add_numbers(number)
+      with(:number => number).reduce(
+        AddsOneAction,
+        AddsTwoAction,
+        AddsThreeAction
+      )
+    end
+  end
+
+  class AddsOneAction
+    include LightService::Action
+    expects :number
+    promises :number
+
+    executed do |context|
+      context.number += 1
+    end
+  end
+
+  class AddsTwoAction
+    include LightService::Action
+    expects :number
+
+    executed do |context|
+      context.number += 2
+    end
+  end
+
+  class AddsThreeAction
+    include LightService::Action
+    expects :number
+    promises :product
+
+    executed do |context|
+      context.product = context.number + 3
+    end
+  end
+
 end
