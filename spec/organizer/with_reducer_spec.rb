@@ -16,4 +16,15 @@ describe LightService::Organizer::WithReducer do
     expect(result).to eq(context)
     expect(result).to be_success
   end
+
+  it "reduces the rollback when FailWithRollbackError is caught" do
+    expect(action1).to receive(:execute).with(context).and_return(context)
+    expect(action2).to receive(:execute).with(context) { raise LightService::FailWithRollbackError }
+    expect(action1).to receive(:rollback).with(context).and_return(context)
+    expect(action2).to receive(:rollback).with(context).and_return(context)
+
+    result = described_class.new.with(context).reduce(actions)
+
+    expect(result).to eq(context)
+  end
 end
