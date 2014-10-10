@@ -26,7 +26,11 @@ module LightService; module Organizer
 
     def reduce_rollback(actions)
       actions.reverse.reduce(context) do |context, action|
-        action.rollback(context)
+        if action.respond_to?(:rollback)
+          action.rollback(context)
+        else
+          context
+        end
       end
     end
   end

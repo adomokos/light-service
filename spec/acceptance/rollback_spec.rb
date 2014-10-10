@@ -33,10 +33,6 @@ class AddsTwoWithRollbackAction
   executed do |context|
     context.number += 2
   end
-
-  rolled_back do |context|
-    context.number -= 2
-  end
 end
 
 class AddsThreeWithRollbackAction
@@ -61,6 +57,6 @@ describe RollbackOrganizer do
 
     expect(result).to be_failure
     expect(result.message).to eq("I did not like this!")
-    expect(number).to eq(1)
+    expect(number).to eq(3)
   end
 end
