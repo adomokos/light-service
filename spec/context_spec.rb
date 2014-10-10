@@ -3,6 +3,8 @@ require 'test_doubles'
 
 describe LightService::Context do
 
+  let(:context) { LightService::Context.make }
+
   describe "can be made" do
     context "with no arguments" do
       subject { LightService::Context.make }
@@ -46,21 +48,18 @@ describe LightService::Context do
   end
 
   it "can be asked for skip_all?" do
-    context = LightService::Context.make
     context.skip_all!
 
     expect(context.skip_all?).to be_truthy
   end
 
   it "can be pushed into a SUCCESS state" do
-    context = LightService::Context.make
     context.succeed!("a happy end")
 
     expect(context).to be_success
   end
 
   it "can be pushed into a SUCCESS state without a message" do
-    context = LightService::Context.make
     context.succeed!
 
     expect(context).to be_success
@@ -68,7 +67,6 @@ describe LightService::Context do
   end
 
   it "can be pushed into a FAILURE state without a message" do
-    context = LightService::Context.make
     context.fail!
 
     expect(context).to be_failure
@@ -76,14 +74,12 @@ describe LightService::Context do
   end
 
   it "can be pushed into a FAILURE state with a message" do
-    context = LightService::Context.make
     context.fail!("a sad end")
 
     expect(context).to be_failure
   end
 
   it "can be pushed into a FAILURE state with a message in an options hash" do
-    context = LightService::Context.make
     context.fail!("a sad end")
 
     expect(context).to be_failure
@@ -92,7 +88,6 @@ describe LightService::Context do
   end
 
   it "can be pushed into a FAILURE state with an error code in an options hash" do
-    context = LightService::Context.make
     context.fail!("a sad end", 10005)
 
     expect(context).to be_failure
@@ -101,15 +96,12 @@ describe LightService::Context do
   end
 
   it "can set a flag to skip all subsequent actions" do
-    context = LightService::Context.make
     context.skip_all!
 
     expect(context).to be_skip_all
   end
 
   context "stopping additional processing in an action" do
-    let(:context) { LightService::Context.make }
-
     it "flags processing to stop on failure" do
       context.fail!("on purpose")
       expect(context.stop_processing?).to be_truthy
@@ -121,4 +113,8 @@ describe LightService::Context do
     end
   end
 
+  it "can fail with FailWithRollBackError" do
+    expect { context.fail_with_rollback!("roll me back") }.to \
+      raise_error(LightService::FailWithRollbackError)
+  end
 end
