@@ -63,7 +63,12 @@ module TestDoubles
 
     executed do |context|
       if context.milk == :very_hot
-        context.fail!("Can't make a latte from a milk that's too hot!")
+        context.fail!("Can't make a latte from a milk that's very hot!")
+        next context
+      end
+
+      if context.milk == :super_hot
+        context.fail_with_rollback!("Can't make a latte from a milk that's super hot!")
         next context
       end
 
@@ -111,8 +116,8 @@ module TestDoubles
   class MakesCappuccinoAddsTwoAndFails
     include LightService::Organizer
 
-    def self.call(coffee)
-      with(:milk => :very_hot, :coffee => coffee)
+    def self.call(coffee, this_hot = :very_hot)
+      with(:milk => this_hot, :coffee => coffee)
           .reduce(TestDoubles::MakesLatteAction,
                   TestDoubles::AddsTwoActionWithFetch)
 

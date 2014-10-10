@@ -75,7 +75,7 @@ describe RollbackOrganizer do
     expect(number).to eq(3)
   end
 
-  it "won't error our when actions don't define rollback" do
+  it "won't error out when actions don't define rollback" do
     result = RollbackOrganizerWithNoRollback.for 1
     number = result.fetch(:number)
 

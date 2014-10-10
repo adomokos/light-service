@@ -14,10 +14,10 @@ module LightService; module Organizer
       actions.reduce(context) do |context, action|
         begin
           result = action.execute(context)
-
-          yield(context, action) if block_given?
         rescue FailWithRollbackError
           result = reduce_rollback(actions)
+        ensure
+          yield(context, action) if block_given?
         end
 
         result
