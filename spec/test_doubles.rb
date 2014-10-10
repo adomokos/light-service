@@ -1,7 +1,7 @@
 # A collection of Action and Organizer dummies used in specs
 
 module TestDoubles
-  class AddsTwoAction
+  class AddsTwoActionWithFetch
     include LightService::Action
 
     executed do |context|
@@ -103,7 +103,7 @@ module TestDoubles
 
     def self.call(milk, coffee)
       with(:milk => milk, :coffee => coffee)
-          .reduce(TestDoubles::AddsTwoAction,
+          .reduce(TestDoubles::AddsTwoActionWithFetch,
                   TestDoubles::MakesLatteAction)
     end
   end
@@ -114,7 +114,7 @@ module TestDoubles
     def self.call(coffee)
       with(:milk => :very_hot, :coffee => coffee)
           .reduce(TestDoubles::MakesLatteAction,
-                  TestDoubles::AddsTwoAction)
+                  TestDoubles::AddsTwoActionWithFetch)
 
     end
   end
@@ -125,7 +125,7 @@ module TestDoubles
     def self.call(coffee)
       with(:milk => "5%", :coffee => coffee)
           .reduce(TestDoubles::MakesLatteAction,
-                  TestDoubles::AddsTwoAction)
+                  TestDoubles::AddsTwoActionWithFetch)
 
     end
   end
