@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'test_doubles'
 
 class RollbackOrganizer
   extend LightService::Organizer
@@ -6,7 +7,7 @@ class RollbackOrganizer
   def self.for(number)
     with(:number => number).reduce(
       AddsOneWithRollbackAction,
-      AddsTwoWithRollbackAction,
+      TestDoubles::AddsTwoAction,
       AddsThreeWithRollbackAction
     )
   end
@@ -23,15 +24,6 @@ class AddsOneWithRollbackAction
 
   rolled_back do |context|
     context.number -= 1
-  end
-end
-
-class AddsTwoWithRollbackAction
-  include LightService::Action
-  expects :number
-
-  executed do |context|
-    context.number += 2
   end
 end
 
