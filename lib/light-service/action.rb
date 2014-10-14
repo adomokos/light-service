@@ -30,16 +30,17 @@ module LightService
         define_singleton_method "execute" do |context = {}|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
-          action = self
 
-          Context::KeyVerifier.verify_expected_keys_are_in_context(action_context, action)
+          action_context.current_action = self
+
+          Context::KeyVerifier.verify_expected_keys_are_in_context(action_context)
 
           action_context.define_accessor_methods_for_keys(expected_keys)
           action_context.define_accessor_methods_for_keys(promised_keys)
 
           yield(action_context)
 
-          Context::KeyVerifier.verify_promised_keys_are_in_context(action_context, action)
+          Context::KeyVerifier.verify_promised_keys_are_in_context(action_context)
         end
       end
 
