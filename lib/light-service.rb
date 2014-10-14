@@ -4,6 +4,7 @@ require "light-service/version"
 
 require 'light-service/errors'
 require 'light-service/configuration'
+require 'light-service/localizer'
 require 'light-service/context'
 require 'light-service/context_key_verifier'
 require 'light-service/organizer/with_reducer'
