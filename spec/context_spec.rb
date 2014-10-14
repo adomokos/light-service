@@ -98,7 +98,7 @@ describe LightService::Context do
   it "uses localizer to translate failure message" do
     action_class = TestDoubles::AnAction
     expect(LightService::Configuration.localizer).to receive(:failure)
-                                                 .with(:failure_reason, action_class)
+                                                 .with(:failure_reason, action_class, {})
                                                  .and_return("message")
 
     context = LightService::Context.make
@@ -112,7 +112,7 @@ describe LightService::Context do
   it "uses localizer to translate success message" do
     action_class = TestDoubles::AnAction
     expect(LightService::Configuration.localizer).to receive(:success)
-                                                 .with(:action_passed, action_class)
+                                                 .with(:action_passed, action_class, {})
                                                  .and_return("message")
 
     context = LightService::Context.make
