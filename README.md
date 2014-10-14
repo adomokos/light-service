@@ -339,6 +339,60 @@ The actions are rolled back in reversed order from the point of failure starting
 
 See [this](spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
 
+## Localizing Messages
+
+By default LightService provides a mechanism for easily translating your error or success messages via I18n.  You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
+
+```ruby
+class FooAction
+  include LightService::Action
+
+  executed do |context|
+    unless service_call.success?
+      context.fail!(:exceeded_api_limit)
+
+      # The failure message used here equates to:
+      # I18n.t(:exceeded_api_limit, scope: "foo_action.light_service.failures")
+    end
+  end
+end
+```
+
+This also works with nested classes via the ActiveSupport `#underscore` method, just as ActiveRecord performs localization lookups on models placed inside a module.
+
+```ruby
+module PaymentGateway
+  class CaptureFunds
+    include LightService::Action
+
+    executed do |context|
+      if api_service.failed?
+        context.fail!(:funds_not_available)
+      end
+
+      # this failure message equates to:
+      # I18n.t(:funds_not_available, scope: "payment_gateway/capture_funds.light_service.failures")
+    end
+  end
+end
+```
+
+To provide your own custom localizer, use the configuration setting and subclass the default localizer LightService provides.
+
+```ruby
+LightService::Configuration.localizer = MyLocalizer.new
+
+# lib/my_localizer.rb
+class MyLocalizer < LightService::Localizer
+  
+  # I just want to change the default lookup path
+  # => "light_service.failures.payment_gateway/capture_funds"
+  def i18n_scope_from_class(action_class, type)
+    "light_service.#{type.pluralize}.#{action_class.name.underscore}"
+  end
+end
+```
+
 ## Requirements
 
 This gem requires ruby 1.9.x
