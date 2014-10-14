@@ -284,13 +284,13 @@ class FooAction
 
   executed do |context|
     unless (service_call.success?)
-      context.fail!("Service call failed", 1001)
+      context.fail!("Service call failed", error_code: 1001)
     end
 
     # Do something else
 
     unless (entity.save)
-      context.fail!("Saving the entity failed", 2001)
+      context.fail!("Saving the entity failed", error_code: 2001)
     end
   end
 end
@@ -372,6 +372,28 @@ module PaymentGateway
 
       # this failure message equates to:
       # I18n.t(:funds_not_available, scope: "payment_gateway/capture_funds.light_service.failures")
+    end
+  end
+end
+```
+
+If you need to provide custom variables for interpolation during localization, pass that along in a hash.
+
+```ruby
+module PaymentGateway
+  class CaptureFunds
+    include LightService::Action
+
+    executed do |context|
+      if api_service.failed?
+        context.fail!(:funds_not_available, last_four: "1234")
+      end
+
+      # this failure message equates to:
+      # I18n.t(:funds_not_available, last_four: "1234", scope: "payment_gateway/capture_funds.light_service.failures")
+
+      # the translation string itself being:
+      # => "Unable to process your payment for account ending in %{last_four}"
     end
   end
 end
