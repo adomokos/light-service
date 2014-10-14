@@ -296,6 +296,49 @@ class FooAction
 end
 ```
 
+## Action Rollback
+
+Sometimes your action has to undo what it did when an error occurs. Think about a chain of actions where you need
+to persist records in your data store in one action and you have to call an external service in the next. What happens if there
+is an error when you call the external service? You want to remove the records you previously saved. You can do it now with
+the `rolled_back` macro.
+
+```ruby
+class SaveEntities
+  include LightService::Action
+  expects :user
+
+  executed do |context|
+    context.user.save!
+  end
+
+  rolled_back do |context|
+    context.user.destroy
+  end
+end
+```
+
+You need to call the `fail_with_rollback!` method to initiate a rollback for actions starting with the action where the failure
+was triggered.
+
+```ruby
+class CallExternalApi
+  include LightService::Action
+
+  executed do |context|
+    api_call_result = SomeAPI.save_user(context.user)
+
+    context.fail_with_rollback!("Error when calling external API") if api_call_result.failure?
+  end
+end
+```
+
+Using the `rolled_back` macro is optional for the actions in the chain. You shouldn't care about undoing non-persisted changes.
+
+The actions are rolled back in reversed order from the point of failure starting with the action that triggered it.
+
+See [this acceptance](spec/acceptance/rollback_spec.rb) test to learn more about this functionality.
+
 ## Requirements
 
 This gem requires ruby 1.9.x
