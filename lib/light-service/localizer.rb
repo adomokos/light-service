@@ -1,16 +1,18 @@
 module LightService
   class Localizer
-    def failure(message_or_key, action_class)
+    def failure(message_or_key, action_class, i18n_options={})
       if message_or_key.is_a?(Symbol)
-        translate(message_or_key, action_class, type: :failure)
+        i18n_options.merge!(type: :failure)
+        translate(message_or_key, action_class, i18n_options)
       else
         message_or_key
       end
     end
 
-    def success(message_or_key, action_class)
+    def success(message_or_key, action_class, i18n_options={})
       if message_or_key.is_a?(Symbol)
-        translate(message_or_key, action_class, type: :success)
+        i18n_options.merge!(type: :success)
+        translate(message_or_key, action_class, i18n_options)
       else
         message_or_key
       end
@@ -20,7 +22,9 @@ module LightService
       type = options.delete(:type)
 
       scope = i18n_scope_from_class(action_class, type)
-      I18n.t(key, scope: scope)
+      options.merge!(scope: scope)
+
+      I18n.t(key, options)
     end
 
     private

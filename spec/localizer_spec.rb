@@ -20,6 +20,16 @@ describe LightService::Localizer do
 
         expect(subject).to eq("message")
       end
+
+      it "allows passing interpolation options to I18n layer" do
+        expect(I18n).to receive(:t)
+                    .with(message_or_key, hash_including(i18n_variable: "value"))
+                    .and_return("message")
+
+        subject = localizer.failure(message_or_key, action_class, i18n_variable: "value")
+
+        expect(subject).to eq("message")
+      end
     end
 
     context "when provided a String" do
@@ -43,6 +53,16 @@ describe LightService::Localizer do
         expect(I18n).to receive(:t)
                     .with(message_or_key, scope: expected_scope)
                     .and_return("message")
+
+        expect(subject).to eq("message")
+      end
+
+      it "allows passing interpolation options to I18n layer" do
+        expect(I18n).to receive(:t)
+                    .with(message_or_key, hash_including(i18n_variable: "value"))
+                    .and_return("message")
+
+        subject = localizer.success(message_or_key, action_class, i18n_variable: "value")
 
         expect(subject).to eq("message")
       end
