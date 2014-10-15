@@ -45,7 +45,7 @@ module LightService
     end
 
     def succeed!(message=nil, options={})
-      @message = Configuration.localizer.success(message, current_action, options)
+      @message = Configuration.localization_adapter.success(message, current_action, options)
       @outcome = ::LightService::Outcomes::SUCCESS
     end
 
@@ -65,7 +65,7 @@ module LightService
         options = {}
       end
 
-      @message = Configuration.localizer.failure(message, current_action, options)
+      @message = Configuration.localization_adapter.failure(message, current_action, options)
       @error_code = error_code
       @outcome = ::LightService::Outcomes::FAILURE
     end

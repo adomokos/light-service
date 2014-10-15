@@ -399,13 +399,13 @@ module PaymentGateway
 end
 ```
 
-To provide your own custom localizer, use the configuration setting and subclass the default localizer LightService provides.
+To provide your own custom adapter, use the configuration setting and subclass the default adapter LightService provides.
 
 ```ruby
-LightService::Configuration.localizer = MyLocalizer.new
+LightService::Configuration.localization_adapter = MyLocalizer.new
 
 # lib/my_localizer.rb
-class MyLocalizer < LightService::Localizer
+class MyLocalizer < LightService::LocalizationAdapter
   
   # I just want to change the default lookup path
   # => "light_service.failures.payment_gateway/capture_funds"

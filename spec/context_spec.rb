@@ -95,9 +95,9 @@ describe LightService::Context do
     expect(context.error_code).to eq(10005)
   end
 
-  it "uses localizer to translate failure message" do
+  it "uses localization adapter to translate failure message" do
     action_class = TestDoubles::AnAction
-    expect(LightService::Configuration.localizer).to receive(:failure)
+    expect(LightService::Configuration.localization_adapter).to receive(:failure)
                                                  .with(:failure_reason, action_class, {})
                                                  .and_return("message")
 
@@ -109,9 +109,9 @@ describe LightService::Context do
     expect(context.message).to eq("message")
   end
 
-  it "uses localizer to translate success message" do
+  it "uses localization adapter to translate success message" do
     action_class = TestDoubles::AnAction
-    expect(LightService::Configuration.localizer).to receive(:success)
+    expect(LightService::Configuration.localization_adapter).to receive(:success)
                                                  .with(:action_passed, action_class, {})
                                                  .and_return("message")
 

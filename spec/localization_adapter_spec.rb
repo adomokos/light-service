@@ -1,12 +1,12 @@
 require "spec_helper"
 require 'test_doubles'
 
-describe LightService::Localizer do
+describe LightService::LocalizationAdapter do
   let(:action_class) { TestDoubles::AnAction }
-  let(:localizer) { described_class.new }
+  let(:adapter) { described_class.new }
 
   describe "#failure" do
-    subject { localizer.failure(message_or_key, action_class) }
+    subject { adapter.failure(message_or_key, action_class) }
 
     context "when provided a Symbol" do
       let(:message_or_key) { :not_found }
@@ -26,7 +26,7 @@ describe LightService::Localizer do
                     .with(message_or_key, hash_including(i18n_variable: "value"))
                     .and_return("message")
 
-        subject = localizer.failure(message_or_key, action_class, i18n_variable: "value")
+        subject = adapter.failure(message_or_key, action_class, i18n_variable: "value")
 
         expect(subject).to eq("message")
       end
@@ -42,7 +42,7 @@ describe LightService::Localizer do
   end
 
   describe "#success" do
-    subject { localizer.success(message_or_key, action_class) }
+    subject { adapter.success(message_or_key, action_class) }
 
     context "when provided a Symbol" do
       let(:message_or_key) { :not_found }
@@ -62,7 +62,7 @@ describe LightService::Localizer do
                     .with(message_or_key, hash_including(i18n_variable: "value"))
                     .and_return("message")
 
-        subject = localizer.success(message_or_key, action_class, i18n_variable: "value")
+        subject = adapter.success(message_or_key, action_class, i18n_variable: "value")
 
         expect(subject).to eq("message")
       end

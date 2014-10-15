@@ -1,5 +1,5 @@
 module LightService
-  class Localizer
+  class LocalizationAdapter
     def failure(message_or_key, action_class, i18n_options={})
       if message_or_key.is_a?(Symbol)
         i18n_options.merge!(type: :failure)
