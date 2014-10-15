@@ -25,7 +25,7 @@ module LightService
       end
 
       def executed
-        raise "executed macro can not be invoked again" if self.respond_to?(:execute)
+        raise "`executed` macro can not be invoked again" if self.respond_to?(:execute)
 
         define_singleton_method "execute" do |context = {}|
           action_context = create_action_context(context)
@@ -41,6 +41,17 @@ module LightService
 
           Context::KeyVerifier.verify_promised_keys_are_in_context(action_context, action)
         end
+      end
+
+      def rolled_back
+        raise "`rolled_back` macro can not be invoked again" if self.respond_to?(:rollback)
+
+        define_singleton_method "rollback" do |context = {}|
+          yield(context)
+
+          context
+        end
+
       end
 
       private

@@ -1,7 +1,4 @@
 module LightService
-  class ExpectedKeysNotInContextError < StandardError; end
-  class PromisedKeysNotInContextError < StandardError; end
-
   class Context
     class KeyVerifier
       class << self

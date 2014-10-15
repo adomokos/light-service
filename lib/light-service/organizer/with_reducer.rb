@@ -12,9 +12,25 @@ module LightService; module Organizer
       actions.flatten!
 
       actions.reduce(context) do |context, action|
-        result = action.execute(context)
-        yield(context, action) if block_given?
+        begin
+          result = action.execute(context)
+        rescue FailWithRollbackError
+          result = reduce_rollback(actions)
+        ensure
+          yield(context, action) if block_given?
+        end
+
         result
+      end
+    end
+
+    def reduce_rollback(actions)
+      actions.reverse.reduce(context) do |context, action|
+        if action.respond_to?(:rollback)
+          action.rollback(context)
+        else
+          context
+        end
       end
     end
   end

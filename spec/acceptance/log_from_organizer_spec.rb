@@ -90,7 +90,24 @@ describe "Logs from organizer" do
     it "logs it with a warning" do
       organizer_log_message = "WARN -- : [LightService] - :-((( <TestDoubles::MakesLatteAction> has failed..."
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "WARN -- : [LightService] - context message: Can't make a latte from a milk that's too hot!"
+      organizer_log_message = "WARN -- : [LightService] - context message: Can't make a latte from a milk that's very hot!"
+      expect(log_message).to include(organizer_log_message)
+      organizer_log_message = "[LightService] -  :-((( <TestDoubles::AddsTwoAction> has failed..."
+      expect(log_message).not_to include(organizer_log_message)
+    end
+  end
+
+  context "when the context has failed with rollback" do
+    subject(:log_message) do
+      collects_log do
+        TestDoubles::MakesCappuccinoAddsTwoAndFails.call("espresso coffee", :super_hot)
+      end
+    end
+
+    it "logs it with a warning" do
+      organizer_log_message = "WARN -- : [LightService] - :-((( <TestDoubles::MakesLatteAction> has failed..."
+      expect(log_message).to include(organizer_log_message)
+      organizer_log_message = "WARN -- : [LightService] - context message: Can't make a latte from a milk that's super hot!"
       expect(log_message).to include(organizer_log_message)
       organizer_log_message = "[LightService] -  :-((( <TestDoubles::AddsTwoAction> has failed..."
       expect(log_message).not_to include(organizer_log_message)

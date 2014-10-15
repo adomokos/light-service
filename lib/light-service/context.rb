@@ -60,6 +60,11 @@ module LightService
       @outcome = ::LightService::Outcomes::FAILURE
     end
 
+    def fail_with_rollback!(message=nil, error_code=nil)
+      fail!(message, error_code)
+      raise FailWithRollbackError.new
+    end
+
     def skip_all!(message=nil)
       @message = message
       @skip_all = true
