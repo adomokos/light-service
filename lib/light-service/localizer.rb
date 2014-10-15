@@ -18,6 +18,8 @@ module LightService
       end
     end
 
+    private
+
     def translate(key, action_class, options={})
       type = options.delete(:type)
 
@@ -26,8 +28,6 @@ module LightService
 
       I18n.t(key, options)
     end
-
-    private
 
     def i18n_scope_from_class(action_class, type)
       "#{action_class.name.underscore}.light_service.#{type.to_s.pluralize}"
