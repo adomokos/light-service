@@ -337,7 +337,7 @@ Using the `rolled_back` macro is optional for the actions in the chain. You shou
 
 The actions are rolled back in reversed order from the point of failure starting with the action that triggered it.
 
-See [this acceptance](spec/acceptance/rollback_spec.rb) test to learn more about this functionality.
+See [this](spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
 
 ## Requirements
 
