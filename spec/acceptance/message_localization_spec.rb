@@ -27,11 +27,11 @@ class TestsLocalizationInvocationOptionsAction
 end
 
 def pass_with(message_or_key, i18n_options={})
-  TestsLocalizationAdapter.with_message(true, message_or_key, i18n_options)  
+  TestsLocalizationAdapter.with_message(true, message_or_key, i18n_options)
 end
 
 def fail_with(message_or_key, i18n_options={})
-  TestsLocalizationAdapter.with_message(false, message_or_key, i18n_options)  
+  TestsLocalizationAdapter.with_message(false, message_or_key, i18n_options)
 end
 
 describe "Localization Adapter" do
@@ -96,7 +96,7 @@ describe "Localization Adapter" do
   describe "passing a Symbol with interpolation variables" do
     describe "by failing the context" do
       it "performs a translation with interpolation" do
-        result = fail_with(:failure_with_interpolation, reason: "bad account")
+        result = fail_with(:failure_with_interpolation, :reason => "bad account")
 
         expect(result).to be_failure
         expect(result.message).to eq("Failed with bad account")
@@ -105,7 +105,7 @@ describe "Localization Adapter" do
 
     describe "by passing the context" do
       it "performs a translation with interpolation" do
-        result = pass_with(:success_with_interpolation, reason: "account in good standing")
+        result = pass_with(:success_with_interpolation, :reason => "account in good standing")
 
         expect(result).to be_success
         expect(result.message).to eq("Passed with account in good standing")

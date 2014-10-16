@@ -17,6 +17,7 @@ module LightService; module Organizer
         rescue FailWithRollbackError
           result = reduce_rollback(actions)
         ensure
+          # For logging
           yield(context, action) if block_given?
         end
 

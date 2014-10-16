@@ -7,7 +7,7 @@ module LightService
   class Context < Hash
     attr_accessor :outcome, :message, :error_code, :current_action
 
-    def initialize(context={}, outcome=::LightService::Outcomes::SUCCESS, message='', error_code=nil)
+    def initialize(context={}, outcome=Outcomes::SUCCESS, message='', error_code=nil)
       @outcome, @message, @error_code = outcome, message, error_code
       @skip_all = false
       context.to_hash.each {|k,v| self[k] = v}
@@ -15,7 +15,7 @@ module LightService
     end
 
     def self.make(context={})
-      unless context.is_a? Hash or context.is_a? ::LightService::Context
+      unless context.is_a? Hash or context.is_a? LightService::Context
         raise ArgumentError, 'Argument must be Hash or LightService::Context'
       end
 
@@ -28,7 +28,7 @@ module LightService
     end
 
     def success?
-      @outcome == ::LightService::Outcomes::SUCCESS
+      @outcome == Outcomes::SUCCESS
     end
 
     def failure?
@@ -46,7 +46,7 @@ module LightService
 
     def succeed!(message=nil, options={})
       @message = Configuration.localization_adapter.success(message, current_action, options)
-      @outcome = ::LightService::Outcomes::SUCCESS
+      @outcome = Outcomes::SUCCESS
     end
 
     def set_failure!(message)
@@ -67,7 +67,7 @@ module LightService
 
       @message = Configuration.localization_adapter.failure(message, current_action, options)
       @error_code = error_code
-      @outcome = ::LightService::Outcomes::FAILURE
+      @outcome = Outcomes::FAILURE
     end
 
     def fail_with_rollback!(message=nil, error_code=nil)

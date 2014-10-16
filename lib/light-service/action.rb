@@ -31,6 +31,7 @@ module LightService
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
 
+          # Store the action within the context
           action_context.current_action = self
 
           Context::KeyVerifier.verify_expected_keys_are_in_context(action_context)
@@ -58,7 +59,7 @@ module LightService
       private
 
       def create_action_context(context)
-        if context.is_a? ::LightService::Context
+        if context.is_a? LightService::Context
           return context
         end
 
