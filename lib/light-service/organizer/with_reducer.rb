@@ -26,13 +26,24 @@ module LightService; module Organizer
     end
 
     def reduce_rollback(actions)
-      actions.reverse.reduce(context) do |context, action|
-        if action.respond_to?(:rollback)
-          action.rollback(context)
-        else
-          context
+      reversable_actions(actions)
+        .reverse
+        .reduce(context) do |context, action|
+          if action.respond_to?(:rollback)
+            action.rollback(context)
+          else
+            context
+          end
         end
-      end
+    end
+
+    private
+
+    def reversable_actions(actions)
+      index_of_current_action = actions.index(@context.current_action) || 0
+
+      # Reverse from the point where the fail was triggered
+      actions.take(index_of_current_action + 1)
     end
   end
 end; end

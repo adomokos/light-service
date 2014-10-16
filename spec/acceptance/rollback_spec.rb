@@ -19,6 +19,10 @@ class AddsOneWithRollbackAction
   promises :number
 
   executed do |context|
+    if context.number == 0
+      context.fail_with_rollback!
+    end
+
     context.number += 1
   end
 
@@ -65,7 +69,7 @@ class AddsThreeWithNoRollbackAction
   end
 end
 
-class RollbackOrganizerWithRollbackInTheMiddle
+class RollbackOrganizerWithMiddleRollback
   extend LightService::Organizer
 
   def self.for(number)
@@ -112,11 +116,19 @@ describe "Rolling back actions when there is a failure" do
   end
 
   it "rolls back properly when triggered with an action in the middle" do
-    result = RollbackOrganizerWithRollbackInTheMiddle.for 1
+    result = RollbackOrganizerWithMiddleRollback.for 1
     number = result.fetch(:number)
 
     expect(result).to be_failure
     expect(result.message).to eq("I did not like this a bit!")
     expect(number).to eq(2)
+  end
+
+  it "rolls back from the first action" do
+    result = RollbackOrganizer.for 0
+    number = result.fetch(:number)
+
+    expect(result).to be_failure
+    expect(number).to eq(-1)
   end
 end

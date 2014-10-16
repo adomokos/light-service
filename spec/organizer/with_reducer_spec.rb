@@ -3,9 +3,11 @@ require 'test_doubles'
 
 describe LightService::Organizer::WithReducer do
   let(:context) { LightService::Context.make }
-  let(:action1) { double }
-  let(:action2) { double }
+  let(:action1) { double(:action1) }
+  let(:action2) { double(:action2) }
   let(:actions) { [action1, action2] }
+
+  before { context.current_action = action2 }
 
   it "reduces the provided actions" do
     expect(action1).to receive(:execute).with(context).and_return(context)
