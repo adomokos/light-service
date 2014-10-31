@@ -1,6 +1,10 @@
 A brief list of new features and changes introduced with the specified version.
 
 ### 0.4.0
+* Adding [rollback](https://github.com/adomokos/light-service#action-rollback) functionality
+* Adding [message localization](https://github.com/adomokos/light-service#localizing-messages) feature
+
+### 0.4.0
 * Adding [logging](https://github.com/adomokos/light-service#logging) to LightService
 
 ### 0.3.6
