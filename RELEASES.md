@@ -1,6 +1,9 @@
 A brief list of new features and changes introduced with the specified version.
 
-### 0.4.0
+### 0.5.1
+* Removing the thrown exception for invoking the "executed" macro twice
+
+### 0.5.0
 * Adding [rollback](https://github.com/adomokos/light-service#action-rollback) functionality
 * Adding [message localization](https://github.com/adomokos/light-service#localizing-messages) feature
 
