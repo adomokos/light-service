@@ -25,8 +25,6 @@ module LightService
       end
 
       def executed
-        raise "`executed` macro can not be invoked again" if self.respond_to?(:execute)
-
         define_singleton_method "execute" do |context = {}|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
