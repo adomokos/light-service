@@ -147,7 +147,7 @@ I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-ele
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
 ## Expects and Promises
-Let me introduce to you the `expects` and `promises` macros. Think of these as a rule set of inputs/outputs for the action.
+The `expects` and `promises` macros are rules for the inputs/outputs of an action.
 `expects` describes what keys it needs to execute and `promises` makes sure the keys are in the context after the
 action is reduced. If either of them are violated, a custom exception is thrown.
 
