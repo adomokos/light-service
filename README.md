@@ -148,7 +148,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 
 ## Expects and Promises
 The `expects` and `promises` macros are rules for the inputs/outputs of an action.
-`expects` describes what keys it needs to execute and `promises` makes sure the keys are in the context after the
+`expects` describes what keys it needs to execute, and `promises` makes sure the keys are in the context after the
 action is reduced. If either of them are violated, a custom exception is thrown.
 
 This is how it's used:
