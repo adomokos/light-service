@@ -77,6 +77,22 @@ describe ":promises macro" do
     end
   end
 
+  context "when a reserved key is listed as a promised key" do
+    it "raises an error indicating a reserved key has been promised" do
+      exception_error_text = "promised or expected keys cannot be a reserved key: [:message]"
+      expect {
+        TestDoubles::MakesTeaPromisingReservedKey.execute(:tea => "black")
+      }.to raise_error(LightService::ReservedKeysInContextError, exception_error_text)
+    end
+
+    it "raises an error indicating that multiple reserved keys have been promised" do
+      exception_error_text = "promised or expected keys cannot be a reserved key: [:message, :error_code, :current_action]"
+      expect {
+        TestDoubles::MakesTeaPromisingMultipleReservedKeys.execute(:tea => "black")
+      }.to raise_error(LightService::ReservedKeysInContextError, exception_error_text)
+    end
+  end
+
   it "can collect promised keys when the `promised` macro is called multiple times" do
     resulting_context = TestDoubles::MultiplePromisesAction.execute(
                             :coffee => "espresso",
@@ -85,5 +101,4 @@ describe ":promises macro" do
     expect(resulting_context.cappuccino).to eq("Cappucino needs espresso and a little milk")
     expect(resulting_context.latte).to eq("Latte needs espresso and a lot of milk")
   end
-
 end

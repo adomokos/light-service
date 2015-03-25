@@ -25,6 +25,19 @@ module LightService; class Context
         end
       end
 
+      def verify_reserved_keys_are_not_in_context(context)
+        action = context.current_action
+
+        violated_keys = (action.promised_keys + action.expected_keys) & reserved_keys
+
+        if violated_keys.any?
+          error_message = "promised or expected keys cannot be a reserved key: [#{format_keys(violated_keys)}]"
+
+          Configuration.logger.error error_message
+          fail ReservedKeysInContextError, error_message
+        end
+      end
+
       private
 
       def verify_keys_are_in_context(context, keys)
@@ -40,6 +53,10 @@ module LightService; class Context
 
       def format_keys(keys)
         keys.map { |k| ":#{k}"}.join(', ')
+      end
+
+      def reserved_keys
+        [:message, :error_code, :current_action]
       end
     end
   end

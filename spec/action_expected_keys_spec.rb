@@ -32,4 +32,19 @@ describe ":expects macro" do
     expect(resulting_context[:milk_tea]).to eq("black - full cream - with dark chocolate")
   end
 
+  context "when a reserved key is listed as an expected key" do
+    it "raises an error indicating a reserved key is expected" do
+      exception_error_text = "promised or expected keys cannot be a reserved key: [:message]"
+      expect {
+        TestDoubles::MakesTeaExpectingReservedKey.execute(:tea => "black", :message => "no no")
+      }.to raise_error(LightService::ReservedKeysInContextError, exception_error_text)
+    end
+
+    it "raises an error indicating that multiple reserved keys are expected" do
+      exception_error_text = "promised or expected keys cannot be a reserved key: [:message, :error_code, :current_action]"
+      expect {
+        TestDoubles::MakesTeaExpectingMultipleReservedKeys.execute(:tea => "black", :message => "no no", :error_code => 1, :current_action => "update")
+      }.to raise_error(LightService::ReservedKeysInContextError, exception_error_text)
+    end
+  end
 end

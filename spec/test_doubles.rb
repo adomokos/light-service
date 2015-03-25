@@ -176,4 +176,41 @@ module TestDoubles
     end
   end
 
+  class MakesTeaExpectingReservedKey
+    include LightService::Action
+    expects :tea, :message
+
+    executed do |context|
+      context.product = context.number + 3
+    end
+  end
+
+  class MakesTeaExpectingMultipleReservedKeys
+    include LightService::Action
+    expects :tea, :message, :error_code, :current_action
+
+    executed do |context|
+      context.product = context.number + 3
+    end
+  end
+
+  class MakesTeaPromisingReservedKey
+    include LightService::Action
+    expects :tea
+    promises :product, :message
+
+    executed do |context|
+      context.product = context.number + 3
+    end
+  end
+
+  class MakesTeaPromisingMultipleReservedKeys
+    include LightService::Action
+    expects :tea
+    promises :product, :message, :error_code, :current_action
+
+    executed do |context|
+      context.product = context.number + 3
+    end
+  end
 end
