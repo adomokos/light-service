@@ -32,15 +32,12 @@ module LightService
           # Store the action within the context
           action_context.current_action = self
 
-          Context::KeyVerifier.verify_reserved_keys_are_not_in_context(action_context)
-          Context::KeyVerifier.verify_expected_keys_are_in_context(action_context)
+          Context::KeyVerifier.verify_keys(action_context) do
+            action_context.define_accessor_methods_for_keys(expected_keys)
+            action_context.define_accessor_methods_for_keys(promised_keys)
 
-          action_context.define_accessor_methods_for_keys(expected_keys)
-          action_context.define_accessor_methods_for_keys(promised_keys)
-
-          yield(action_context)
-
-          Context::KeyVerifier.verify_promised_keys_are_in_context(action_context)
+            yield(action_context)
+          end
         end
       end
 

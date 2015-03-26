@@ -1,6 +1,17 @@
 module LightService; class Context
   class KeyVerifier
     class << self
+      def verify_keys(context, &block)
+        verify_reserved_keys_are_not_in_context(context)
+        verify_expected_keys_are_in_context(context)
+
+        block.call
+
+        verify_promised_keys_are_in_context(context)
+      end
+
+      private
+
       def verify_expected_keys_are_in_context(context)
         action = context.current_action
 
@@ -37,8 +48,6 @@ module LightService; class Context
           fail ReservedKeysInContextError, error_message
         end
       end
-
-      private
 
       def verify_keys_are_in_context(context, keys)
         keys ||= context.keys
