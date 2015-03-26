@@ -65,7 +65,7 @@ module LightService; class Context
       end
 
       def reserved_keys
-        [:message, :error_code, :current_action]
+        [:message, :error_code, :current_action].freeze
       end
     end
   end
