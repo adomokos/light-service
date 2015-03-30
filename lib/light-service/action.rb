@@ -25,7 +25,7 @@ module LightService
       end
 
       def executed
-        define_singleton_method "execute" do |context = {}|
+        define_singleton_method :execute do |context = {}|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
 
@@ -33,8 +33,7 @@ module LightService
           action_context.current_action = self
 
           Context::KeyVerifier.verify_keys(action_context) do
-            action_context.define_accessor_methods_for_keys(expected_keys)
-            action_context.define_accessor_methods_for_keys(promised_keys)
+            action_context.define_accessor_methods_for_keys(all_keys)
 
             yield(action_context)
           end
@@ -44,7 +43,7 @@ module LightService
       def rolled_back
         raise "`rolled_back` macro can not be invoked again" if self.respond_to?(:rollback)
 
-        define_singleton_method "rollback" do |context = {}|
+        define_singleton_method :rollback do |context = {}|
           yield(context)
 
           context
@@ -60,6 +59,10 @@ module LightService
         end
 
         LightService::Context.make(context)
+      end
+
+      def all_keys
+        expected_keys + promised_keys
       end
 
     end

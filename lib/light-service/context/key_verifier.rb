@@ -13,32 +13,41 @@ module LightService; class Context
       private
 
       def verify_expected_keys_are_in_context(context)
-        action = context.current_action
+        return context if context.failure?
 
-        verify_keys_are_in_context(context, action.expected_keys) do |not_found_keys|
-          error_message = "expected #{format_keys(not_found_keys)} to be in the context during #{action}"
+        action = context.current_action
+        expected_keys = action.expected_keys
+
+        unless are_all_keys_in_context?(context, expected_keys)
+          error_message = "expected #{format_keys(keys_not_found(context, expected_keys))} to be in the context during #{action}"
 
           Configuration.logger.error error_message
           fail ExpectedKeysNotInContextError, error_message
         end
+
+        context
       end
 
       def verify_promised_keys_are_in_context(context)
         return context if context.failure?
 
         action = context.current_action
+        promised_keys = action.promised_keys
 
-        verify_keys_are_in_context(context, action.promised_keys) do |not_found_keys|
-          error_message = "promised #{format_keys(not_found_keys)} to be in the context during #{action}"
+        unless are_all_keys_in_context?(context, promised_keys)
+          error_message = "promised #{format_keys(keys_not_found(context, promised_keys))} to be in the context during #{action}"
 
           Configuration.logger.error error_message
           fail PromisedKeysNotInContextError, error_message
         end
+
+        context
       end
 
       def verify_reserved_keys_are_not_in_context(context)
-        action = context.current_action
+        return context if context.failure?
 
+        action = context.current_action
         violated_keys = (action.promised_keys + action.expected_keys) & reserved_keys
 
         if violated_keys.any?
@@ -49,15 +58,14 @@ module LightService; class Context
         end
       end
 
-      def verify_keys_are_in_context(context, keys)
+      def are_all_keys_in_context?(context, keys)
+        not_found_keys = keys_not_found(context, keys)
+        !not_found_keys.any?
+      end
+
+      def keys_not_found(context, keys)
         keys ||= context.keys
-
-        not_found_keys = keys - context.keys
-        unless not_found_keys.empty?
-          yield not_found_keys
-        end
-
-        context
+        keys - context.keys
       end
 
       def format_keys(keys)
