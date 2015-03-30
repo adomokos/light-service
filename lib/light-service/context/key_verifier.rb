@@ -1,80 +1,114 @@
 module LightService; class Context
   class KeyVerifier
-    class << self
-      def verify_keys(context, &block)
-        verify_reserved_keys_are_not_in_context(context)
-        verify_expected_keys_are_in_context(context)
+    attr_reader :context, :action
 
-        block.call
+    def initialize(context)
+      @context = context
+      @action = context.current_action
+    end
 
-        verify_promised_keys_are_in_context(context)
+    def are_all_keys_in_context?(keys)
+      not_found_keys = keys_not_found(keys)
+      !not_found_keys.any?
+    end
+
+    def keys_not_found(keys)
+      keys ||= context.keys
+      keys - context.keys
+    end
+
+    def format_keys(keys)
+      keys.map { |k| ":#{k}"}.join(', ')
+    end
+
+    def error_message
+      "#{type_name} #{format_keys(keys_not_found(keys))} to be in the context during #{action}"
+    end
+
+    def throw_error_predicate(keys)
+      raise NotImplementedError, 'Sorry, you have to override length'
+    end
+
+    def verify
+      return context if context.failure?
+
+      if throw_error_predicate(keys)
+        Configuration.logger.error error_message
+        fail error_to_throw, error_message
       end
 
-      private
+      context
+    end
 
-      def verify_expected_keys_are_in_context(context)
-        return context if context.failure?
+    def self.verify_keys(context, &block)
+      ReservedKeysVerifier.new(context).verify
+      ExpectedKeyVerifier.new(context).verify
 
-        action = context.current_action
-        expected_keys = action.expected_keys
+      block.call
 
-        unless are_all_keys_in_context?(context, expected_keys)
-          error_message = "expected #{format_keys(keys_not_found(context, expected_keys))} to be in the context during #{action}"
+      PromisedKeyVerifier.new(context).verify
+    end
+  end
 
-          Configuration.logger.error error_message
-          fail ExpectedKeysNotInContextError, error_message
-        end
+  class ExpectedKeyVerifier < KeyVerifier
+    def type_name
+      "expected"
+    end
 
-        context
-      end
+    def keys
+      action.expected_keys
+    end
 
-      def verify_promised_keys_are_in_context(context)
-        return context if context.failure?
+    def error_to_throw
+      ExpectedKeysNotInContextError
+    end
 
-        action = context.current_action
-        promised_keys = action.promised_keys
+    def throw_error_predicate(keys)
+      !are_all_keys_in_context?(keys)
+    end
+  end
 
-        unless are_all_keys_in_context?(context, promised_keys)
-          error_message = "promised #{format_keys(keys_not_found(context, promised_keys))} to be in the context during #{action}"
+  class PromisedKeyVerifier < KeyVerifier
+    def type_name
+      "promised"
+    end
 
-          Configuration.logger.error error_message
-          fail PromisedKeysNotInContextError, error_message
-        end
+    def keys
+      action.promised_keys
+    end
 
-        context
-      end
+    def error_to_throw
+      PromisedKeysNotInContextError
+    end
 
-      def verify_reserved_keys_are_not_in_context(context)
-        return context if context.failure?
+    def throw_error_predicate(keys)
+      !are_all_keys_in_context?(keys)
+    end
+  end
 
-        action = context.current_action
-        violated_keys = (action.promised_keys + action.expected_keys) & reserved_keys
+  class ReservedKeysVerifier < KeyVerifier
+    def violated_keys
+      (action.promised_keys + action.expected_keys) & reserved_keys
+    end
 
-        if violated_keys.any?
-          error_message = "promised or expected keys cannot be a reserved key: [#{format_keys(violated_keys)}]"
+    def error_message
+      "promised or expected keys cannot be a reserved key: [#{format_keys(violated_keys)}]"
+    end
 
-          Configuration.logger.error error_message
-          fail ReservedKeysInContextError, error_message
-        end
-      end
+    def keys
+      violated_keys
+    end
 
-      def are_all_keys_in_context?(context, keys)
-        not_found_keys = keys_not_found(context, keys)
-        !not_found_keys.any?
-      end
+    def error_to_throw
+      ReservedKeysInContextError
+    end
 
-      def keys_not_found(context, keys)
-        keys ||= context.keys
-        keys - context.keys
-      end
+    def throw_error_predicate(keys)
+      keys.any?
+    end
 
-      def format_keys(keys)
-        keys.map { |k| ":#{k}"}.join(', ')
-      end
-
-      def reserved_keys
-        [:message, :error_code, :current_action].freeze
-      end
+    def reserved_keys
+      [:message, :error_code, :current_action].freeze
     end
   end
 end; end
