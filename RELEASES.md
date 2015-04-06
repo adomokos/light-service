@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.5.2
+* Guarding context keys against the reserved keys the context needs to operate.
+
 ### 0.5.1
 * Removing the thrown exception for invoking the "executed" macro twice
 
