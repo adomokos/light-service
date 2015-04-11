@@ -145,4 +145,10 @@ describe LightService::Context do
     expect { context.fail_with_rollback!("roll me back") }.to \
       raise_error(LightService::FailWithRollbackError)
   end
+
+  it "warns about the outcome attribute reader being deprecated" do
+    expect(ActiveSupport::Deprecation).to receive(:warn)
+
+    expect(context.outcome).to eq(::LightService::Outcomes::SUCCESS)
+  end
 end

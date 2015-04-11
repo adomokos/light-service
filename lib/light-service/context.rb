@@ -5,7 +5,7 @@ module LightService
   end
 
   class Context < Hash
-    attr_accessor :outcome, :message, :error_code, :current_action
+    attr_accessor :message, :error_code, :current_action
 
     def initialize(context={}, outcome=Outcomes::SUCCESS, message='', error_code=nil)
       @outcome, @message, @error_code = outcome, message, error_code
@@ -39,19 +39,14 @@ module LightService
       @skip_all
     end
 
-    def set_success!(message)
-      warn '`set_success!` is DEPRECATED: please use `succeed!` instead'
-      succeed!(message)
+    def outcome
+      ActiveSupport::Deprecation.warn '`Context#outcome` attribute reader is DEPRECATED and will be removed'
+      @outcome
     end
 
     def succeed!(message=nil, options={})
       @message = Configuration.localization_adapter.success(message, current_action, options)
       @outcome = Outcomes::SUCCESS
-    end
-
-    def set_failure!(message)
-      warn '`set_failure!` is DEPRECATED: please use `fail!` instead'
-      fail!(message)
     end
 
     def fail!(message=nil, options_or_error_code={})
