@@ -1,6 +1,10 @@
 module LightService
   module Organizer
+    def self.extended(base_class)
+      base_class.extend ClassMethods
+    end
     def self.included(base_class)
+      warn "including Lightervice::Organizer is deprecated. Please use `extend LightService::Organizer` instead."
       base_class.extend ClassMethods
     end
 

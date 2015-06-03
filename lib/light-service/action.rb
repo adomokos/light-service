@@ -1,7 +1,12 @@
 module LightService
   module Action
 
+    def self.extended(base_class)
+      base_class.extend Macros
+    end
+
     def self.included(base_class)
+      warn "including Lightervice::Action is deprecated. Please use `extend LightService::Action` instead."
       base_class.extend Macros
     end
 
@@ -66,5 +71,6 @@ module LightService
       end
 
     end
+
   end
 end

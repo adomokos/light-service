@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ":expects and :promises macros" do
   describe "actions are backward compatible" do
     class FooAction
-      include LightService::Action
+      extend LightService::Action
 
       executed do |context|
         baz = context.fetch :baz
@@ -21,7 +21,7 @@ describe ":expects and :promises macros" do
 
   context "when expected keys are not in context" do
     class FooNoExpectedKeyAction
-      include LightService::Action
+      extend LightService::Action
       expects :baz
 
       executed do |context|
@@ -40,7 +40,7 @@ describe ":expects and :promises macros" do
 
   describe "expected keys" do
     class FooWithReaderAction
-      include LightService::Action
+      extend LightService::Action
       expects :baz
 
       executed do |context|
@@ -58,7 +58,7 @@ describe ":expects and :promises macros" do
 
   context "when promised keys are not in context" do
     class FooNoPromisedKeyAction
-      include LightService::Action
+      extend LightService::Action
       expects :baz
       promises :bar
 
@@ -75,7 +75,7 @@ describe ":expects and :promises macros" do
 
   describe "promised keys" do
     class FooWithExpectsAndPromisesAction
-      include LightService::Action
+      extend LightService::Action
       expects :baz
       promises :bar
 

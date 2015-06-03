@@ -1,5 +1,5 @@
 class LooksUpTaxPercentageAction
-  include LightService::Action
+  extend LightService::Action
   expects :order
   promises :tax_percentage
 

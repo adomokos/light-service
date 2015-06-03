@@ -6,7 +6,7 @@ describe ":promises macro" do
   context "when the promised key is not in the context" do
     it "raises an ArgumentError" do
       class TestDoubles::MakesCappuccinoAction1
-        include LightService::Action
+        extend LightService::Action
         expects :coffee, :milk
         promises :cappuccino
         executed do |context|
@@ -22,7 +22,7 @@ describe ":promises macro" do
 
     it "can fail the context without fulfilling its promise" do
       class TestDoubles::MakesCappuccinoAction2
-        include LightService::Action
+        extend LightService::Action
         expects :coffee, :milk
         promises :cappuccino
         executed do |context|
@@ -42,7 +42,7 @@ describe ":promises macro" do
   context "when the promised key is in the context" do
     it "can be set with an actual value" do
       class TestDoubles::MakesCappuccinoAction3
-        include LightService::Action
+        extend LightService::Action
         expects :coffee, :milk
         promises :cappuccino
         executed do |context|
@@ -61,7 +61,7 @@ describe ":promises macro" do
 
     it "can be set with nil" do
       class TestDoubles::MakesCappuccinoAction4
-        include LightService::Action
+        extend LightService::Action
         expects :coffee, :milk
         promises :cappuccino
         executed do |context|

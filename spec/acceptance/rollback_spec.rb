@@ -14,7 +14,7 @@ class RollbackOrganizer
 end
 
 class AddsOneWithRollbackAction
-  include LightService::Action
+  extend LightService::Action
   expects :number
   promises :number
 
@@ -32,7 +32,7 @@ class AddsOneWithRollbackAction
 end
 
 class AddsThreeWithRollbackAction
-  include LightService::Action
+  extend LightService::Action
   expects :number
 
   executed do |context|
@@ -59,7 +59,7 @@ class RollbackOrganizerWithNoRollback
 end
 
 class AddsThreeWithNoRollbackAction
-  include LightService::Action
+  extend LightService::Action
   expects :number
 
   executed do |context|
@@ -82,7 +82,7 @@ class RollbackOrganizerWithMiddleRollback
 end
 
 class AddsTwoActionWithRollback
-  include LightService::Action
+  extend LightService::Action
   expects :number
 
   executed do |context|

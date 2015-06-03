@@ -1,5 +1,5 @@
 class CalculatesOrderTaxAction
-  include ::LightService::Action
+  extend ::LightService::Action
   expects :order, :tax_percentage
 
   executed do |context|

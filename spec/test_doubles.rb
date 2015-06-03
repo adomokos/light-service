@@ -2,7 +2,7 @@
 
 module TestDoubles
   class AddsTwoActionWithFetch
-    include LightService::Action
+    extend LightService::Action
 
     executed do |context|
       number = context.fetch(:number, 0)
@@ -14,7 +14,7 @@ module TestDoubles
   class AnotherAction; end
 
   class AnOrganizer
-    include LightService::Organizer
+    extend LightService::Organizer
 
     def self.do_something(action_arguments)
       with(action_arguments).reduce([AnAction, AnotherAction])
@@ -30,7 +30,7 @@ module TestDoubles
   end
 
   class MakesTeaWithMilkAction
-    include LightService::Action
+    extend LightService::Action
     expects :tea, :milk
     promises :milk_tea
 
@@ -40,7 +40,7 @@ module TestDoubles
   end
 
   class MultipleExpectsAction
-    include LightService::Action
+    extend LightService::Action
     expects :tea
     expects :milk, :chocolate
     promises :milk_tea
@@ -51,13 +51,13 @@ module TestDoubles
   end
 
   class MakesCappuccinoAction
-    include LightService::Action
+    extend LightService::Action
     expects :coffee, :milk
     promises :cappuccino
   end
 
   class MakesLatteAction
-    include LightService::Action
+    extend LightService::Action
     expects :coffee, :milk
     promises :latte
 
@@ -82,7 +82,7 @@ module TestDoubles
   end
 
   class MultiplePromisesAction
-    include LightService::Action
+    extend LightService::Action
     expects :coffee, :milk
     promises :cappuccino
     promises :latte
@@ -94,7 +94,7 @@ module TestDoubles
   end
 
   class MakesTeaAndCappuccino
-    include LightService::Organizer
+    extend LightService::Organizer
 
     def self.call(tea, milk, coffee)
       with(:tea => tea, :milk => milk, :coffee => coffee)
@@ -104,7 +104,7 @@ module TestDoubles
   end
 
   class MakesCappuccinoAddsTwo
-    include LightService::Organizer
+    extend LightService::Organizer
 
     def self.call(milk, coffee)
       with(:milk => milk, :coffee => coffee)
@@ -114,7 +114,7 @@ module TestDoubles
   end
 
   class MakesCappuccinoAddsTwoAndFails
-    include LightService::Organizer
+    extend LightService::Organizer
 
     def self.call(coffee, this_hot = :very_hot)
       with(:milk => this_hot, :coffee => coffee)
@@ -125,7 +125,7 @@ module TestDoubles
   end
 
   class MakesCappuccinoSkipsAddsTwo
-    include LightService::Organizer
+    extend LightService::Organizer
 
     def self.call(coffee)
       with(:milk => "5%", :coffee => coffee)
@@ -148,7 +148,7 @@ module TestDoubles
   end
 
   class AddsOneAction
-    include LightService::Action
+    extend LightService::Action
     expects :number
     promises :number
 
@@ -158,7 +158,7 @@ module TestDoubles
   end
 
   class AddsTwoAction
-    include LightService::Action
+    extend LightService::Action
     expects :number
 
     executed do |context|
@@ -167,7 +167,7 @@ module TestDoubles
   end
 
   class AddsThreeAction
-    include LightService::Action
+    extend LightService::Action
     expects :number
     promises :product
 
@@ -177,7 +177,7 @@ module TestDoubles
   end
 
   class MakesTeaExpectingReservedKey
-    include LightService::Action
+    extend LightService::Action
     expects :tea, :message
 
     executed do |context|
@@ -186,7 +186,7 @@ module TestDoubles
   end
 
   class MakesTeaExpectingMultipleReservedKeys
-    include LightService::Action
+    extend LightService::Action
     expects :tea, :message, :error_code, :current_action
 
     executed do |context|
@@ -195,7 +195,7 @@ module TestDoubles
   end
 
   class MakesTeaPromisingReservedKey
-    include LightService::Action
+    extend LightService::Action
     expects :tea
     promises :product, :message
 
@@ -205,7 +205,7 @@ module TestDoubles
   end
 
   class MakesTeaPromisingMultipleReservedKeys
-    include LightService::Action
+    extend LightService::Action
     expects :tea
     promises :product, :message, :error_code, :current_action
 

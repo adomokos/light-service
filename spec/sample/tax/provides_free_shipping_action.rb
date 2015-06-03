@@ -1,5 +1,5 @@
 class ProvidesFreeShippingAction
-  include LightService::Action
+  extend LightService::Action
   expects :order
 
   executed do |context|
