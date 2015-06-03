@@ -66,7 +66,7 @@ This is how the organizer and actions interact with eachother:
 
 ```ruby
 class CalculatesTax
-  include LightService::Organizer
+  extend LightService::Organizer
 
   def self.for_order(order)
     with(:order => order).reduce(
@@ -78,7 +78,7 @@ class CalculatesTax
 end
 
 class LooksUpTaxPercentageAction
-  include LightService::Action
+  extend LightService::Action
   expects :order
   promises :tax_percentage
 
@@ -104,7 +104,7 @@ class LooksUpTaxPercentageAction
 end
 
 class CalculatesOrderTaxAction
-  include ::LightService::Action
+  extend ::LightService::Action
   expects :order, :tax_percentage
 
   executed do |context|
@@ -114,7 +114,7 @@ class CalculatesOrderTaxAction
 end
 
 class ProvidesFreeShippingAction
-  include LightService::Action
+  extend LightService::Action
   expects :order
 
   executed do |context|
@@ -154,7 +154,7 @@ action is reduced. If either of them are violated, a custom exception is thrown.
 This is how it's used:
 ```ruby
 class FooAction
-  include LightService::Action
+  extend LightService::Action
   expects :baz
   promises :bar
 
@@ -172,7 +172,7 @@ makes it available to you through a reader. You can refactor the action like thi
 
 ```ruby
 class FooAction
-  include LightService::Action
+  extend LightService::Action
   expects :baz
   promises :bar
 
@@ -188,7 +188,7 @@ you use the accessor with the same name. The code above can be further simplifie
 
 ```ruby
 class FooAction
-  include LightService::Action
+  extend LightService::Action
   expects :baz
   promises :bar
 
@@ -266,7 +266,7 @@ Normally, when something goes wrong in your actions, you fail the process by set
 
 ```ruby
 class FooAction
-  include LightService::Action
+  extend LightService::Action
 
   executed do |context|
     context.fail!("I don't like what happened here.")
@@ -280,7 +280,7 @@ or in the actions.
 
 ```ruby
 class FooAction
-  include LightService::Action
+  extend LightService::Action
 
   executed do |context|
     unless (service_call.success?)
@@ -305,7 +305,7 @@ the `rolled_back` macro.
 
 ```ruby
 class SaveEntities
-  include LightService::Action
+  extend LightService::Action
   expects :user
 
   executed do |context|
@@ -323,7 +323,7 @@ was triggered.
 
 ```ruby
 class CallExternalApi
-  include LightService::Action
+  extend LightService::Action
 
   executed do |context|
     api_call_result = SomeAPI.save_user(context.user)
@@ -345,7 +345,7 @@ By default LightService provides a mechanism for easily translating your error o
 
 ```ruby
 class FooAction
-  include LightService::Action
+  extend LightService::Action
 
   executed do |context|
     unless service_call.success?
@@ -363,7 +363,7 @@ This also works with nested classes via the ActiveSupport `#underscore` method, 
 ```ruby
 module PaymentGateway
   class CaptureFunds
-    include LightService::Action
+    extend LightService::Action
 
     executed do |context|
       if api_service.failed?
@@ -382,7 +382,7 @@ If you need to provide custom variables for interpolation during localization, p
 ```ruby
 module PaymentGateway
   class CaptureFunds
-    include LightService::Action
+    extend LightService::Action
 
     executed do |context|
       if api_service.failed?
