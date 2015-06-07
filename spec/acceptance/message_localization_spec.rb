@@ -14,7 +14,7 @@ class TestsLocalizationAdapter
 end
 
 class TestsLocalizationInvocationOptionsAction
-  include LightService::Action
+  extend LightService::Action
   expects :pass_or_fail, :message_or_key, :i18n_options
 
   executed do |context|
