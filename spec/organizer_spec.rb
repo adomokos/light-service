@@ -58,4 +58,26 @@ describe LightService::Organizer do
         .not_to raise_error
     end
   end
+
+  context "when the organizer is also an action", "and the organizer rescues exceptions of its sub-actions" do
+    let(:organizer) do
+      Class.new do
+        extend LightService::Organizer
+        extend LightService::Action
+
+        executed do |ctx|
+          begin
+            with(ctx).
+              reduce(TestDoubles::MakesTeaPromisingKeyButRaisesException)
+          rescue
+          end
+        end
+      end
+    end
+
+    it "does not raise an error concerning a sub-action's missing keys" do
+      expect { organizer.execute }.not_to raise_error
+    end
+  end
+
 end
