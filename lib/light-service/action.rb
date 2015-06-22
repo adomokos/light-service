@@ -37,7 +37,7 @@ module LightService
           # Store the action within the context
           action_context.current_action = self
 
-          Context::KeyVerifier.verify_keys(action_context) do
+          Context::KeyVerifier.verify_keys(action_context, self) do
             action_context.define_accessor_methods_for_keys(all_keys)
 
             yield(action_context)

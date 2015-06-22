@@ -213,4 +213,20 @@ module TestDoubles
       context.product = context.number + 3
     end
   end
+
+  class MakesTeaPromisingKeyButRaisesException
+    extend LightService::Action
+    promises :product
+
+    executed do |context|
+      context.product = make_product
+    end
+
+    private
+
+    def self.make_product
+      fail "Fail"
+    end
+  end
+
 end

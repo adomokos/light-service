@@ -2,9 +2,9 @@ module LightService; class Context
   class KeyVerifier
     attr_reader :context, :action
 
-    def initialize(context)
+    def initialize(context, action)
       @context = context
-      @action = context.current_action
+      @action = action
     end
 
     def are_all_keys_in_context?(keys)
@@ -40,13 +40,13 @@ module LightService; class Context
       context
     end
 
-    def self.verify_keys(context, &block)
-      ReservedKeysVerifier.new(context).verify
-      ExpectedKeyVerifier.new(context).verify
+    def self.verify_keys(context, action, &block)
+      ReservedKeysVerifier.new(context, action).verify
+      ExpectedKeyVerifier.new(context, action).verify
 
       block.call
 
-      PromisedKeyVerifier.new(context).verify
+      PromisedKeyVerifier.new(context, action).verify
     end
   end
 
