@@ -15,7 +15,7 @@ module LightService
       end
 
       def reduce(*actions)
-        WithReducerFactory.make(self).with.reduce(actions)
+        with({}).reduce(actions)
       end
     end
   end
