@@ -11,14 +11,14 @@ module LightService; module Organizer
       raise "No action(s) were provided" if actions.empty?
       actions.flatten!
 
-      actions.reduce(context) do |context, action|
+      actions.reduce(context) do |current_context, action|
         begin
-          result = action.execute(context)
+          result = action.execute(current_context)
         rescue FailWithRollbackError
           result = reduce_rollback(actions)
         ensure
           # For logging
-          yield(context, action) if block_given?
+          yield(current_context, action) if block_given?
         end
 
         result
