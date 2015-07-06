@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'test_doubles'
-require 'pry'
 
 describe "organizer aliases macro" do
   let(:organizer_with_alias) do

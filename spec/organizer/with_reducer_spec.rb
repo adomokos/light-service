@@ -44,9 +44,7 @@ describe LightService::Organizer::WithReducer do
 
   context "when aliases are given" do
     it "puts the aliased value in the context with the aliasing key" do
-      data = {
-        foo: "foo"
-      }
+      data = LightService::Context.make({ foo: "foo" })
       aliases = {
         foo: :alias_of_foo
       }
