@@ -4,7 +4,7 @@ module LightService; module Organizer
 
     def with(data = {}, aliases = nil)
       @context = LightService::Context.make(data)
-      @aliases = aliases
+      @context.set_aliases(aliases)
       self
     end
 
@@ -14,7 +14,6 @@ module LightService; module Organizer
 
       actions.reduce(context) do |current_context, action|
         begin
-          put_aliases_in_the_context(current_context) if @aliases
           result = action.execute(current_context)
         rescue FailWithRollbackError
           result = reduce_rollback(actions)
@@ -48,10 +47,5 @@ module LightService; module Organizer
       actions.take(index_of_current_action + 1)
     end
 
-    def put_aliases_in_the_context(context)
-      @aliases.each_pair do |key, key_alias|
-        context[key_alias] = context[key]
-      end
-    end
   end
 end; end

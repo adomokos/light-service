@@ -87,5 +87,14 @@ module LightService
         define_singleton_method("#{key}=") { |value| self[key] = value }
       end
     end
+
+    def set_aliases(aliases)
+      return unless aliases
+
+      aliases.each_pair do |key, key_alias|
+        self[key_alias] = self[key]
+      end
+    end
+
   end
 end
