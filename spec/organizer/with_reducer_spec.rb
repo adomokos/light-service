@@ -41,26 +41,4 @@ describe LightService::Organizer::WithReducer do
       expect(result).to eq(context)
     end
   end
-
-  context "when aliases are given" do
-    xit "puts the aliased value in the context with the aliasing key" do
-      data = LightService::Context.make({ foo: "foo" })
-      aliases = {
-        foo: :alias_of_foo
-      }
-      aliased_pair = {
-        alias_of_foo: "foo"
-      }
-
-      expect(action1).to receive(:execute) \
-        .with(hash_including(aliased_pair)) \
-        .and_return(data)
-
-      expect(action2).to receive(:execute) \
-        .with(hash_including(aliased_pair)) \
-        .and_return(data)
-
-      described_class.new.with(data, aliases).reduce(actions)
-    end
-  end
 end
