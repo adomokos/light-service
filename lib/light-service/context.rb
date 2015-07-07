@@ -6,6 +6,7 @@ module LightService
 
   class Context < Hash
     attr_accessor :message, :error_code, :current_action
+    attr_reader :_aliases
 
     def initialize(context={}, outcome=Outcomes::SUCCESS, message='', error_code=nil)
       @outcome, @message, @error_code = outcome, message, error_code
@@ -19,8 +20,12 @@ module LightService
         raise ArgumentError, 'Argument must be Hash or LightService::Context'
       end
 
-      return context if context.is_a?(Context)
-      self.new(context)
+      aliases = context.delete(:_aliases)
+      unless context.is_a?(Context)
+        context = self.new(context)
+      end
+
+      context
     end
 
     def add_to_context(values)
@@ -88,13 +93,20 @@ module LightService
       end
     end
 
-    def set_aliases(aliases)
-      return unless aliases
+    def aliases=(aliases)
+      @aliases = aliases
 
       aliases.each_pair do |key, key_alias|
         self[key_alias] = self[key]
       end
     end
 
+    def aliases
+      @aliases ||= {}
+    end
+
+    def [](key)
+      super(key) || super(aliases.key(key))
+    end
   end
 end

@@ -10,13 +10,9 @@ describe CalculatesTax do
                          :failure? => false, :skip_all? => false) }
 
   it "calls the actions in order" do
-    allow(::LightService::Context).to receive(:make) \
-                            .with(:order => order) \
-                            .and_return context
-
-    allow(LooksUpTaxPercentageAction).to receive(:execute).with(context).and_return context
-    allow(CalculatesOrderTaxAction).to receive(:execute).with(context).and_return context
-    allow(ProvidesFreeShippingAction).to receive(:execute).with(context).and_return context
+    allow(LooksUpTaxPercentageAction).to receive(:execute).and_return context
+    allow(CalculatesOrderTaxAction).to receive(:execute).and_return context
+    allow(ProvidesFreeShippingAction).to receive(:execute).and_return context
 
     result = CalculatesTax.for_order(order)
 
