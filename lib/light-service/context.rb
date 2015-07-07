@@ -19,11 +19,11 @@ module LightService
         raise ArgumentError, 'Argument must be Hash or LightService::Context'
       end
 
-      aliases = context.delete(:_aliases)
       unless context.is_a?(Context)
         context = self.new(context)
       end
 
+      context.set_aliases(context.delete(:_aliases)) if context[:_aliases]
       context
     end
 
@@ -92,7 +92,7 @@ module LightService
       end
     end
 
-    def aliases=(aliases)
+    def set_aliases(aliases)
       @aliases = aliases
 
       aliases.each_pair do |key, key_alias|
