@@ -200,6 +200,46 @@ end
 
 Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
+## Key Aliases
+The `aliases` macro sets up pairs of keys and aliases in an Organizer.  Actions can access the context using the aliases.
+
+This allows you to put together existing Actions from different sources and have them work together without having to modify their code.  Aliases will work with or without Action `expects`.
+
+Say for example you have actions `AnAction` and `AnotherAction` that you've used in previous projects.  `AnAction` provides `:my_key` but `AnotherAction` needs to use that value but expects `:key_alias`.  You can use them together in an organizer like so:
+
+```ruby
+class AnOrganizer
+  extend LightService::Organizer
+
+  aliases my_key: :key_alias
+
+  def self.for_order(order)
+    with(:order => order).reduce(
+        AnAction,
+        AnotherAction,
+      )
+  end
+end
+
+class AnAction
+  extend LightService::Action
+  promises :my_key
+
+  executed do |context|
+    context.my_key = "value"
+  end
+end
+
+class FooAction
+  extend LightService::Action
+  expects :key_alias
+
+  executed do |context|
+    context.key_alias # => "value"
+  end
+end
+```
+
 ## Logging
 
 Enable LightService's logging to better understand what goes on within the series of actions,
