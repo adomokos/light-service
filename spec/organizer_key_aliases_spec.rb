@@ -21,6 +21,7 @@ describe "organizer aliases macro" do
     it "makes aliases available to the actions" do
       result = organizer_with_alias.do_something
       expect(result[:promised_key]).to eq(result[:expected_key])
+      expect(result.promised_key).to eq(result.expected_key)
     end
   end
 end

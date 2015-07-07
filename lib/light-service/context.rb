@@ -107,5 +107,9 @@ module LightService
     def [](key)
       super(key) || super(aliases.key(key))
     end
+
+    def fetch(key, default_or_block = nil)
+      self[key] ||= super(key, default_or_block)
+    end
   end
 end
