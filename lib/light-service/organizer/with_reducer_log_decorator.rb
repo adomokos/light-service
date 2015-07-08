@@ -10,10 +10,10 @@ module LightService; module Organizer
       @logged = false
     end
 
-    def with(data = {}, aliases = nil)
+    def with(data = {})
       logger.info("[LightService] - calling organizer <#{organizer.to_s}>")
 
-      decorated.with(data, aliases)
+      decorated.with(data)
 
       logger.info("[LightService] -     keys in context: #{extract_keys(decorated.context.keys)}")
       self

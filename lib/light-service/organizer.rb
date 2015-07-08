@@ -13,7 +13,8 @@ module LightService
     # In case this module is included
     module ClassMethods
       def with(data)
-        WithReducerFactory.make(self).with(data, @aliases)
+        data.merge!(:_aliases => @aliases) if @aliases
+        WithReducerFactory.make(self).with(data)
       end
 
       def reduce(*actions)

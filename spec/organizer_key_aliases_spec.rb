@@ -6,7 +6,7 @@ describe "organizer aliases macro" do
     Class.new do
       extend LightService::Organizer
 
-      aliases promised_key: :expected_key
+      aliases :promised_key => :expected_key
 
       def self.do_something(ctx={})
         with(ctx).reduce([
@@ -20,7 +20,8 @@ describe "organizer aliases macro" do
   context "when aliases is invoked" do
     it "makes aliases available to the actions" do
       result = organizer_with_alias.do_something
-      expect(result[:promised_key]).to eq result[:expected_key]
+      expect(result[:expected_key]).to eq(result[:promised_key])
+      expect(result.expected_key).to eq(result[:promised_key])
     end
   end
 end
