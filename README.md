@@ -230,7 +230,7 @@ class AnAction
   end
 end
 
-class FooAction
+class AnotherAction
   extend LightService::Action
   expects :key_alias
 
