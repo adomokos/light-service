@@ -19,8 +19,12 @@ module LightService
         raise ArgumentError, 'Argument must be Hash or LightService::Context'
       end
 
-      return context if context.is_a?(Context)
-      self.new(context)
+      unless context.is_a?(Context)
+        context = self.new(context)
+      end
+
+      context.set_aliases(context.delete(:_aliases)) if context[:_aliases]
+      context
     end
 
     def add_to_context(values)
@@ -86,6 +90,26 @@ module LightService
         define_singleton_method("#{key}") { self.fetch(key) }
         define_singleton_method("#{key}=") { |value| self[key] = value }
       end
+    end
+
+    def set_aliases(aliases)
+      @aliases = aliases
+
+      aliases.each_pair do |key, key_alias|
+        self[key_alias] = self[key]
+      end
+    end
+
+    def aliases
+      @aliases ||= {}
+    end
+
+    def [](key)
+      super(key) || super(aliases.key(key))
+    end
+
+    def fetch(key, default_or_block = nil)
+      self[key] ||= super(key, default_or_block)
     end
   end
 end

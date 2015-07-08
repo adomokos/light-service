@@ -229,4 +229,25 @@ module TestDoubles
     end
   end
 
+  class PromisesPromisedKeyAction
+    extend LightService::Action
+
+    promises :promised_key
+
+    executed do |ctx|
+      ctx.promised_key = "promised_key"
+    end
+  end
+
+  class ExpectsExpectedKeyAction
+    extend LightService::Action
+
+    expects :expected_key
+    promises :final_key
+
+    executed do |ctx|
+      ctx.final_key = ctx.expected_key
+    end
+  end
+
 end

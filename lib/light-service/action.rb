@@ -69,7 +69,6 @@ module LightService
       def all_keys
         expected_keys + promised_keys
       end
-
     end
 
   end

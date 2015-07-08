@@ -80,4 +80,31 @@ describe LightService::Organizer do
     end
   end
 
+  context "when aliases are declared" do
+    let(:organizer) do
+      Class.new do
+        extend LightService::Organizer
+        aliases :foo => :bar
+
+        def self.do_stuff
+          reduce(TestDoubles::AnAction)
+        end
+      end
+    end
+
+    it "merges the aliases into the data" do
+      with_reducer = double(reduce: true)
+
+      allow(described_class::WithReducerFactory).to receive(:make).
+        and_return(with_reducer)
+
+      expect(with_reducer).to \
+        receive(:with).
+        with(hash_including(:_aliases => { :foo => :bar })).
+        and_return(with_reducer)
+
+      organizer.do_stuff
+    end
+  end
+
 end
