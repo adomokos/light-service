@@ -1,5 +1,9 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.6.0
+* Using [extend](https://github.com/adomokos/light-service/pull/64) for using class methods in Actions and Organizers
+* Setting [key aliases](https://github.com/adomokos/light-service/pull/69) for the Context from the Organizer
+
 ### 0.5.2
 * Guarding context keys against the reserved keys the context needs to operate.
 
