@@ -87,7 +87,7 @@ describe LightService::Organizer do
         aliases :foo => :bar
 
         def self.do_stuff
-          reduce(TestDoubles::AnAction)
+          with.reduce(TestDoubles::AnAction)
         end
       end
     end

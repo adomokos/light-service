@@ -12,7 +12,7 @@ module LightService
 
     # In case this module is included
     module ClassMethods
-      def with(data)
+      def with(data={})
         data.merge!(:_aliases => @aliases) if @aliases
         WithReducerFactory.make(self).with(data)
       end
