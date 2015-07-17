@@ -5,7 +5,7 @@ module LightService
       base_class.extend Macros
     end
     def self.included(base_class)
-      ActiveSupport::Deprecation.warn "including Lightervice::Organizer is deprecated. Please use `extend LightService::Organizer` instead"
+      ActiveSupport::Deprecation.warn "including LightService::Organizer is deprecated. Please use `extend LightService::Organizer` instead"
       base_class.extend ClassMethods
       base_class.extend Macros
     end
