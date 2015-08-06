@@ -5,3 +5,6 @@ rvm:
   - 2.1.2
 # uncomment this line if your project needs to run something other than `rake`:
 script: bundle exec rspec spec
+gemfile:
+  - gemfiles/activesupport_3.gemfile
+  - gemfiles/activesupport_4.gemfile
