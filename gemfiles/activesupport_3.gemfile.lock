@@ -1,0 +1,63 @@
+PATH
+  remote: ../
+  specs:
+    light-service (0.6.0)
+      activesupport (>= 3.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activesupport (3.2.22)
+      i18n (~> 0.6, >= 0.6.4)
+      multi_json (~> 1.0)
+    appraisal (2.0.2)
+      bundler
+      rake
+      thor (>= 0.14.0)
+    coderay (1.0.9)
+    diff-lcs (1.2.5)
+    i18n (0.7.0)
+    method_source (0.8.2)
+    multi_json (1.11.2)
+    pry (0.9.12.2)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+    rake (10.4.2)
+    rspec (3.3.0)
+      rspec-core (~> 3.3.0)
+      rspec-expectations (~> 3.3.0)
+      rspec-mocks (~> 3.3.0)
+    rspec-core (3.3.2)
+      rspec-support (~> 3.3.0)
+    rspec-expectations (3.3.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.3.0)
+    rspec-its (1.2.0)
+      rspec-core (>= 3.0.0)
+      rspec-expectations (>= 3.0.0)
+    rspec-mocks (3.3.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.3.0)
+    rspec-support (3.3.0)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
+    slop (3.6.0)
+    thor (0.19.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activesupport (~> 3.0)
+  appraisal (~> 2.0)
+  light-service!
+  pry (= 0.9.12.2)
+  rspec (~> 3.0)
+  rspec-its (~> 1.0)
+  simplecov (~> 0.7.1)
+
+BUNDLED WITH
+   1.10.6
