@@ -446,7 +446,7 @@ LightService::Configuration.localization_adapter = MyLocalizer.new
 
 # lib/my_localizer.rb
 class MyLocalizer < LightService::LocalizationAdapter
-  
+
   # I just want to change the default lookup path
   # => "light_service.failures.payment_gateway/capture_funds"
   def i18n_scope_from_class(action_class, type)
@@ -454,6 +454,8 @@ class MyLocalizer < LightService::LocalizationAdapter
   end
 end
 ```
+
+To get the value of a `fail!` or `succeed!` message, simply call `#message` on the returned context.
 
 ## Requirements
 
