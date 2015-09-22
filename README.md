@@ -146,6 +146,74 @@ end
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
+## Stopping the Series of Actions
+When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
+```ruby
+class SomeController < ApplicationController
+  def index
+    result_context = SomeOrganizer.call(current_user.id)
+
+    if result_context.success?
+      redirect_to foo_path, :notice => "Everything went OK! Thanks!"
+    else
+      flash[:error] = result_context.message
+      render :action => "new"
+    end
+  end
+end
+```
+However, sometimes not everything will play out as you expect it. An external API call might not be available or some complex business logic will need to stop the processing of the Series of Actions.
+You have two options to stop the callchain:
+
+1. Failing the context
+2. Skipping the rest of the actions
+
+### Failing the Context
+When something goes wrong in an action and you want to halt the chain, you need to call `fail!` on the context object. This will push the context in a failure state (`context.failure? # will evalute to true`).
+The context's `fail!` method can take an optional message argument, this message might help describing what went wrong.
+In case you need to return immediately from the point of failure, you have to do that by calling `next context`.
+
+Here is an example:
+```ruby
+class SubmitsOrderAction
+  extend LightService::Action
+  expects :order, :mailer
+
+  executed do |context|
+    unless context.order.submit_order_succeful?
+      context.fail!("Failed to submit the order")
+      next context
+    end
+
+    context.mailer.send_order_notification!
+  end
+end
+```
+![LightService](https://raw.github.com/adomokos/light-service/add-documentation/resources/fail_actions.png)
+
+In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
+
+### Skipping the rest of the actions
+You can skip the rest of the actions by calling `context.skip_all!`. This behaves very similarly to the above mentioned `fail!` mechanism, except this will not push the context into a failure state.
+A good use case for this is executing the first couple of action and based on a check you might not need to execute the rest.
+Here is an example of how you do it:
+```ruby
+class ChecksOrderStatusAction
+  extend LightService::Action
+  expects :order
+
+  executed do |context|
+    if context.order.send_notification?
+      context.skip_all!("Everything is good, no need to execute the rest of the actions")
+    end
+  end
+end
+```
+![LightService](https://raw.github.com/adomokos/light-service/add-documentation/resources/skip_actions.png)
+
+In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
+
+
 ## Expects and Promises
 The `expects` and `promises` macros are rules for the inputs/outputs of an action.
 `expects` describes what keys it needs to execute, and `promises` makes sure the keys are in the context after the
@@ -201,9 +269,9 @@ end
 Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
 ## Key Aliases
-The `aliases` macro sets up pairs of keys and aliases in an Organizer.  Actions can access the context using the aliases.
+The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.
 
-This allows you to put together existing Actions from different sources and have them work together without having to modify their code.  Aliases will work with or without Action `expects`.
+This allows you to put together existing actions from different sources and have them work together without having to modify their code. Aliases will work with or without action `expects`.
 
 Say for example you have actions `AnAction` and `AnotherAction` that you've used in previous projects.  `AnAction` provides `:my_key` but `AnotherAction` needs to use that value but expects `:key_alias`.  You can use them together in an organizer like so:
 

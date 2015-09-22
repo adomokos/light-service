@@ -22,4 +22,5 @@ class LooksUpTaxPercentageAction
 
     false
   end
+  private_class_method :object_is_nil?
 end
