@@ -13,6 +13,24 @@ describe LightService::Action do
 
       expect(context.to_hash.keys).to be_empty
     end
+
+    it "returns the failure message in the context" do
+      context.fail!("an error")
+
+      returned_context = TestDoubles::AddsTwoActionWithFetch.execute(context)
+
+      expect(returned_context.message).to eq("an error")
+    end
+  end
+
+  context "when the action has an explicit success message" do
+    it "returns the success message in the context" do
+      context.succeed!("successful")
+
+      returned_context = TestDoubles::AddsTwoActionWithFetch.execute(context)
+
+      expect(returned_context.message).to eq("successful")
+    end
   end
 
   context "when the action context does not have failure" do
