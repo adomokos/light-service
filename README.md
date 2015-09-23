@@ -189,7 +189,7 @@ class SubmitsOrderAction
   end
 end
 ```
-![LightService](https://raw.github.com/adomokos/light-service/add-documentation/resources/fail_actions.png)
+![LightService](https://raw.github.com/adomokos/light-service/master/resources/fail_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
@@ -209,7 +209,7 @@ class ChecksOrderStatusAction
   end
 end
 ```
-![LightService](https://raw.github.com/adomokos/light-service/add-documentation/resources/skip_actions.png)
+![LightService](https://raw.github.com/adomokos/light-service/master/resources/skip_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
 
