@@ -163,7 +163,7 @@ class SomeController < ApplicationController
 end
 ```
 However, sometimes not everything will play out as you expect it. An external API call might not be available or some complex business logic will need to stop the processing of the Series of Actions.
-You have two options to stop the callchain:
+You have two options to stop the call chain:
 
 1. Failing the context
 2. Skipping the rest of the actions
