@@ -19,6 +19,16 @@ describe LightService::Organizer::WithReducer do
     expect(result).to be_success
   end
 
+  it "executes a handler around each action and continues reducing" do
+    expect(action1).to receive(:execute).with(context).and_return(context)
+    expect(TestDoubles::AroundEachNullHandler).to receive(:call).with(action1, context).and_yield
+
+    result = described_class.new.with(context).around_each(TestDoubles::AroundEachNullHandler).reduce([action1])
+
+    expect(result).to eq(context)
+    expect(result).to be_success
+  end
+
   context "when FailWithRollbackError is caught" do
     it "reduces the rollback" do
       expect(action1).to receive(:execute).with(context).and_return(context)

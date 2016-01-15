@@ -1,6 +1,29 @@
 # A collection of Action and Organizer dummies used in specs
 
 module TestDoubles
+  class AroundEachNullHandler
+    def self.call(action, context)
+      yield
+    end
+  end
+
+  class AroundEachLoggerHandler
+    def self.call(action, context)
+      MyLogger.info(action, context)
+      result = yield
+      MyLogger.info(action, context)
+
+      result
+    end
+  end
+
+  class AroundEachOrganizer
+    extend LightService::Organizer
+    def self.add(action_arguments)
+      with(action_arguments).around_each(AroundEachLoggerHandler).reduce([AddsTwoActionWithFetch])
+    end
+  end
+
   class AddsTwoActionWithFetch
     extend LightService::Action
 
