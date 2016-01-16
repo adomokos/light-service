@@ -217,9 +217,10 @@ In the example above the organizer called 4 actions. The first 2 actions got exe
 
 ## Wrapping Action Calls with Around Advice
 Benchmarking your action is needed when you profile the series of actions. You could add benchmarking logic to each and every action, however, that would blur the business logic you have in your actions.
+
 Take advantage of the organizer's `around_each` method, which wraps the action calls as its reducing them in order.
 
-Take a look at this example:
+Check out this example:
 
 ```ruby
 class LogDuration
