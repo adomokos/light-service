@@ -148,13 +148,13 @@ simple and elegant Rails code where I told the story of how LightService was ext
 
 
 ## Table of Content
-[Stopping the Series of Actions](#stopping-the-series-of-actions)
-[Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
-[Key Aliases](#key-aliases)
-[Logging](#logging)
-[Error Codes](#error-codes)
-[Action Rollback](#action-rollback)
-[Localizing Messages](#localizing-messages)
+* [Stopping the Series of Actions](#stopping-the-series-of-actions)
+* [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
+* [Key Aliases](#key-aliases)
+* [Logging](#logging)
+* [Error Codes](#error-codes)
+* [Action Rollback](#action-rollback)
+* [Localizing Messages](#localizing-messages)
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
