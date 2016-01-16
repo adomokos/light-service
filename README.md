@@ -149,6 +149,8 @@ simple and elegant Rails code where I told the story of how LightService was ext
 
 ## Table of Content
 * [Stopping the Series of Actions](#stopping-the-series-of-actions)
+    * [Failing the Context](#failing-the-context)
+    * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
 * [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
 * [Key Aliases](#key-aliases)
 * [Logging](#logging)
