@@ -8,11 +8,12 @@ describe "organizer aliases macro" do
 
       aliases :promised_key => :expected_key
 
-      def self.do_something(ctx={})
-        with(ctx).reduce([
-          TestDoubles::PromisesPromisedKeyAction,
-          TestDoubles::ExpectsExpectedKeyAction,
-        ])
+      def self.do_something(ctx = {})
+        with(ctx).reduce(
+          [
+            TestDoubles::PromisesPromisedKeyAction,
+            TestDoubles::ExpectsExpectedKeyAction
+          ])
       end
     end
   end

@@ -7,28 +7,32 @@ module LightService
   class Context < Hash
     attr_accessor :message, :error_code, :current_action
 
-    def initialize(context={}, outcome=Outcomes::SUCCESS, message='', error_code=nil)
-      @outcome, @message, @error_code = outcome, message, error_code
+    def initialize(context = {},
+                   outcome = Outcomes::SUCCESS,
+                   message = '',
+                   error_code = nil)
+      @outcome = outcome
+      @message = message
+      @error_code = error_code
       @skip_all = false
-      context.to_hash.each {|k,v| self[k] = v}
+      context.to_hash.each { |k, v| self[k] = v }
       self
     end
 
-    def self.make(context={})
-      unless context.is_a? Hash or context.is_a? LightService::Context
-        raise ArgumentError, 'Argument must be Hash or LightService::Context'
+    def self.make(context = {})
+      unless context.is_a?(Hash) || context.is_a?(LightService::Context)
+        msg = 'Argument must be Hash or LightService::Context'
+        fail ArgumentError, msg
       end
 
-      unless context.is_a?(Context)
-        context = self.new(context)
-      end
+      context = new(context) unless context.is_a?(Context)
 
-      context.set_aliases(context.delete(:_aliases)) if context[:_aliases]
+      context.assign_aliases(context.delete(:_aliases)) if context[:_aliases]
       context
     end
 
     def add_to_context(values)
-      self.merge! values
+      merge! values
     end
 
     def success?
@@ -44,16 +48,20 @@ module LightService
     end
 
     def outcome
-      ActiveSupport::Deprecation.warn '`Context#outcome` attribute reader is DEPRECATED and will be removed'
+      msg = '`Context#outcome` attribute reader is ' \
+            'DEPRECATED and will be removed'
+      ActiveSupport::Deprecation.warn(msg)
       @outcome
     end
 
-    def succeed!(message=nil, options={})
-      @message = Configuration.localization_adapter.success(message, current_action, options)
+    def succeed!(message = nil, options = {})
+      @message = Configuration.localization_adapter.success(message,
+                                                            current_action,
+                                                            options)
       @outcome = Outcomes::SUCCESS
     end
 
-    def fail!(message=nil, options_or_error_code={})
+    def fail!(message = nil, options_or_error_code = {})
       options_or_error_code ||= {}
 
       if options_or_error_code.is_a?(Hash)
@@ -64,17 +72,19 @@ module LightService
         options = {}
       end
 
-      @message = Configuration.localization_adapter.failure(message, current_action, options)
+      @message = Configuration.localization_adapter.failure(message,
+                                                            current_action,
+                                                            options)
       @error_code = error_code
       @outcome = Outcomes::FAILURE
     end
 
-    def fail_with_rollback!(message=nil, error_code=nil)
+    def fail_with_rollback!(message = nil, error_code = nil)
       fail!(message, error_code)
-      raise FailWithRollbackError.new
+      fail(FailWithRollbackError)
     end
 
-    def skip_all!(message=nil)
+    def skip_all!(message = nil)
       @message = message
       @skip_all = true
     end
@@ -86,13 +96,13 @@ module LightService
     def define_accessor_methods_for_keys(keys)
       return if keys.nil?
       keys.each do |key|
-        next if self.respond_to?(key.to_sym)
-        define_singleton_method("#{key}") { self.fetch(key) }
+        next if respond_to?(key.to_sym)
+        define_singleton_method(key.to_s) { fetch(key) }
         define_singleton_method("#{key}=") { |value| self[key] = value }
       end
     end
 
-    def set_aliases(aliases)
+    def assign_aliases(aliases)
       @aliases = aliases
 
       aliases.each_pair do |key, key_alias|

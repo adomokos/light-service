@@ -46,7 +46,8 @@ module TestDoubles
     promises :milk_tea
 
     executed do |context|
-      context.milk_tea = "#{context.tea} - #{context.milk} - with #{context.chocolate}"
+      context.milk_tea = "#{context.tea} - #{context.milk}"\
+                         " - with #{context.chocolate}"
     end
   end
 
@@ -68,7 +69,8 @@ module TestDoubles
       end
 
       if context.milk == :super_hot
-        context.fail_with_rollback!("Can't make a latte from a milk that's super hot!")
+        error_message = "Can't make a latte from a milk that's super hot!"
+        context.fail_with_rollback!(error_message)
         next context
       end
 
@@ -98,8 +100,8 @@ module TestDoubles
 
     def self.call(tea, milk, coffee)
       with(:tea => tea, :milk => milk, :coffee => coffee)
-          .reduce(TestDoubles::MakesTeaWithMilkAction,
-                  TestDoubles::MakesLatteAction)
+        .reduce(TestDoubles::MakesTeaWithMilkAction,
+                TestDoubles::MakesLatteAction)
     end
   end
 
@@ -108,8 +110,8 @@ module TestDoubles
 
     def self.call(milk, coffee)
       with(:milk => milk, :coffee => coffee)
-          .reduce(TestDoubles::AddsTwoActionWithFetch,
-                  TestDoubles::MakesLatteAction)
+        .reduce(TestDoubles::AddsTwoActionWithFetch,
+                TestDoubles::MakesLatteAction)
     end
   end
 
@@ -118,9 +120,8 @@ module TestDoubles
 
     def self.call(coffee, this_hot = :very_hot)
       with(:milk => this_hot, :coffee => coffee)
-          .reduce(TestDoubles::MakesLatteAction,
-                  TestDoubles::AddsTwoActionWithFetch)
-
+        .reduce(TestDoubles::MakesLatteAction,
+                TestDoubles::AddsTwoActionWithFetch)
     end
   end
 
@@ -129,9 +130,8 @@ module TestDoubles
 
     def self.call(coffee)
       with(:milk => "5%", :coffee => coffee)
-          .reduce(TestDoubles::MakesLatteAction,
-                  TestDoubles::AddsTwoActionWithFetch)
-
+        .reduce(TestDoubles::MakesLatteAction,
+                TestDoubles::AddsTwoActionWithFetch)
     end
   end
 
@@ -222,11 +222,10 @@ module TestDoubles
       context.product = make_product
     end
 
-    private
-
     def self.make_product
       fail "Fail"
     end
+    private_class_method :make_product
   end
 
   class PromisesPromisedKeyAction
@@ -249,5 +248,4 @@ module TestDoubles
       ctx.final_key = ctx.expected_key
     end
   end
-
 end
