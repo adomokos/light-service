@@ -7,7 +7,9 @@ rvm:
   - 2.3.0
 
 before_install:
-  - gem install bundler
+  - 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc'
+  - gem install bundler bundle_cache
+  - bundle_cache_install
 
 # uncomment this line if your project needs to run something other than `rake`:
 script: bundle exec rspec spec
