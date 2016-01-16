@@ -9,7 +9,9 @@ describe LightService::Context do
     context "with no arguments" do
       subject { LightService::Context.make }
       it { is_expected.to be_success }
-      its(:message) { should be_empty }
+      specify "message is empty string" do
+        expect(context.message).to be_empty
+      end
     end
 
     context "with a hash" do
