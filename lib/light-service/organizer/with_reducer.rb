@@ -7,13 +7,22 @@ module LightService; module Organizer
       self
     end
 
+    def around_each(handler)
+      @around_each_handler = handler
+      self
+    end
+
     def reduce(*actions)
       raise "No action(s) were provided" if actions.empty?
       actions.flatten!
 
       actions.reduce(context) do |current_context, action|
         begin
-          result = action.execute(current_context)
+          if @around_each_handler
+            result = @around_each_handler.call(action, current_context) {action.execute(current_context)}
+          else
+            result = action.execute(current_context)
+          end
         rescue FailWithRollbackError
           result = reduce_rollback(actions)
         ensure
