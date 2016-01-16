@@ -147,6 +147,15 @@ I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-ele
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
 
+## Table of Content
+[Stopping the Series of Actions](#stopping-the-series-of-actions)
+[Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
+[Key Aliases](#key-aliases)
+[Logging](#logging)
+[Error Codes](#error-codes)
+[Action Rollback](#action-rollback)
+[Localizing Messages](#localizing-messages)
+
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
 ```ruby
@@ -215,7 +224,7 @@ end
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
 
 
-## Wrapping Action Calls with Around Advice
+## Benchmarking Actions with Around Advice
 Benchmarking your action is needed when you profile the series of actions. You could add benchmarking logic to each and every action, however, that would blur the business logic you have in your actions.
 
 Take advantage of the organizer's `around_each` method, which wraps the action calls as its reducing them in order.
