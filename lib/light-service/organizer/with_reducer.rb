@@ -1,9 +1,14 @@
 module LightService; module Organizer
   class WithReducer
-    attr_reader :context
+    attr_reader :context, :around_each_handler
 
     def with(data = {})
       @context = LightService::Context.make(data)
+      self
+    end
+
+    def around_each(handler)
+      @around_each_handler = handler
       self
     end
 
@@ -13,7 +18,7 @@ module LightService; module Organizer
 
       actions.reduce(context) do |current_context, action|
         begin
-          result = action.execute(current_context)
+          result = invoke_action(current_context, action)
         rescue FailWithRollbackError
           result = reduce_rollback(actions)
         ensure
@@ -22,6 +27,16 @@ module LightService; module Organizer
         end
 
         result
+      end
+    end
+
+    private
+
+    def invoke_action(current_context, action)
+      return action.execute(current_context) unless around_each_handler
+
+      around_each_handler.call(action, current_context) do
+        action.execute(current_context)
       end
     end
 
@@ -37,14 +52,11 @@ module LightService; module Organizer
         end
     end
 
-    private
-
     def reversable_actions(actions)
-      index_of_current_action = actions.index(@context.current_action) || 0
+      index_of_current_action = actions.index(context.current_action) || 0
 
       # Reverse from the point where the fail was triggered
       actions.take(index_of_current_action + 1)
     end
-
   end
 end; end
