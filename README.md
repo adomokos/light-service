@@ -146,7 +146,10 @@ end
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
-You can also add objects that get executed around every action, which is ideal for specialized logging:
+## Wrapping Action Calls with Around Advice
+
+You can wrap action calls from the organizer by using the `around_each` method.
+This is an easy way to benchmark action execution time for each action in the call chain. This is an example of how it can be accomplished:
 
 ```ruby
 class LogDuration
@@ -154,10 +157,10 @@ class LogDuration
     start_time = Time.now
     result = yield
     duration = Time.now - start_time
-    LightService::Configuration.logger.info({
+    LightService::Configuration.logger.info(
       :action   => action,
       :duration => duration
-    })
+    )
 
     result
   end
@@ -167,7 +170,7 @@ class CalculatesTax
   extend LightService::Organizer
 
   def self.for_order(order)
-    with(:order => order).around_each(LogDuration)reduce(
+    with(:order => order).around_each(LogDuration).reduce(
         LooksUpTaxPercentageAction,
         CalculatesOrderTaxAction,
         ProvidesFreeShippingAction
@@ -176,8 +179,7 @@ class CalculatesTax
 end
 ```
 
-Any object passed into ```around_each``` must respond to #call.  Call is passed two arguments: the action name and the context it will execute with.  It is also passed a block, where LightService's action execution
-will be done in, so the result must be returned.  While this is a little work, it also gives you before and after state access to the data for any data auditing checks you may need to accomplish.
+Any object passed into `around_each` must respond to #call with two arguments: the action name and the context it will execute with. It is also passed a block, where LightService's action execution will be done in, so the result must be returned. While this is a little work, it also gives you before and after state access to the data for any auditing and/or checks you may need to accomplish.
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
