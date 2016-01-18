@@ -1,12 +1,13 @@
 module LightService
   module Action
-
     def self.extended(base_class)
       base_class.extend Macros
     end
 
     def self.included(base_class)
-      ActiveSupport::Deprecation.warn "including LightService::Action is deprecated. Please use `extend LightService::Action` instead"
+      msg = "including LightService::Action is deprecated. " \
+            "Please use `extend LightService::Action` instead"
+      ActiveSupport::Deprecation.warn(msg)
       base_class.extend Macros
     end
 
@@ -46,22 +47,20 @@ module LightService
       end
 
       def rolled_back
-        raise "`rolled_back` macro can not be invoked again" if self.respond_to?(:rollback)
+        msg = "`rolled_back` macro can not be invoked again"
+        fail msg if respond_to?(:rollback)
 
         define_singleton_method :rollback do |context = {}|
           yield(context)
 
           context
         end
-
       end
 
       private
 
       def create_action_context(context)
-        if context.is_a? LightService::Context
-          return context
-        end
+        return context if context.is_a? LightService::Context
 
         LightService::Context.make(context)
       end
@@ -70,6 +69,5 @@ module LightService
         expected_keys + promised_keys
       end
     end
-
   end
 end

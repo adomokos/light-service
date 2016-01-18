@@ -15,18 +15,20 @@ describe LightService::LocalizationAdapter do
         expected_scope = "test_doubles/an_action.light_service.failures"
 
         expect(I18n).to receive(:t)
-                    .with(message_or_key, :scope => expected_scope)
-                    .and_return("message")
+          .with(message_or_key, :scope => expected_scope)
+          .and_return("message")
 
         expect(subject).to eq("message")
       end
 
       it "allows passing interpolation options to I18n layer" do
         expect(I18n).to receive(:t)
-                    .with(message_or_key, hash_including(:i18n_variable => "value"))
-                    .and_return("message")
+          .with(message_or_key, hash_including(:i18n_variable => "value"))
+          .and_return("message")
 
-        subject = adapter.failure(message_or_key, action_class, :i18n_variable => "value")
+        subject = adapter.failure(message_or_key,
+                                  action_class,
+                                  :i18n_variable => "value")
 
         expect(subject).to eq("message")
       end
@@ -51,18 +53,20 @@ describe LightService::LocalizationAdapter do
         expected_scope = "test_doubles/an_action.light_service.successes"
 
         expect(I18n).to receive(:t)
-                    .with(message_or_key, :scope => expected_scope)
-                    .and_return("message")
+          .with(message_or_key, :scope => expected_scope)
+          .and_return("message")
 
         expect(subject).to eq("message")
       end
 
       it "allows passing interpolation options to I18n layer" do
         expect(I18n).to receive(:t)
-                    .with(message_or_key, hash_including(:i18n_variable => "value"))
-                    .and_return("message")
+          .with(message_or_key, hash_including(:i18n_variable => "value"))
+          .and_return("message")
 
-        subject = adapter.success(message_or_key, action_class, :i18n_variable => "value")
+        subject = adapter.success(message_or_key,
+                                  action_class,
+                                  :i18n_variable => "value")
 
         expect(subject).to eq("message")
       end

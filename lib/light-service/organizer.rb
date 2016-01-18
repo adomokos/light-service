@@ -4,16 +4,19 @@ module LightService
       base_class.extend ClassMethods
       base_class.extend Macros
     end
+
     def self.included(base_class)
-      ActiveSupport::Deprecation.warn "including LightService::Organizer is deprecated. Please use `extend LightService::Organizer` instead"
+      warning_msg = "including LightService::Organizer is deprecated. " \
+                    "Please use `extend LightService::Organizer` instead"
+      ActiveSupport::Deprecation.warn(warning_msg)
       base_class.extend ClassMethods
       base_class.extend Macros
     end
 
     # In case this module is included
     module ClassMethods
-      def with(data={})
-        data.merge!(:_aliases => @aliases) if @aliases
+      def with(data = {})
+        data[:_aliases] = @aliases if @aliases
         WithReducerFactory.make(self).with(data)
       end
 

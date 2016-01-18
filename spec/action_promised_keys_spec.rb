@@ -2,37 +2,43 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe ":promises macro" do
-
   context "when the promised key is not in the context" do
     it "raises an ArgumentError" do
-      class TestDoubles::MakesCappuccinoAction1
-        extend LightService::Action
-        expects :coffee, :milk
-        promises :cappuccino
-        executed do |context|
-          context[:macchiato] = "#{context.coffee} - #{context.milk}"
+      module TestDoubles
+        class MakesCappuccinoAction1
+          extend LightService::Action
+          expects :coffee, :milk
+          promises :cappuccino
+          executed do |context|
+            context[:macchiato] = "#{context.coffee} - #{context.milk}"
+          end
         end
       end
 
-      exception_error_text = "promised :cappuccino to be in the context during TestDoubles::MakesCappuccinoAction1"
-      expect {
-        TestDoubles::MakesCappuccinoAction1.execute(:coffee => "espresso", :milk => "2%")
-      }.to raise_error(LightService::PromisedKeysNotInContextError, exception_error_text)
+      exception_msg = "promised :cappuccino to be in the context during " \
+                      "TestDoubles::MakesCappuccinoAction1"
+      expect do
+        TestDoubles::MakesCappuccinoAction1.execute(:coffee => "espresso",
+                                                    :milk => "2%")
+      end.to \
+        raise_error(LightService::PromisedKeysNotInContextError, exception_msg)
     end
 
     it "can fail the context without fulfilling its promise" do
-      class TestDoubles::MakesCappuccinoAction2
-        extend LightService::Action
-        expects :coffee, :milk
-        promises :cappuccino
-        executed do |context|
-          context.fail!("Sorry, something bad has happened.")
+      module TestDoubles
+        class MakesCappuccinoAction2
+          extend LightService::Action
+          expects :coffee, :milk
+          promises :cappuccino
+          executed do |context|
+            context.fail!("Sorry, something bad has happened.")
+          end
         end
       end
 
-      result_context = TestDoubles::MakesCappuccinoAction2.execute(
-                          :coffee => "espresso",
-                          :milk => "2%")
+      result_context = TestDoubles::MakesCappuccinoAction2
+                       .execute(:coffee => "espresso",
+                                :milk => "2%")
 
       expect(result_context).to be_failure
       expect(result_context.keys).not_to include(:cappuccino)
@@ -41,36 +47,40 @@ describe ":promises macro" do
 
   context "when the promised key is in the context" do
     it "can be set with an actual value" do
-      class TestDoubles::MakesCappuccinoAction3
-        extend LightService::Action
-        expects :coffee, :milk
-        promises :cappuccino
-        executed do |context|
-          context.cappuccino = "#{context.coffee} - with #{context.milk} milk"
-          context.cappuccino += " hot"
+      module TestDoubles
+        class MakesCappuccinoAction3
+          extend LightService::Action
+          expects :coffee, :milk
+          promises :cappuccino
+          executed do |context|
+            context.cappuccino = "#{context.coffee} - with #{context.milk} milk"
+            context.cappuccino += " hot"
+          end
         end
       end
 
-      result_context = TestDoubles::MakesCappuccinoAction3.execute(
-                          :coffee => "espresso",
-                          :milk => "2%")
+      result_context = TestDoubles::MakesCappuccinoAction3
+                       .execute(:coffee => "espresso",
+                                :milk => "2%")
 
       expect(result_context).to be_success
       expect(result_context.cappuccino).to eq("espresso - with 2% milk hot")
     end
 
     it "can be set with nil" do
-      class TestDoubles::MakesCappuccinoAction4
-        extend LightService::Action
-        expects :coffee, :milk
-        promises :cappuccino
-        executed do |context|
-          context.cappuccino = nil
+      module TestDoubles
+        class MakesCappuccinoAction4
+          extend LightService::Action
+          expects :coffee, :milk
+          promises :cappuccino
+          executed do |context|
+            context.cappuccino = nil
+          end
         end
       end
-      result_context = TestDoubles::MakesCappuccinoAction4.execute(
-                          :coffee => "espresso",
-                          :milk => "2%")
+      result_context = TestDoubles::MakesCappuccinoAction4
+                       .execute(:coffee => "espresso",
+                                :milk => "2%")
 
       expect(result_context).to be_success
       expect(result_context[:cappuccino]).to be_nil
@@ -78,27 +88,35 @@ describe ":promises macro" do
   end
 
   context "when a reserved key is listed as a promised key" do
-    it "raises an error indicating a reserved key has been promised" do
-      exception_error_text = "promised or expected keys cannot be a reserved key: [:message]"
-      expect {
+    it "raises error indicating a reserved key has been promised" do
+      exception_msg = "promised or expected keys cannot be a reserved key: "\
+                      "[:message]"
+      expect do
         TestDoubles::MakesTeaPromisingReservedKey.execute(:tea => "black")
-      }.to raise_error(LightService::ReservedKeysInContextError, exception_error_text)
+      end.to \
+        raise_error(LightService::ReservedKeysInContextError, exception_msg)
     end
 
-    it "raises an error indicating that multiple reserved keys have been promised" do
-      exception_error_text = "promised or expected keys cannot be a reserved key: [:message, :error_code, :current_action]"
-      expect {
-        TestDoubles::MakesTeaPromisingMultipleReservedKeys.execute(:tea => "black")
-      }.to raise_error(LightService::ReservedKeysInContextError, exception_error_text)
+    it "raises error indicating multiple reserved keys have been promised" do
+      exception_msg = "promised or expected keys cannot be a reserved key: " \
+                      "[:message, :error_code, :current_action]"
+      expect do
+        ctx = { :tea => "black" }
+        TestDoubles::MakesTeaPromisingMultipleReservedKeys.execute(ctx)
+      end.to \
+        raise_error(LightService::ReservedKeysInContextError, exception_msg)
     end
   end
 
-  it "can collect promised keys when the `promised` macro is called multiple times" do
-    resulting_context = TestDoubles::MultiplePromisesAction.execute(
-                            :coffee => "espresso",
-                            :milk => "2%")
+  context "when the `promised` macro is called multiple times" do
+    it "collects promised keys " do
+      result = TestDoubles::MultiplePromisesAction \
+               .execute(:coffee => "espresso", :milk => "2%")
 
-    expect(resulting_context.cappuccino).to eq("Cappucino needs espresso and a little milk")
-    expect(resulting_context.latte).to eq("Latte needs espresso and a lot of milk")
+      expect(result.cappuccino).to \
+        eq("Cappucino needs espresso and a little milk")
+      expect(result.latte).to \
+        eq("Latte needs espresso and a lot of milk")
+    end
   end
 end

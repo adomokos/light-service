@@ -1,6 +1,5 @@
 module LightService
   class Configuration
-
     class << self
       attr_writer :logger, :localization_adapter
 
@@ -20,6 +19,5 @@ module LightService
         logger
       end
     end
-
   end
 end

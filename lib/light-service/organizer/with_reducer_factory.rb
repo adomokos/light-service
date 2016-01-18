@@ -2,11 +2,10 @@ module LightService
   module Organizer
     class WithReducerFactory
       def self.make(monitored_organizer)
-        if (LightService::Configuration.logger.nil?)
-          ::LightService::Organizer::WithReducer.new
+        if LightService::Configuration.logger.nil?
+          WithReducer.new
         else
-          ::LightService::Organizer::WithReducerLogDecorator.new(
-            ::LightService::Organizer::WithReducer.new, monitored_organizer)
+          WithReducerLogDecorator.new(monitored_organizer, WithReducer.new)
         end
       end
     end

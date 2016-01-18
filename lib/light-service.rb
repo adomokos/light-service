@@ -1,6 +1,6 @@
 require 'logger'
 
-require "light-service/version"
+require 'light-service/version'
 
 require 'light-service/errors'
 require 'light-service/configuration'

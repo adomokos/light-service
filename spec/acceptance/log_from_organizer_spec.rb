@@ -19,24 +19,29 @@ describe "Logs from organizer" do
   context "when every action has expects or promises" do
     subject(:log_message) do
       collects_log do
-        TestDoubles::MakesTeaAndCappuccino.call("black tea", "2% milk", "espresso coffee")
+        TestDoubles::MakesTeaAndCappuccino
+          .call("black tea", "2% milk", "espresso coffee")
       end
     end
 
     it "describes what organizer was invoked" do
-      organizer_log_message = "[LightService] - calling organizer <TestDoubles::MakesTeaAndCappuccino>"
+      organizer_log_message = "[LightService] - calling organizer " \
+                              "<TestDoubles::MakesTeaAndCappuccino>"
       expect(log_message).to include(organizer_log_message)
     end
 
     it "describes the actions invoked" do
-      organizer_log_message = "[LightService] - executing <TestDoubles::MakesTeaWithMilkAction>"
+      organizer_log_message = "[LightService] - executing " \
+                              "<TestDoubles::MakesTeaWithMilkAction>"
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "[LightService] - executing <TestDoubles::MakesLatteAction>"
+      organizer_log_message = "[LightService] - executing " \
+                              "<TestDoubles::MakesLatteAction>"
       expect(log_message).to include(organizer_log_message)
     end
 
     it "lists the keys in context before the actions are executed" do
-      organizer_log_message = "[LightService] -     keys in context: :tea, :milk, :coffee"
+      organizer_log_message = "[LightService] -     " \
+                              "keys in context: :tea, :milk, :coffee"
       expect(log_message).to include(organizer_log_message)
     end
 
@@ -55,7 +60,8 @@ describe "Logs from organizer" do
     end
 
     it "lists the keys in contect after the actions are executed" do
-      organizer_log_message = "[LightService] -     keys in context: :tea, :milk, :coffee, :milk_tea, :latte"
+      organizer_log_message = "[LightService] -     keys in context: " \
+                              ":tea, :milk, :coffee, :milk_tea, :latte"
       expect(log_message).to include(organizer_log_message)
     end
   end
@@ -68,7 +74,8 @@ describe "Logs from organizer" do
     end
 
     it "describes what organizer was invoked" do
-      organizer_log_message = "[LightService] - calling organizer <TestDoubles::MakesCappuccinoAddsTwo>"
+      organizer_log_message = "[LightService] - calling organizer " \
+                              "<TestDoubles::MakesCappuccinoAddsTwo>"
       expect(log_message).to include(organizer_log_message)
     end
 
@@ -83,16 +90,20 @@ describe "Logs from organizer" do
   context "when the context has failed" do
     subject(:log_message) do
       collects_log do
-        TestDoubles::MakesCappuccinoAddsTwoAndFails.call("espresso coffee")
+        TestDoubles::MakesCappuccinoAddsTwoAndFails
+          .call("espresso coffee")
       end
     end
 
     it "logs it with a warning" do
-      organizer_log_message = "WARN -- : [LightService] - :-((( <TestDoubles::MakesLatteAction> has failed..."
+      organizer_log_message = "WARN -- : [LightService] - :-((( " \
+                              "<TestDoubles::MakesLatteAction> has failed..."
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "WARN -- : [LightService] - context message: Can't make a latte from a milk that's very hot!"
+      organizer_log_message = "WARN -- : [LightService] - context message: " \
+                              "Can't make a latte from a milk that's very hot!"
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "[LightService] -  :-((( <TestDoubles::AddsTwoAction> has failed..."
+      organizer_log_message = "[LightService] -  :-((( " \
+                              "<TestDoubles::AddsTwoAction> has failed..."
       expect(log_message).not_to include(organizer_log_message)
     end
   end
@@ -100,16 +111,21 @@ describe "Logs from organizer" do
   context "when the context has failed with rollback" do
     subject(:log_message) do
       collects_log do
-        TestDoubles::MakesCappuccinoAddsTwoAndFails.call("espresso coffee", :super_hot)
+        TestDoubles::MakesCappuccinoAddsTwoAndFails
+          .call("espresso coffee", :super_hot)
       end
     end
 
     it "logs it with a warning" do
-      organizer_log_message = "WARN -- : [LightService] - :-((( <TestDoubles::MakesLatteAction> has failed..."
+      organizer_log_message = "WARN -- : [LightService] - :-((( " \
+                              "<TestDoubles::MakesLatteAction> has failed..."
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "WARN -- : [LightService] - context message: Can't make a latte from a milk that's super hot!"
+      organizer_log_message = "WARN -- : [LightService] - context message: " \
+                              "Can't make a latte from a milk that's super hot!"
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "[LightService] -  :-((( <TestDoubles::AddsTwoAction> has failed..."
+      organizer_log_message = "[LightService] -  :-((( " \
+                              "<TestDoubles::AddsTwoAction> " \
+                              "has failed..."
       expect(log_message).not_to include(organizer_log_message)
     end
   end
@@ -122,11 +138,16 @@ describe "Logs from organizer" do
     end
 
     it "logs it with a warning" do
-      organizer_log_message = "INFO -- : [LightService] - ;-) <TestDoubles::MakesLatteAction> has decided to skip the rest of the actions"
+      organizer_log_message = "INFO -- : [LightService] - ;-) " \
+                              "<TestDoubles::MakesLatteAction> has decided " \
+                              "to skip the rest of the actions"
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "INFO -- : [LightService] - context message: Can't make a latte with a fatty milk like that!"
+      organizer_log_message = "INFO -- : [LightService] - context message: " \
+                              "Can't make a latte with a fatty milk like that!"
       expect(log_message).to include(organizer_log_message)
-      organizer_log_message = "INFO -- : [LightService] - ;-) <TestDoubles::AddsTwoAction> has decided to skip the rest of the actions"
+      organizer_log_message = "INFO -- : [LightService] - ;-) " \
+                              "<TestDoubles::AddsTwoAction> has decided " \
+                              "to skip the rest of the actions"
       expect(log_message).not_to include(organizer_log_message)
     end
   end
