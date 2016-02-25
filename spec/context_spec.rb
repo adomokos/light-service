@@ -2,14 +2,15 @@ require "spec_helper"
 require 'test_doubles'
 
 describe LightService::Context do
-
   let(:context) { LightService::Context.make }
 
   describe "can be made" do
     context "with no arguments" do
       subject { LightService::Context.make }
       it { is_expected.to be_success }
-      its(:message) { should be_empty }
+      specify "message is empty string" do
+        expect(context.message).to be_empty
+      end
     end
 
     context "with a hash" do
@@ -22,7 +23,9 @@ describe LightService::Context do
 
     context "with FAILURE" do
       it "is failed" do
-        context = LightService::Context.new({}, ::LightService::Outcomes::FAILURE, '')
+        context = LightService::Context.new({},
+                                            LightService::Outcomes::FAILURE,
+                                            '')
 
         expect(context).to be_failure
       end
@@ -31,18 +34,18 @@ describe LightService::Context do
 
   describe "can't be made" do
     specify "with invalid parameters" do
-      expect{LightService::Context.make([])}.to raise_error(ArgumentError)
+      expect { LightService::Context.make([]) }.to raise_error(ArgumentError)
     end
   end
 
   it "can be asked for success?" do
-    context = LightService::Context.new({}, ::LightService::Outcomes::SUCCESS)
+    context = LightService::Context.new({}, LightService::Outcomes::SUCCESS)
 
     expect(context).to be_success
   end
 
   it "can be asked for failure?" do
-    context = LightService::Context.new({}, ::LightService::Outcomes::FAILURE)
+    context = LightService::Context.new({}, LightService::Outcomes::FAILURE)
 
     expect(context).to be_failure
   end
@@ -87,19 +90,20 @@ describe LightService::Context do
     expect(context.error_code).to be_nil
   end
 
-  it "can be pushed into a FAILURE state with an error code in an options hash" do
-    context.fail!("a sad end", 10005)
+  it "can be pushed into a FAILURE state with an error code in options hash" do
+    context.fail!("a sad end", 10_005)
 
     expect(context).to be_failure
     expect(context.message).to eq("a sad end")
-    expect(context.error_code).to eq(10005)
+    expect(context.error_code).to eq(10_005)
   end
 
   it "uses localization adapter to translate failure message" do
     action_class = TestDoubles::AnAction
-    expect(LightService::Configuration.localization_adapter).to receive(:failure)
-                                                 .with(:failure_reason, action_class, {})
-                                                 .and_return("message")
+    expect(LightService::Configuration.localization_adapter)
+      .to receive(:failure)
+      .with(:failure_reason, action_class, {})
+      .and_return("message")
 
     context = LightService::Context.make
     context.current_action = action_class
@@ -111,9 +115,10 @@ describe LightService::Context do
 
   it "uses localization adapter to translate success message" do
     action_class = TestDoubles::AnAction
-    expect(LightService::Configuration.localization_adapter).to receive(:success)
-                                                 .with(:action_passed, action_class, {})
-                                                 .and_return("message")
+    expect(LightService::Configuration.localization_adapter)
+      .to receive(:success)
+      .with(:action_passed, action_class, {})
+      .and_return("message")
 
     context = LightService::Context.make
     context.current_action = action_class
@@ -156,7 +161,7 @@ describe LightService::Context do
     let(:context) do
       LightService::Context.make(
         :foo => "foobar",
-        :_aliases => aliases,
+        :_aliases => aliases
       )
     end
     let(:aliases) { { :foo => :bar } }
@@ -171,5 +176,4 @@ describe LightService::Context do
       expect(context.fetch(:bar)).to eq context[:foo]
     end
   end
-
 end

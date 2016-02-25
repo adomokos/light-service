@@ -3,20 +3,21 @@ class LooksUpTaxPercentageAction
   expects :order
   promises :tax_percentage
 
-  executed do |context|
-    tax_ranges = TaxRange.for_region(context.order.region)
-    context.tax_percentage = 0
+  executed do |ctx|
+    tax_ranges = TaxRange.for_region(ctx.order.region)
+    ctx.tax_percentage = 0
 
-    next context if object_is_nil?(tax_ranges, context, 'The tax ranges were not found')
+    next ctx if object_is_nil?(tax_ranges, ctx, 'The tax ranges were not found')
 
-    context.tax_percentage = tax_ranges.for_total(context.order.total)
+    ctx.tax_percentage = tax_ranges.for_total(ctx.order.total)
 
-    next context if object_is_nil?(context.tax_percentage, context, 'The tax percentage was not found')
+    error_message = 'The tax percentage was not found'
+    next ctx if object_is_nil?(ctx.tax_percentage, ctx, error_message)
   end
 
-  def self.object_is_nil?(object, context, message)
+  def self.object_is_nil?(object, ctx, message)
     if object.nil?
-      context.fail!(message)
+      ctx.fail!(message)
       return true
     end
 

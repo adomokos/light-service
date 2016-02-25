@@ -4,12 +4,12 @@ require "test_doubles"
 class TestsLocalizationAdapter
   extend LightService::Organizer
 
-  def self.with_message(pass_or_fail, message_or_key, i18n_options={})
-    with({
-      pass_or_fail: pass_or_fail,
-      message_or_key: message_or_key,
-      i18n_options: i18n_options
-    }).reduce(TestsLocalizationInvocationOptionsAction)
+  def self.with_message(pass_or_fail, message_or_key, i18n_options = {})
+    with(
+      :pass_or_fail => pass_or_fail,
+      :message_or_key => message_or_key,
+      :i18n_options => i18n_options
+    ).reduce(TestsLocalizationInvocationOptionsAction)
   end
 end
 
@@ -26,31 +26,30 @@ class TestsLocalizationInvocationOptionsAction
   end
 end
 
-def pass_with(message_or_key, i18n_options={})
+def pass_with(message_or_key, i18n_options = {})
   TestsLocalizationAdapter.with_message(true, message_or_key, i18n_options)
 end
 
-def fail_with(message_or_key, i18n_options={})
+def fail_with(message_or_key, i18n_options = {})
   TestsLocalizationAdapter.with_message(false, message_or_key, i18n_options)
 end
 
 describe "Localization Adapter" do
-
   before do
-    I18n.backend.store_translations(:en, {
-      tests_localization_invocation_options_action: {
-        light_service: {
-          failures: {
-            some_failure_reason: "This has failed",
-            failure_with_interpolation: "Failed with %{reason}"
+    I18n.backend.store_translations(
+      :en,
+      :tests_localization_invocation_options_action => {
+        :light_service => {
+          :failures => {
+            :some_failure_reason => "This has failed",
+            :failure_with_interpolation => "Failed with %{reason}"
           },
-          successes: {
-            some_success_reason: "This has passed",
-            success_with_interpolation: "Passed with %{reason}"
+          :successes => {
+            :some_success_reason => "This has passed",
+            :success_with_interpolation => "Passed with %{reason}"
           }
         }
-      }
-    })
+      })
   end
 
   describe "passing a simple string message" do
@@ -96,7 +95,8 @@ describe "Localization Adapter" do
   describe "passing a Symbol with interpolation variables" do
     describe "by failing the context" do
       it "performs a translation with interpolation" do
-        result = fail_with(:failure_with_interpolation, :reason => "bad account")
+        result = fail_with(:failure_with_interpolation,
+                           :reason => "bad account")
 
         expect(result).to be_failure
         expect(result.message).to eq("Failed with bad account")
@@ -105,12 +105,12 @@ describe "Localization Adapter" do
 
     describe "by passing the context" do
       it "performs a translation with interpolation" do
-        result = pass_with(:success_with_interpolation, :reason => "account in good standing")
+        result = pass_with(:success_with_interpolation,
+                           :reason => "account in good standing")
 
         expect(result).to be_success
         expect(result.message).to eq("Passed with account in good standing")
       end
     end
   end
-
 end

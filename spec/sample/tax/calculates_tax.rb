@@ -3,10 +3,9 @@ class CalculatesTax
 
   def self.for_order(order)
     with(:order => order).reduce(
-        LooksUpTaxPercentageAction,
-        CalculatesOrderTaxAction,
-        ProvidesFreeShippingAction
+      LooksUpTaxPercentageAction,
+      CalculatesOrderTaxAction,
+      ProvidesFreeShippingAction
     )
   end
 end
-  

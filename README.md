@@ -1,4 +1,4 @@
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/light-service.png)
+![LightService](resources/light-service.png)
 
 [![Gem Version](https://img.shields.io/gem/v/light-service.svg)](https://rubygems.org/gems/light-service)
 [![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
@@ -62,7 +62,7 @@ and executes them one-by-one. Then you need to create the actions which will onl
 
 This is how the organizer and actions interact with eachother:
 
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/organizer_and_actions.png)
+![LightService](resources/organizer_and_actions.png)
 
 ```ruby
 class CalculatesTax
@@ -146,6 +146,18 @@ end
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
+
+## Table of Content
+* [Stopping the Series of Actions](#stopping-the-series-of-actions)
+    * [Failing the Context](#failing-the-context)
+    * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
+* [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
+* [Key Aliases](#key-aliases)
+* [Logging](#logging)
+* [Error Codes](#error-codes)
+* [Action Rollback](#action-rollback)
+* [Localizing Messages](#localizing-messages)
+
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
 ```ruby
@@ -189,12 +201,12 @@ class SubmitsOrderAction
   end
 end
 ```
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/fail_actions.png)
+![LightService](resources/fail_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
 ### Skipping the rest of the actions
-You can skip the rest of the actions by calling `context.skip_all!`. This behaves very similarly to the above mentioned `fail!` mechanism, except this will not push the context into a failure state.
+You can skip the rest of the actions by calling `context.skip_all!`. This behaves very similarly to the above-mentioned `fail!` mechanism, except this will not push the context into a failure state.
 A good use case for this is executing the first couple of action and based on a check you might not need to execute the rest.
 Here is an example of how you do it:
 ```ruby
@@ -209,9 +221,47 @@ class ChecksOrderStatusAction
   end
 end
 ```
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/skip_actions.png)
+![LightService](resources/skip_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
+
+
+## Benchmarking Actions with Around Advice
+Benchmarking your action is needed when you profile the series of actions. You could add benchmarking logic to each and every action, however, that would blur the business logic you have in your actions.
+
+Take advantage of the organizer's `around_each` method, which wraps the action calls as its reducing them in order.
+
+Check out this example:
+
+```ruby
+class LogDuration
+  def self.call(action, context)
+    start_time = Time.now
+    result = yield
+    duration = Time.now - start_time
+    LightService::Configuration.logger.info(
+      :action   => action,
+      :duration => duration
+    )
+
+    result
+  end
+end
+
+class CalculatesTax
+  extend LightService::Organizer
+
+  def self.for_order(order)
+    with(:order => order).around_each(LogDuration).reduce(
+        LooksUpTaxPercentageAction,
+        CalculatesOrderTaxAction,
+        ProvidesFreeShippingAction
+      )
+  end
+end
+```
+
+Any object passed into `around_each` must respond to #call with two arguments: the action name and the context it will execute with. It is also passed a block, where LightService's action execution will be done in, so the result must be returned. While this is a little work, it also gives you before and after state access to the data for any auditing and/or checks you may need to accomplish.
 
 
 ## Expects and Promises
@@ -309,7 +359,6 @@ end
 ```
 
 ## Logging
-
 Enable LightService's logging to better understand what goes on within the series of actions,
 what's in the context or when an action fails.
 
@@ -368,7 +417,6 @@ I, [DATE]  INFO -- : [LightService] - context message: Can't make a latte with a
 ```
 
 ## Error Codes
-
 You can add some more structure to your error handling by taking advantage of error codes in the context.
 Normally, when something goes wrong in your actions, you fail the process by setting the context to failure:
 
@@ -405,7 +453,6 @@ end
 ```
 
 ## Action Rollback
-
 Sometimes your action has to undo what it did when an error occurs. Think about a chain of actions where you need
 to persist records in your data store in one action and you have to call an external service in the next. What happens if there
 is an error when you call the external service? You want to remove the records you previously saved. You can do it now with
@@ -448,7 +495,6 @@ The actions are rolled back in reversed order from the point of failure starting
 See [this](spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
 
 ## Localizing Messages
-
 By default LightService provides a mechanism for easily translating your error or success messages via I18n.  You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
 
 ```ruby
@@ -526,11 +572,9 @@ end
 To get the value of a `fail!` or `succeed!` message, simply call `#message` on the returned context.
 
 ## Requirements
-
-This gem requires ruby 1.9.x
+This gem requires ruby 2.x
 
 ## Installation
-
 Add this line to your application's Gemfile:
 
     gem 'light-service'
@@ -544,14 +588,12 @@ Or install it yourself as:
     $ gem install light-service
 
 ## Usage
-
 Based on the refactoring example above, just create an organizer object that calls the
 actions in order and write code for the actions. That's it.
 
 For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki).
 
 ## Contributing
-
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Added some feature'`)
@@ -561,9 +603,7 @@ For further examples, please visit the project's [Wiki](https://github.com/adomo
 Huge thanks to the [contributors](https://github.com/adomokos/light-service/graphs/contributors)!
 
 ## Release Notes
-
 Follow the release notes in this [document](https://github.com/adomokos/light-service/blob/master/RELEASES.md).
 
 ## License
-
 LightService is released under the [MIT License](http://www.opensource.org/licenses/MIT).

@@ -4,9 +4,7 @@ class ProvidesFreeShippingAction
 
   executed do |context|
     order = context.order
-    if order.total_with_tax > 200
-      order.provide_free_shipping!
-    end
-  end
 
+    order.provide_free_shipping! if order.total_with_tax > 200
+  end
 end
