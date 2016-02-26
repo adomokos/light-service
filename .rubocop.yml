@@ -21,6 +21,9 @@ Style/TrailingBlankLines:
 Style/RedundantReturn:
   Enabled: false
 
+Style/SignalException:
+  Enabled: true
+
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
