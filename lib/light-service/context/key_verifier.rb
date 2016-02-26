@@ -28,7 +28,7 @@ module LightService
       end
 
       def throw_error_predicate(_keys)
-        fail NotImplementedError, 'Sorry, you have to override length'
+        raise NotImplementedError, 'Sorry, you have to override length'
       end
 
       def verify
@@ -36,7 +36,7 @@ module LightService
 
         if throw_error_predicate(keys)
           Configuration.logger.error error_message
-          fail error_to_throw, error_message
+          raise error_to_throw, error_message
         end
 
         context

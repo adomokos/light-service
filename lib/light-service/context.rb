@@ -22,7 +22,7 @@ module LightService
     def self.make(context = {})
       unless context.is_a?(Hash) || context.is_a?(LightService::Context)
         msg = 'Argument must be Hash or LightService::Context'
-        fail ArgumentError, msg
+        raise ArgumentError, msg
       end
 
       context = new(context) unless context.is_a?(Context)
@@ -81,7 +81,7 @@ module LightService
 
     def fail_with_rollback!(message = nil, error_code = nil)
       fail!(message, error_code)
-      fail(FailWithRollbackError)
+      raise FailWithRollbackError
     end
 
     def skip_all!(message = nil)

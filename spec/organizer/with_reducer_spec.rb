@@ -36,7 +36,7 @@ describe LightService::Organizer::WithReducer do
     it "reduces the rollback" do
       expect(action1).to receive(:execute).with(context).and_return(context)
       expect(action2).to receive(:execute).with(context) do
-        fail LightService::FailWithRollbackError
+        raise LightService::FailWithRollbackError
       end
       expect(action1).to receive(:rollback).with(context).and_return(context)
       expect(action2).to receive(:rollback).with(context).and_return(context)
@@ -49,7 +49,7 @@ describe LightService::Organizer::WithReducer do
     it "reduces the rollback with an action without `rollback`" do
       expect(action1).to receive(:execute).with(context).and_return(context)
       expect(action2).to receive(:execute).with(context) do
-        fail LightService::FailWithRollbackError
+        raise LightService::FailWithRollbackError
       end
       expect(action2).to receive(:rollback).with(context).and_return(context)
 

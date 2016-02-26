@@ -248,7 +248,7 @@ module TestDoubles
     end
 
     def self.make_product
-      fail "Fail"
+      raise "Fail"
     end
     private_class_method :make_product
   end

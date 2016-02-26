@@ -14,7 +14,7 @@ module LightService
       end
 
       def reduce(*actions)
-        fail "No action(s) were provided" if actions.empty?
+        raise "No action(s) were provided" if actions.empty?
         actions.flatten!
 
         actions.reduce(context) do |current_context, action|
