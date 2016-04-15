@@ -1,4 +1,4 @@
-![LightService](resources/light-service.png)
+![LightService](https://github.com/adomokos/light-service/blob/master/resources/light-service.png)
 
 [![Gem Version](https://img.shields.io/gem/v/light-service.svg)](https://rubygems.org/gems/light-service)
 [![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
@@ -62,7 +62,7 @@ and executes them one-by-one. Then you need to create the actions which will onl
 
 This is how the organizer and actions interact with eachother:
 
-![LightService](resources/organizer_and_actions.png)
+![LightService](https://github.com/adomokos/light-service/blob/master/resources/organizer_and_actions.png)
 
 ```ruby
 class CalculatesTax
@@ -201,7 +201,7 @@ class SubmitsOrderAction
   end
 end
 ```
-![LightService](resources/fail_actions.png)
+![LightService](https://github.com/adomokos/light-service/blob/master/resources/fail_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
@@ -221,7 +221,7 @@ class ChecksOrderStatusAction
   end
 end
 ```
-![LightService](resources/skip_actions.png)
+![LightService](https://github.com/adomokos/light-service/blob/master/resources/skip_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
 
@@ -316,7 +316,7 @@ class FooAction
 end
 ```
 
-Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
+Take a look at [this spec](https://github.com/adomokos/light-service/blob/master/spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
 ## Key Aliases
 The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.
@@ -492,7 +492,7 @@ Using the `rolled_back` macro is optional for the actions in the chain. You shou
 
 The actions are rolled back in reversed order from the point of failure starting with the action that triggered it.
 
-See [this](spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
+See [this](https://github.com/adomokos/light-service/blob/master/spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
 
 ## Localizing Messages
 By default LightService provides a mechanism for easily translating your error or success messages via I18n.  You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
