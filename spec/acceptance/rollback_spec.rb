@@ -19,7 +19,7 @@ class AddsOneWithRollbackAction
   promises :number
 
   executed do |context|
-    context.fail_with_rollback! if context.number == 0
+    context.fail_with_rollback! if context.number.zero?
 
     context.number += 1
   end

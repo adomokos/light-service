@@ -38,7 +38,8 @@ describe "Localization Adapter" do
   before do
     I18n.backend.store_translations(
       :en,
-      :tests_localization_invocation_options_action => {
+      :tests_localization_invocation_options_action =>
+      {
         :light_service => {
           :failures => {
             :some_failure_reason => "This has failed",
@@ -49,7 +50,8 @@ describe "Localization Adapter" do
             :success_with_interpolation => "Passed with %{reason}"
           }
         }
-      })
+      }
+    )
   end
 
   describe "passing a simple string message" do
