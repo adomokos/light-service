@@ -13,7 +13,8 @@ describe "organizer aliases macro" do
           [
             TestDoubles::PromisesPromisedKeyAction,
             TestDoubles::ExpectsExpectedKeyAction
-          ])
+          ]
+        )
       end
     end
   end
