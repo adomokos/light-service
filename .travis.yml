@@ -25,7 +25,5 @@ matrix:
   exclude:
   - rvm: 2.0.0
     gemfile: gemfiles/activesupport_5.gemfile
-    env: ISOLATED=true
   - rvm: 2.1.2
     gemfile: gemfiles/activesupport_5.gemfile
-    env: ISOLATED=true
