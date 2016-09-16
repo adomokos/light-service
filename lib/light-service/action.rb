@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 module LightService
   module Action
     def self.extended(base_class)

@@ -3,7 +3,7 @@ language: ruby
 rvm:
   - 2.0.0
   - 2.1.2
-  - 2.2.0
+  - 2.2.2
   - 2.3.0
 
 before_install:
@@ -18,4 +18,12 @@ script:
 
 gemfile:
   - gemfiles/activesupport_3.gemfile
-  - gemfiles/activesupport_4.gemfileset
+  - gemfiles/activesupport_4.gemfile
+  - gemfiles/activesupport_5.gemfile
+
+matrix:
+  exclude:
+  - rvm: 2.0.0
+    gemfile: gemfiles/activesupport_5.gemfile
+  - rvm: 2.1.2
+    gemfile: gemfiles/activesupport_5.gemfile
