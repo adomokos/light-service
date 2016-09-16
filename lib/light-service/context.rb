@@ -1,3 +1,5 @@
+require 'active_support/deprecation'
+
 module LightService
   module Outcomes
     SUCCESS = 0
