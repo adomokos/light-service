@@ -8,7 +8,7 @@ module LightService
     def self.included(base_class)
       warning_msg = "including LightService::Organizer is deprecated. " \
                     "Please use `extend LightService::Organizer` instead"
-      ActiveSupport::Deprecation.warn(warning_msg)
+      warn(warning_msg)
       base_class.extend ClassMethods
       base_class.extend Macros
     end
