@@ -616,7 +616,7 @@ class ExtractsTransformsLoadsData
       reduce_if(->(ctx) { ctx.retrieved_items.any? == false  }, [
         NotifiesEngineeringTeamAction
       ]),
-      iterate(:retrieved_item [
+      iterate(:retrieved_item, [
         TransformsData
       ]),
       LoadsData,
