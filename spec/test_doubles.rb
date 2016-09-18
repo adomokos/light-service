@@ -19,7 +19,7 @@ module TestDoubles
 
   class AroundEachOrganizer
     extend LightService::Organizer
-    def self.add(action_arguments)
+    def self.call(action_arguments)
       with(action_arguments)
         .around_each(AroundEachLoggerHandler)
         .reduce([AddsTwoActionWithFetch])
@@ -41,7 +41,7 @@ module TestDoubles
   class AnOrganizer
     extend LightService::Organizer
 
-    def self.do_something(action_arguments)
+    def self.call(action_arguments)
       with(action_arguments).reduce([AnAction, AnotherAction])
     end
 
@@ -163,7 +163,7 @@ module TestDoubles
   class AdditionOrganizer
     extend LightService::Organizer
 
-    def self.add_numbers(number)
+    def self.call(number)
       with(:number => number).reduce(
         AddsOneAction,
         AddsTwoAction,
