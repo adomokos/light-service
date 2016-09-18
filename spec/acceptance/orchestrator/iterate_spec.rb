@@ -7,16 +7,16 @@ describe LightService::Orchestrator do
 
     def self.run(context)
       with(context).reduce([
-        iterate(:numbers, [
-          TestDoubles::AddOneAction
-        ])
-      ])
+                             iterate(:numbers, [
+                                       TestDoubles::AddOneAction
+                                     ])
+                           ])
     end
 
     def self.run_single(context)
       with(context).reduce([
-        iterate(:numbers, TestDoubles::AddOneAction)
-      ])
+                             iterate(:numbers, TestDoubles::AddOneAction)
+                           ])
     end
   end
 

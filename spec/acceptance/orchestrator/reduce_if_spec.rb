@@ -7,11 +7,11 @@ describe LightService::Orchestrator do
 
     def self.run(context)
       with(context).reduce([
-        TestDoubles::AddOneAction,
-        reduce_if(->(ctx) { ctx.number == 1 }, [
-          TestDoubles::AddOneAction
-        ])
-      ])
+                             TestDoubles::AddOneAction,
+                             reduce_if(->(ctx) { ctx.number == 1 }, [
+                                         TestDoubles::AddOneAction
+                                       ])
+                           ])
     end
   end
 

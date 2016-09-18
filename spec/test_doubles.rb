@@ -3,37 +3,31 @@
 module TestDoubles
   class RollbackAction
     extend LightService::Action
-    executed do |ctx|
-      ctx.fail_with_rollback!
-    end
+    executed(&:fail_with_rollback!)
   end
 
   class RaiseErrorAction
     extend LightService::Action
-    executed do |ctx|
+    executed do |_ctx|
       raise 'A problem has occured.'
     end
   end
 
   class RaiseAnotherErrorAction
     extend LightService::Action
-    executed do |ctx|
+    executed do |_ctx|
       raise 'More problems'
     end
   end
 
   class SkipAllAction
     extend LightService::Action
-    executed do |ctx|
-      ctx.skip_all!
-    end
+    executed(&:skip_all!)
   end
 
   class FailureAction
     extend LightService::Action
-    executed do |ctx|
-      ctx.fail!
-    end
+    executed(&:fail!)
   end
 
   class AddOneAction

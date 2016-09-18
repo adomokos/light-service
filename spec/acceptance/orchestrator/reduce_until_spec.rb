@@ -7,10 +7,10 @@ RSpec.describe LightService::Orchestrator do
 
     def self.run
       with(:number => 1).reduce([
-        reduce_until(->(ctx) { ctx.number == 3 }, [
-          TestDoubles::AddOneAction
-        ])
-      ])
+                                  reduce_until(->(ctx) { ctx.number == 3 }, [
+                                                 TestDoubles::AddOneAction
+                                               ])
+                                ])
     end
   end
 

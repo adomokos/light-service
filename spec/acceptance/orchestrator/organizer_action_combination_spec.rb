@@ -12,9 +12,9 @@ describe LightService::Orchestrator do
 
   it 'responds to both actions and organizers' do
     result = TestReduce.run({ :number => 0 }, [
-      TestDoubles::AddTwoOrganizer,
-      TestDoubles::AddOneAction
-    ])
+                              TestDoubles::AddTwoOrganizer,
+                              TestDoubles::AddOneAction
+                            ])
 
     expect(result).to be_success
     expect(result.number).to eq(3)
@@ -22,10 +22,10 @@ describe LightService::Orchestrator do
 
   it 'fails fast by skipping proceeding actions/organizers after failure' do
     result = TestReduce.run({ :number => 0 }, [
-      TestDoubles::AddTwoOrganizer,
-      TestDoubles::FailureAction,
-      TestDoubles::AddOneAction
-    ])
+                              TestDoubles::AddTwoOrganizer,
+                              TestDoubles::FailureAction,
+                              TestDoubles::AddOneAction
+                            ])
 
     expect(result).not_to be_success
     expect(result.number).to eq(2)

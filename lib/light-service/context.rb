@@ -7,8 +7,7 @@ module LightService
   end
 
   class Context < Hash
-    attr_accessor :message, :error_code, :current_action, :raised_error,
-                  :errored_action
+    attr_accessor :message, :error_code, :current_action
 
     def initialize(context = {},
                    outcome = Outcomes::SUCCESS,
@@ -18,8 +17,6 @@ module LightService
       @message = message
       @error_code = error_code
       @skip_all = false
-      @raised_error = nil
-      @errored_action = nil
       context.to_hash.each { |k, v| self[k] = v }
       self
     end
@@ -74,9 +71,7 @@ module LightService
     def fail!(message = nil, options_or_error_code = {})
       options_or_error_code ||= {}
 
-      if raised_error
-        message = "#{raised_error.inspect} -- see `context.raised_error` for the error object"
-      elsif options_or_error_code.is_a?(Hash)
+      if options_or_error_code.is_a?(Hash)
         error_code = options_or_error_code.delete(:error_code)
         options = options_or_error_code
       else
