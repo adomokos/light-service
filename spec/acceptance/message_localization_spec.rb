@@ -4,7 +4,7 @@ require "test_doubles"
 class TestsLocalizationAdapter
   extend LightService::Organizer
 
-  def self.with_message(pass_or_fail, message_or_key, i18n_options = {})
+  def self.call(pass_or_fail, message_or_key, i18n_options = {})
     with(
       :pass_or_fail => pass_or_fail,
       :message_or_key => message_or_key,
@@ -27,11 +27,11 @@ class TestsLocalizationInvocationOptionsAction
 end
 
 def pass_with(message_or_key, i18n_options = {})
-  TestsLocalizationAdapter.with_message(true, message_or_key, i18n_options)
+  TestsLocalizationAdapter.call(true, message_or_key, i18n_options)
 end
 
 def fail_with(message_or_key, i18n_options = {})
-  TestsLocalizationAdapter.with_message(false, message_or_key, i18n_options)
+  TestsLocalizationAdapter.call(false, message_or_key, i18n_options)
 end
 
 describe "Localization Adapter" do

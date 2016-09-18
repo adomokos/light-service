@@ -19,7 +19,7 @@ describe "Executing arbitrary code around each action" do
     assert_before_action_execute_log
     assert_after_action_execute_log
 
-    result = TestDoubles::AroundEachOrganizer.add(context)
+    result = TestDoubles::AroundEachOrganizer.call(context)
 
     expect(result.fetch(:number)).to eq(2)
   end
