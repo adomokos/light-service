@@ -649,11 +649,11 @@ The 4 different constructs an organizer can have are the followings:
 
 The `reduce` method needs no interaction, it behaves similarly to organizers' `reduce` method.
 
-`reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at this acceptance test for its behavior.
+`reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/orchestrator/reduce_until_spec.rb) to see how it's used.
 
-`reduce_if` will reduce the included organizers and/or actions if the predicate in the labmda evaulates to true. Take a look at this acceptance test for an example of its behavior.
+`reduce_if` will reduce the included organizers and/or actions if the predicate in the labmda evaulates to true. [This acceptance test](spec/acceptance/orchestrator/reduce_if_spec.rb) describes this functionality.
 
-`iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example. to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The orchestrator will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. This acceptance tests is a good example of how it's being used.
+`iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example. to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The orchestrator will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. [This acceptance test](spec/acceptance/orchestrator/iterate_spec.rb) should provide you with an example.
 
 ## Requirements
 
