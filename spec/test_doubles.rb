@@ -1,6 +1,59 @@
 # A collection of Action and Organizer dummies used in specs
 
 module TestDoubles
+  class RollbackAction
+    extend LightService::Action
+    executed do |ctx|
+      ctx.fail_with_rollback!
+    end
+  end
+
+  class RaiseErrorAction
+    extend LightService::Action
+    executed do |ctx|
+      raise 'A problem has occured.'
+    end
+  end
+
+  class RaiseAnotherErrorAction
+    extend LightService::Action
+    executed do |ctx|
+      raise 'More problems'
+    end
+  end
+
+  class SkipAllAction
+    extend LightService::Action
+    executed do |ctx|
+      ctx.skip_all!
+    end
+  end
+
+  class FailureAction
+    extend LightService::Action
+    executed do |ctx|
+      ctx.fail!
+    end
+  end
+
+  class AddOneAction
+    extend LightService::Action
+    expects :number
+    promises :number
+
+    executed do |ctx|
+      ctx.number += 1
+      ctx.message = 'Added 1'
+    end
+  end
+
+  class AddTwoOrganizer
+    extend LightService::Organizer
+    def self.call(context)
+      with(context).reduce([AddOneAction, AddOneAction])
+    end
+  end
+
   class AroundEachNullHandler
     def self.call(_action, _context)
       yield

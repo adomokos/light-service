@@ -41,9 +41,17 @@ module LightService
           action_context.current_action = self
 
           Context::KeyVerifier.verify_keys(action_context, self) do
-            action_context.define_accessor_methods_for_keys(all_keys)
+            begin
+              action_context.define_accessor_methods_for_keys(all_keys)
 
-            yield(action_context)
+              yield(action_context)
+            rescue => e
+              raise e unless LightService::Configuration.capture_errors
+              raise FailWithRollbackError if e.is_a?(FailWithRollbackError)
+              action_context.raised_error = e
+              action_context.errored_action = self
+              action_context.fail!
+            end
           end
         end
       end
