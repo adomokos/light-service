@@ -32,7 +32,6 @@ module LightService
         @_promised_keys ||= []
       end
 
-      # rubocop:disable Metrics/MethodLength
       def executed
         define_singleton_method :execute do |context = {}|
           action_context = create_action_context(context)
@@ -42,21 +41,12 @@ module LightService
           action_context.current_action = self
 
           Context::KeyVerifier.verify_keys(action_context, self) do
-            begin
-              action_context.define_accessor_methods_for_keys(all_keys)
+            action_context.define_accessor_methods_for_keys(all_keys)
 
-              yield(action_context)
-            rescue => e
-              raise e unless LightService::Configuration.capture_errors
-              raise FailWithRollbackError if e.is_a?(FailWithRollbackError)
-              action_context.raised_error = e
-              action_context.errored_action = self
-              action_context.fail!
-            end
+            yield(action_context)
           end
         end
       end
-      # rubocop:enable Metrics/MethodLength
 
       def rolled_back
         msg = "`rolled_back` macro can not be invoked again"
