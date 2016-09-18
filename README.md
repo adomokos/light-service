@@ -157,6 +157,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 * [Error Codes](#error-codes)
 * [Action Rollback](#action-rollback)
 * [Localizing Messages](#localizing-messages)
+* [Orchestrators](#orchestrators)
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
@@ -571,7 +572,91 @@ end
 
 To get the value of a `fail!` or `succeed!` message, simply call `#message` on the returned context.
 
+## Orchestrators
+
+The Organizer - Action combination works really well for simple use cases. However, as business logic gets more complex, or when LightService is used in an ETL workflow, the code that routes the different organizers becomes very complex and imperative. Let's look at a piece of code that does basic data transformations:
+
+```ruby
+class ExtractsTransformsLoadsData
+  def self.run(connection)
+    context = RetrievesConnectionInfo.call(connection)
+    context = PullsDataFromRemoteApi.call(context)
+
+    retrieved_items = context.retrieved_items
+    if retrieved_items.any? == false
+      NotifiesEngineeringTeamAction.execute(context)
+    end
+
+    retrieved_items.each do |item|
+      context[:item] = item
+      TransformsData.call(context)
+    end
+
+    context = LoadsData.call(context)
+
+    SendsNotifications.call(context)
+  end
+end
+```
+
+The `LightService::Context` is initialized with the first action, that context is passed around among organizers and actions. This code is still simpler than many out there, but it feels very imperative: it has conditionals, iterators in it. Let's see how we could make it a bit more simpler with a declrative style:
+
+```ruby
+class ExtractsTransformsLoadsData
+  extend LightService::Orchestrator
+
+  def self.run(connection)
+    with(:connection => connection).reduce(steps)
+  end
+
+  def self.steps
+    [
+      RetrievesConnectionInfo,
+      PullsDataFromRemoteApi,
+      reduce_if(->(ctx) { ctx.retrieved_items.any? == false  }, [
+        NotifiesEngineeringTeamAction
+      ]),
+      iterate(:retrieved_item [
+        TransformsData
+      ]),
+      LoadsData,
+      SendsNotifications
+    ]
+  end
+end
+```
+
+This code is much easier to reason about, it's less noisy and it captures the goal of LightService well: simple, declarative code that's easy to understand.
+
+Our convention for naming the public methods on the different items at different levels is this:
+```
+Orchestrators
+   |-> run - steps
+   Organizers
+       |-> call - actions
+       Actions
+           |-> execute
+```
+
+You can mix organizers with actions in the orchestrator steps, but mixing other organizers with actions in an organizer is discouraged.
+
+The 4 different constructs an organizer can have are the followings:
+
+1. `reduce`
+2. `reduce_until`
+3. `reduce_if`
+4. `iterate`
+
+The `reduce` method needs no interaction, it behaves similarly to organizers' `reduce` method.
+
+`reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at this acceptance test for its behavior.
+
+`reduce_if` will reduce the included organizers and/or actions if the predicate in the labmda evaulates to true. Take a look at this acceptance test for an example of its behavior.
+
+`iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example. to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The orchestrator will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. This acceptance tests is a good example of how it's being used.
+
 ## Requirements
+
 This gem requires ruby 2.x
 
 ## Installation

@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'test_doubles'
 
-describe LightService::Orchestrator do
+RSpec.describe LightService::Orchestrator do
   class TestReduceUntil
     extend LightService::Orchestrator
 
