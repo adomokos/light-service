@@ -6,12 +6,15 @@ describe LightService::Orchestrator do
     extend LightService::Orchestrator
 
     def self.run(context)
-      with(context).reduce([
-                             TestDoubles::AddOneAction,
-                             reduce_if(->(ctx) { ctx.number == 1 }, [
-                                         TestDoubles::AddOneAction
-                                       ])
-                           ])
+      with(context).reduce(steps)
+    end
+
+    def self.steps
+      [
+        TestDoubles::AddOneAction,
+        reduce_if(->(ctx) { ctx.number == 1 },
+                  TestDoubles::AddOneAction)
+      ]
     end
   end
 
