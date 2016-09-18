@@ -50,15 +50,15 @@ Wouldn't it be nice to see this instead?
 
 ```ruby
 (
-  LooksUpTaxPercentageAction,
-  CalculatesOrderTaxAction,
-  ChecksFreeShippingAction
+  LooksUpTaxPercentage,
+  CalculatesOrderTax,
+  ChecksFreeShipping
 )
 ```
 
 This block of code should tell you the "story" of what's going on in this workflow.
 With the help of LightService you can write code this way. First you need an organizer object that sets up the actions in order
-and executes them one-by-one. Then you need to create the actions which will only have one method and will do only one thing.
+and executes them one-by-one. Then you need to create the actions with one method (that will do only one thing).
 
 This is how the organizer and actions interact with eachother:
 
@@ -68,7 +68,7 @@ This is how the organizer and actions interact with eachother:
 class CalculatesTax
   extend LightService::Organizer
 
-  def self.for_order(order)
+  def self.call(order)
     with(:order => order).reduce(
         LooksUpTaxPercentageAction,
         CalculatesOrderTaxAction,
@@ -251,7 +251,7 @@ end
 class CalculatesTax
   extend LightService::Organizer
 
-  def self.for_order(order)
+  def self.call(order)
     with(:order => order).around_each(LogDuration).reduce(
         LooksUpTaxPercentageAction,
         CalculatesOrderTaxAction,
@@ -329,9 +329,9 @@ Say for example you have actions `AnAction` and `AnotherAction` that you've used
 class AnOrganizer
   extend LightService::Organizer
 
-  aliases my_key: :key_alias
+  aliases :my_key => :key_alias
 
-  def self.for_order(order)
+  def self.call(order)
     with(:order => order).reduce(
         AnAction,
         AnotherAction,
