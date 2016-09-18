@@ -17,7 +17,7 @@ module LightService
     # In case this module is included
     module ClassMethods
       def with(data = {})
-        VerifyCallMethodExists.call(self)
+        VerifyCallMethodExists.call(self, caller.first)
         data[:_aliases] = @aliases if @aliases
         WithReducerFactory.make(self).with(data)
       end
@@ -30,7 +30,10 @@ module LightService
       # use `call` method name going forward.
       # This should be removed eventually.
       class VerifyCallMethodExists
-        def self.call(klass)
+        def self.call(klass, first_caller = '')
+          invoker_method = caller_method(first_caller)
+          return if invoker_method == 'call'
+
           call_method_exists = klass.methods.include?(:call)
           return if call_method_exists
 
@@ -39,6 +42,12 @@ module LightService
                         "should be named `call`. " \
                         "Please use #{klass}.call going forward."
           ActiveSupport::Deprecation.warn(warning_msg)
+        end
+
+        def self.caller_method(first_caller)
+          return nil unless first_caller =~ /`(.*)'/
+
+          Regexp.last_match[1]
         end
       end
     end
