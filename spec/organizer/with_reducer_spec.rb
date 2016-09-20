@@ -22,7 +22,7 @@ describe LightService::Organizer::WithReducer do
   it "executes a handler around each action and continues reducing" do
     expect(action1).to receive(:execute).with(context).and_return(context)
     expect(TestDoubles::AroundEachNullHandler).to receive(:call)
-      .with(action1, context).and_yield
+      .with(context).and_yield
 
     result = described_class.new.with(context)
                             .around_each(TestDoubles::AroundEachNullHandler)

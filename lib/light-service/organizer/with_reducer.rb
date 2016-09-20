@@ -48,7 +48,7 @@ module LightService
       def invoke_action(current_context, action)
         return action.execute(current_context) unless around_each_handler
 
-        around_each_handler.call(action, current_context) do
+        around_each_handler.call(current_context) do
           action.execute(current_context)
         end
       end

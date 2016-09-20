@@ -54,11 +54,23 @@ module TestDoubles
     end
   end
 
+  class TestLogger
+    attr_accessor :logs
+    def initialize
+      @logs = []
+    end
+  end
+
   class AroundEachLoggerHandler
-    def self.call(action, context)
-      MyLogger.info(action, context)
+    def self.call(context)
+      before_number = context[:number]
       result = yield
-      MyLogger.info(action, context)
+
+      context[:logger].logs << {
+        :action => context.current_action,
+        :before => before_number,
+        :after => result[:number]
+      }
 
       result
     end
