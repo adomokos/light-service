@@ -640,7 +640,7 @@ Orchestrators
 
 You can mix organizers with actions in the orchestrator steps, but mixing other organizers with actions in an organizer is discouraged.
 
-The 4 different constructs an organizer can have are the followings:
+The 4 different constructs an orchestrator can have:
 
 1. `reduce`
 2. `reduce_until`
