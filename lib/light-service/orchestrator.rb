@@ -40,6 +40,13 @@ module LightService
         end
       end
 
+      def execute(code_block)
+        lambda do |ctx|
+          ctx = code_block.call(ctx)
+          ctx
+        end
+      end
+
       def iterate(collection_key, steps)
         lambda do |ctx|
           collection = ctx[collection_key]
