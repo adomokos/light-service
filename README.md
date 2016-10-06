@@ -583,7 +583,7 @@ class ExtractsTransformsLoadsData
     context = PullsDataFromRemoteApi.call(context)
 
     retrieved_items = context.retrieved_items
-    if retrieved_items.any? == false
+    if retrieved_items.empty?
       NotifiesEngineeringTeamAction.execute(context)
     end
 
@@ -613,7 +613,7 @@ class ExtractsTransformsLoadsData
     [
       RetrievesConnectionInfo,
       PullsDataFromRemoteApi,
-      reduce_if(->(ctx) { ctx.retrieved_items.any? == false  }, [
+      reduce_if(->(ctx) { ctx.retrieved_items.empty? }, [
         NotifiesEngineeringTeamAction
       ]),
       iterate(:retrieved_item, [
@@ -638,14 +638,15 @@ Orchestrators
            |-> execute
 ```
 
-You can mix organizers with actions in the orchestrator steps, but mixing other organizers with actions in an organizer is discouraged.
+You can mix organizers with actions in the orchestrator steps, but mixing other organizers with actions in an organizer is discouraged for the sake of simplicity.
 
-The 4 different constructs an orchestrator can have:
+The 5 different constructs an orchestrator can have:
 
 1. `reduce`
 2. `reduce_until`
 3. `reduce_if`
 4. `iterate`
+5. `execute`
 
 The `reduce` method needs no interaction, it behaves similarly to organizers' `reduce` method.
 
@@ -654,6 +655,8 @@ The `reduce` method needs no interaction, it behaves similarly to organizers' `r
 `reduce_if` will reduce the included organizers and/or actions if the predicate in the labmda evaulates to true. [This acceptance test](spec/acceptance/orchestrator/reduce_if_spec.rb) describes this functionality.
 
 `iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example. to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The orchestrator will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. [This acceptance test](spec/acceptance/orchestrator/iterate_spec.rb) should provide you with an example.
+
+To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of seremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/orchestrator/execute_spec.rb) describes how you can use it.
 
 ## Requirements
 
