@@ -13,6 +13,7 @@ describe LightService::Orchestrator do
       [
         TestDoubles::AddOneAction,
         execute(->(ctx) { ctx.number += 1 }),
+        execute(->(ctx) { ctx[:something] = 'hello' }),
         TestDoubles::AddOneAction
       ]
     end
@@ -23,5 +24,6 @@ describe LightService::Orchestrator do
 
     expect(result).to be_success
     expect(result.number).to eq(3)
+    expect(result[:something]).to eq('hello')
   end
 end
