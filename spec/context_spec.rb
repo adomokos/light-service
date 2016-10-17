@@ -157,14 +157,20 @@ describe LightService::Context do
     expect(context.outcome).to eq(::LightService::Outcomes::SUCCESS)
   end
 
+  it "can contain false values" do
+    context = LightService::Context.make(:foo => false)
+    expect(context[:foo]).to eq false
+  end
+
   context "when aliases are included via .make" do
     let(:context) do
       LightService::Context.make(
         :foo => "foobar",
+        :foo2 => false,
         :_aliases => aliases
       )
     end
-    let(:aliases) { { :foo => :bar } }
+    let(:aliases) { { :foo => :bar, :foo2 => :bar2 } }
 
     it "contains the aliases" do
       expect(context.aliases).to eq(aliases)
@@ -174,6 +180,10 @@ describe LightService::Context do
     it "returns the correct values for #[] and #fetch" do
       expect(context[:bar]).to eq context[:foo]
       expect(context.fetch(:bar)).to eq context[:foo]
+    end
+
+    it "can contain false values" do
+      expect(context[:bar2]).to eq false
     end
   end
 end
