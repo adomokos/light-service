@@ -117,8 +117,8 @@ module LightService
     end
 
     def [](key)
-      return super(key) if has_key? key
-      super(aliases.key(key))
+      key = aliases.key(key) || key
+      return super(key)
     end
 
     def fetch(key, default_or_block = nil)
