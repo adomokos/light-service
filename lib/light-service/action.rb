@@ -15,13 +15,11 @@ module LightService
 
     module Macros
       def expects(*args)
-        @_expected_keys ||= []
-        @_expected_keys.concat(args)
+        expected_keys.concat(args)
       end
 
       def promises(*args)
-        @_promised_keys ||= []
-        @_promised_keys.concat(args)
+        promised_keys.concat(args)
       end
 
       def expected_keys
