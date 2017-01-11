@@ -599,7 +599,7 @@ class ExtractsTransformsLoadsData
 end
 ```
 
-The `LightService::Context` is initialized with the first action, that context is passed around among organizers and actions. This code is still simpler than many out there, but it feels very imperative: it has conditionals, iterators in it. Let's see how we could make it a bit more simpler with a declrative style:
+The `LightService::Context` is initialized with the first action, that context is passed around among organizers and actions. This code is still simpler than many out there, but it feels very imperative: it has conditionals, iterators in it. Let's see how we could make it a bit more simpler with a declarative style:
 
 ```ruby
 class ExtractsTransformsLoadsData
