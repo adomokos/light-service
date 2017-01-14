@@ -68,7 +68,7 @@ This is how the organizer and actions interact with eachother:
 class CalculatesTax
   extend LightService::Organizer
 
-  def self.for_order(order)
+  def self.call(order)
     with(:order => order).reduce(
         LooksUpTaxPercentageAction,
         CalculatesOrderTaxAction,
@@ -251,7 +251,7 @@ end
 class CalculatesTax
   extend LightService::Organizer
 
-  def self.for_order(order)
+  def self.call(order)
     with(:order => order).around_each(LogDuration).reduce(
         LooksUpTaxPercentageAction,
         CalculatesOrderTaxAction,
@@ -331,7 +331,7 @@ class AnOrganizer
 
   aliases my_key: :key_alias
 
-  def self.for_order(order)
+  def self.call(order)
     with(:order => order).reduce(
         AnAction,
         AnotherAction,

@@ -16,7 +16,7 @@ describe LightService::Organizer do
     end
 
     it "implicitly creates a Context" do
-      result = TestDoubles::AnOrganizer.do_something(:user => user)
+      result = TestDoubles::AnOrganizer.call(:user => user)
       expect(result).to eq(ctx)
     end
   end
@@ -32,7 +32,7 @@ describe LightService::Organizer do
     end
 
     it "uses that Context without recreating it" do
-      result = TestDoubles::AnOrganizer.do_something(ctx)
+      result = TestDoubles::AnOrganizer.call(ctx)
       expect(result).to eq(ctx)
     end
   end
@@ -64,7 +64,7 @@ describe LightService::Organizer do
         extend LightService::Organizer
         aliases :foo => :bar
 
-        def self.do_stuff
+        def self.call
           with.reduce(TestDoubles::AnAction)
         end
       end
@@ -80,7 +80,7 @@ describe LightService::Organizer do
         .with(hash_including(:_aliases => { :foo => :bar }))
         .and_return(with_reducer)
 
-      organizer.do_stuff
+      organizer.call
     end
   end
 end

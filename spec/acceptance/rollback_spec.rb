@@ -4,7 +4,7 @@ require 'test_doubles'
 class RollbackOrganizer
   extend LightService::Organizer
 
-  def self.for(number)
+  def self.call(number)
     with(:number => number).reduce(
       AddsOneWithRollbackAction,
       TestDoubles::AddsTwoAction,
@@ -47,7 +47,7 @@ end
 class RollbackOrganizerWithNoRollback
   extend LightService::Organizer
 
-  def self.for(number)
+  def self.call(number)
     with(:number => number).reduce(
       TestDoubles::AddsOneAction,
       TestDoubles::AddsTwoAction,
@@ -70,7 +70,7 @@ end
 class RollbackOrganizerWithMiddleRollback
   extend LightService::Organizer
 
-  def self.for(number)
+  def self.call(number)
     with(:number => number).reduce(
       TestDoubles::AddsOneAction,
       AddsTwoActionWithRollback,
@@ -96,7 +96,7 @@ end
 
 describe "Rolling back actions when there is a failure" do
   it "Adds 1, 2, 3 to 1 and rolls back " do
-    result = RollbackOrganizer.for 1
+    result = RollbackOrganizer.call 1
     number = result.fetch(:number)
 
     expect(result).to be_failure
@@ -105,7 +105,7 @@ describe "Rolling back actions when there is a failure" do
   end
 
   it "won't error out when actions don't define rollback" do
-    result = RollbackOrganizerWithNoRollback.for 1
+    result = RollbackOrganizerWithNoRollback.call 1
     number = result.fetch(:number)
 
     expect(result).to be_failure
@@ -114,7 +114,7 @@ describe "Rolling back actions when there is a failure" do
   end
 
   it "rolls back properly when triggered with an action in the middle" do
-    result = RollbackOrganizerWithMiddleRollback.for 1
+    result = RollbackOrganizerWithMiddleRollback.call 1
     number = result.fetch(:number)
 
     expect(result).to be_failure
@@ -123,7 +123,7 @@ describe "Rolling back actions when there is a failure" do
   end
 
   it "rolls back from the first action" do
-    result = RollbackOrganizer.for 0
+    result = RollbackOrganizer.call 0
     number = result.fetch(:number)
 
     expect(result).to be_failure

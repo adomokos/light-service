@@ -8,7 +8,7 @@ describe "organizer aliases macro" do
 
       aliases :promised_key => :expected_key
 
-      def self.do_something(ctx = {})
+      def self.call(ctx = {})
         with(ctx).reduce(
           [
             TestDoubles::PromisesPromisedKeyAction,
@@ -21,7 +21,7 @@ describe "organizer aliases macro" do
 
   context "when aliases is invoked" do
     it "makes aliases available to the actions" do
-      result = organizer_with_alias.do_something
+      result = organizer_with_alias.call
       expect(result[:expected_key]).to eq(result[:promised_key])
       expect(result.expected_key).to eq(result[:promised_key])
     end

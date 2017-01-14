@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.7.0
+* Organizers should have a public method [call](https://github.com/adomokos/light-service/pull/98) in preparation of orchestrators.
+
 ### 0.6.1
 * Introducing [around_each](https://github.com/adomokos/light-service/pull/79) for AOP style logging and code execution
 * Introducing [Rubocop](https://github.com/adomokos/light-service/commit/39aa7ea39f69a16c2df66b213fb6d638796e25f2) to the project, forcing consistant style

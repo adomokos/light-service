@@ -26,7 +26,7 @@ describe CalculatesTax do
       .with(ctx)
       .and_return(ctx)
 
-    result = CalculatesTax.for_order(order)
+    result = CalculatesTax.call(order)
 
     expect(result).to eq(ctx)
   end
