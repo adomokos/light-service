@@ -658,6 +658,8 @@ The `reduce` method needs no interaction, it behaves similarly to organizers' `r
 
 To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of seremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/orchestrator/execute_spec.rb) describes how you can use it.
 
+** Thanks to [@bwvoss](https://github.com/bwvoss) for writing most of the Orchestrators code, I only ported his changes to LS and submitted the PR.
+
 ## Requirements
 
 This gem requires ruby 2.x
