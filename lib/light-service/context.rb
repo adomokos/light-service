@@ -49,6 +49,11 @@ module LightService
       @skip_all
     end
 
+    def reset_skip_all!
+      @message = nil
+      @skip_all = false
+    end
+
     def outcome
       msg = '`Context#outcome` attribute reader is ' \
             'DEPRECATED and will be removed'
