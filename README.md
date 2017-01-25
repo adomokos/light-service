@@ -36,7 +36,7 @@ end
 ```
 
 This controller violates [SRP](http://en.wikipedia.org/wiki/Single_responsibility_principle) all over.
-Also, imagine what would it take to test this beast.
+Also, imagine what it would take to test this beast.
 You could move the tax_percentage finders and calculations into the tax model,
 but then you'll make your model logic heavy.
 
@@ -60,7 +60,7 @@ This block of code should tell you the "story" of what's going on in this workfl
 With the help of LightService you can write code this way. First you need an organizer object that sets up the actions in order
 and executes them one-by-one. Then you need to create the actions which will only have one method and will do only one thing.
 
-This is how the organizer and actions interact with eachother:
+This is how the organizer and actions interact with each other:
 
 ![LightService](https://raw.github.com/adomokos/light-service/master/resources/organizer_and_actions.png)
 
@@ -192,7 +192,7 @@ class SubmitsOrderAction
   expects :order, :mailer
 
   executed do |context|
-    unless context.order.submit_order_succeful?
+    unless context.order.submit_order_successful?
       context.fail!("Failed to submit the order")
       next context
     end
