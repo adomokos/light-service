@@ -1,4 +1,4 @@
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/light-service.png)
+![LightService](resources/light-service.png)
 
 [![Gem Version](https://img.shields.io/gem/v/light-service.svg)](https://rubygems.org/gems/light-service)
 [![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
@@ -50,19 +50,19 @@ Wouldn't it be nice to see this instead?
 
 ```ruby
 (
-  LooksUpTaxPercentageAction,
-  CalculatesOrderTaxAction,
-  ChecksFreeShippingAction
+  LooksUpTaxPercentage,
+  CalculatesOrderTax,
+  ChecksFreeShipping
 )
 ```
 
 This block of code should tell you the "story" of what's going on in this workflow.
 With the help of LightService you can write code this way. First you need an organizer object that sets up the actions in order
-and executes them one-by-one. Then you need to create the actions which will only have one method and will do only one thing.
+and executes them one-by-one. Then you need to create the actions with one method (that will do only one thing).
 
 This is how the organizer and actions interact with each other:
 
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/organizer_and_actions.png)
+![LightService](resources/organizer_and_actions.png)
 
 ```ruby
 class CalculatesTax
@@ -157,6 +157,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 * [Error Codes](#error-codes)
 * [Action Rollback](#action-rollback)
 * [Localizing Messages](#localizing-messages)
+* [Orchestrators](#orchestrators)
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
@@ -201,7 +202,7 @@ class SubmitsOrderAction
   end
 end
 ```
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/fail_actions.png)
+![LightService](resources/fail_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
@@ -221,7 +222,7 @@ class ChecksOrderStatusAction
   end
 end
 ```
-![LightService](https://raw.github.com/adomokos/light-service/master/resources/skip_actions.png)
+![LightService](resources/skip_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
 
@@ -316,7 +317,7 @@ class FooAction
 end
 ```
 
-Take a look at [this spec](https://github.com/adomokos/light-service/blob/master/spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
+Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
 
 ## Key Aliases
 The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.
@@ -329,7 +330,7 @@ Say for example you have actions `AnAction` and `AnotherAction` that you've used
 class AnOrganizer
   extend LightService::Organizer
 
-  aliases my_key: :key_alias
+  aliases :my_key => :key_alias
 
   def self.call(order)
     with(:order => order).reduce(
@@ -492,7 +493,7 @@ Using the `rolled_back` macro is optional for the actions in the chain. You shou
 
 The actions are rolled back in reversed order from the point of failure starting with the action that triggered it.
 
-See [this](https://github.com/adomokos/light-service/blob/master/spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
+See [this](spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
 
 ## Localizing Messages
 By default LightService provides a mechanism for easily translating your error or success messages via I18n.  You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
@@ -571,7 +572,96 @@ end
 
 To get the value of a `fail!` or `succeed!` message, simply call `#message` on the returned context.
 
+## Orchestrators
+
+The Organizer - Action combination works really well for simple use cases. However, as business logic gets more complex, or when LightService is used in an ETL workflow, the code that routes the different organizers becomes very complex and imperative. Let's look at a piece of code that does basic data transformations:
+
+```ruby
+class ExtractsTransformsLoadsData
+  def self.run(connection)
+    context = RetrievesConnectionInfo.call(connection)
+    context = PullsDataFromRemoteApi.call(context)
+
+    retrieved_items = context.retrieved_items
+    if retrieved_items.empty?
+      NotifiesEngineeringTeamAction.execute(context)
+    end
+
+    retrieved_items.each do |item|
+      context[:item] = item
+      TransformsData.call(context)
+    end
+
+    context = LoadsData.call(context)
+
+    SendsNotifications.call(context)
+  end
+end
+```
+
+The `LightService::Context` is initialized with the first action, that context is passed around among organizers and actions. This code is still simpler than many out there, but it feels very imperative: it has conditionals, iterators in it. Let's see how we could make it a bit more simpler with a declarative style:
+
+```ruby
+class ExtractsTransformsLoadsData
+  extend LightService::Orchestrator
+
+  def self.run(connection)
+    with(:connection => connection).reduce(steps)
+  end
+
+  def self.steps
+    [
+      RetrievesConnectionInfo,
+      PullsDataFromRemoteApi,
+      reduce_if(->(ctx) { ctx.retrieved_items.empty? }, [
+        NotifiesEngineeringTeamAction
+      ]),
+      iterate(:retrieved_item, [
+        TransformsData
+      ]),
+      LoadsData,
+      SendsNotifications
+    ]
+  end
+end
+```
+
+This code is much easier to reason about, it's less noisy and it captures the goal of LightService well: simple, declarative code that's easy to understand.
+
+Our convention for naming the public methods on the different items at different levels is this:
+```
+Orchestrators
+   |-> run - steps
+   Organizers
+       |-> call - actions
+       Actions
+           |-> execute
+```
+
+You can mix organizers with actions in the orchestrator steps, but mixing other organizers with actions in an organizer is discouraged for the sake of simplicity.
+
+The 5 different constructs an orchestrator can have:
+
+1. `reduce`
+2. `reduce_until`
+3. `reduce_if`
+4. `iterate`
+5. `execute`
+
+The `reduce` method needs no interaction, it behaves similarly to organizers' `reduce` method.
+
+`reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/orchestrator/reduce_until_spec.rb) to see how it's used.
+
+`reduce_if` will reduce the included organizers and/or actions if the predicate in the labmda evaulates to true. [This acceptance test](spec/acceptance/orchestrator/reduce_if_spec.rb) describes this functionality.
+
+`iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example. to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The orchestrator will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. [This acceptance test](spec/acceptance/orchestrator/iterate_spec.rb) should provide you with an example.
+
+To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of seremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/orchestrator/execute_spec.rb) describes how you can use it.
+
+** Thanks to [@bwvoss](https://github.com/bwvoss) for writing most of the Orchestrators code, I only ported his changes to LS and submitted the PR.
+
 ## Requirements
+
 This gem requires ruby 2.x
 
 ## Installation

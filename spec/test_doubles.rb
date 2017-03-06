@@ -1,17 +1,76 @@
 # A collection of Action and Organizer dummies used in specs
 
 module TestDoubles
+  class RollbackAction
+    extend LightService::Action
+    executed(&:fail_with_rollback!)
+  end
+
+  class RaiseErrorAction
+    extend LightService::Action
+    executed do |_ctx|
+      raise 'A problem has occured.'
+    end
+  end
+
+  class RaiseAnotherErrorAction
+    extend LightService::Action
+    executed do |_ctx|
+      raise 'More problems'
+    end
+  end
+
+  class SkipAllAction
+    extend LightService::Action
+    executed(&:skip_all!)
+  end
+
+  class FailureAction
+    extend LightService::Action
+    executed(&:fail!)
+  end
+
+  class AddOneAction
+    extend LightService::Action
+    expects :number
+    promises :number
+
+    executed do |ctx|
+      ctx.number += 1
+      ctx.message = 'Added 1'
+    end
+  end
+
+  class AddTwoOrganizer
+    extend LightService::Organizer
+    def self.call(context)
+      with(context).reduce([AddOneAction, AddOneAction])
+    end
+  end
+
   class AroundEachNullHandler
     def self.call(_action, _context)
       yield
     end
   end
 
+  class TestLogger
+    attr_accessor :logs
+    def initialize
+      @logs = []
+    end
+  end
+
   class AroundEachLoggerHandler
-    def self.call(action, context)
-      MyLogger.info(action, context)
+    def self.call(context)
+      before_number = context[:number]
       result = yield
-      MyLogger.info(action, context)
+
+      context[:logger].logs << {
+        :action => context.current_action,
+        :before => before_number,
+        :after => result[:number]
+      }
 
       result
     end
