@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.8.0
+* Adding [orchestrators](https://github.com/adomokos/light-service/pull/99).
+
 ### 0.7.0
 * Organizers should have a public method [call](https://github.com/adomokos/light-service/pull/98) in preparation of orchestrators.
 
