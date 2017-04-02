@@ -1,4 +1,4 @@
-![LightService](resources/light-service.png)
+![LightService](https://raw.githubusercontent.com/adomokos/light-service/master/resources/light-service.png)
 
 [![Gem Version](https://img.shields.io/gem/v/light-service.svg)](https://rubygems.org/gems/light-service)
 [![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
@@ -62,7 +62,7 @@ and executes them one-by-one. Then you need to create the actions with one metho
 
 This is how the organizer and actions interact with each other:
 
-![LightService](resources/organizer_and_actions.png)
+![LightService](https://raw.githubusercontent.com/adomokos/light-service/master/resources/organizer_and_actions.png)
 
 ```ruby
 class CalculatesTax
@@ -202,7 +202,7 @@ class SubmitsOrderAction
   end
 end
 ```
-![LightService](resources/fail_actions.png)
+![fail-actions](https://raw.githubusercontent.com/adomokos/light-service/master/resources/fail_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
@@ -222,7 +222,7 @@ class ChecksOrderStatusAction
   end
 end
 ```
-![LightService](resources/skip_actions.png)
+![skip-actions](https://raw.githubusercontent.com/adomokos/light-service/master/resources/skip_actions.png)
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
 
