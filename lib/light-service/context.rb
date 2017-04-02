@@ -6,6 +6,7 @@ module LightService
     FAILURE = 1
   end
 
+  # rubocop:disable ClassLength
   class Context < Hash
     attr_accessor :message, :error_code, :current_action
 
@@ -138,4 +139,5 @@ module LightService
       self[key] ||= super(key, default_or_block)
     end
   end
+  # rubocop:enable ClassLength
 end

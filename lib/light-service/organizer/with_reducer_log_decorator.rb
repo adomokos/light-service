@@ -56,17 +56,17 @@ module LightService
       end
 
       def log_expects(action)
-        if defined?(action.expects) && action.expects.any?
-          logger.info("[LightService] -   expects: " \
-                      "#{extract_keys(action.expects)}")
-        end
+        return unless defined?(action.expects) && action.expects.any?
+
+        logger.info("[LightService] -   expects: " \
+                    "#{extract_keys(action.expects)}")
       end
 
       def log_promises(action)
-        if defined?(action.promises) && action.promises.any?
-          logger.info("[LightService] -   promises: " \
-                      "#{extract_keys(action.promises)}")
-        end
+        return unless defined?(action.promises) && action.promises.any?
+
+        logger.info("[LightService] -   promises: " \
+                    "#{extract_keys(action.promises)}")
       end
 
       def extract_keys(keys)

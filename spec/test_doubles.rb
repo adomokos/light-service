@@ -161,7 +161,8 @@ module TestDoubles
       context[:latte] = "#{context.coffee} - with lots of #{context.milk}"
 
       if context.milk == "5%"
-        context.skip_remaining!("Can't make a latte with a fatty milk like that!")
+        msg = "Can't make a latte with a fatty milk like that!"
+        context.skip_remaining!(msg)
         next context
       end
     end
