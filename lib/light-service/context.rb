@@ -16,7 +16,7 @@ module LightService
       @outcome = outcome
       @message = message
       @error_code = error_code
-      @skip_all = false
+      @skip_remaining = false
       context.to_hash.each { |k, v| self[k] = v }
       self
     end
@@ -45,13 +45,13 @@ module LightService
       success? == false
     end
 
-    def skip_all?
-      @skip_all
+    def skip_remaining?
+      @skip_remaining
     end
 
-    def reset_skip_all!
+    def reset_skip_remaining!
       @message = nil
-      @skip_all = false
+      @skip_remaining = false
     end
 
     def outcome
@@ -92,12 +92,20 @@ module LightService
     end
 
     def skip_all!(message = nil)
+      warning_msg = "Using skip_all! has been deprecated, " \
+                    "please use `skip_remaining!` instead."
+      ActiveSupport::Deprecation.warn(warning_msg)
+
+      skip_remaining!(message)
+    end
+
+    def skip_remaining!(message = nil)
       @message = message
-      @skip_all = true
+      @skip_remaining = true
     end
 
     def stop_processing?
-      failure? || skip_all?
+      failure? || skip_remaining?
     end
 
     def define_accessor_methods_for_keys(keys)

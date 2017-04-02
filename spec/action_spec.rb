@@ -43,7 +43,7 @@ describe LightService::Action do
 
   context "when the action context skips all" do
     it "returns immediately" do
-      context.skip_all!
+      context.skip_remaining!
 
       TestDoubles::AddsTwoActionWithFetch.execute(context)
 
@@ -54,7 +54,7 @@ describe LightService::Action do
       TestDoubles::AddsTwoActionWithFetch.execute(context)
       expect(context.to_hash).to eq(:number => 2)
 
-      context.skip_all!
+      context.skip_remaining!
 
       TestDoubles::AddsTwoActionWithFetch.execute(context)
       # Since the action was skipped, the number remains 2

@@ -63,14 +63,14 @@ module LightService
       private
 
       def scoped_reduction(ctx, steps)
-        ctx.reset_skip_all! unless ctx.failure?
+        ctx.reset_skip_remaining! unless ctx.failure?
         ctx =
           if steps.is_a?(Array)
             reduce(steps, ctx)
           else
             reduce([steps], ctx)
           end
-        ctx.reset_skip_all! unless ctx.failure?
+        ctx.reset_skip_remaining! unless ctx.failure?
 
         ctx
       end

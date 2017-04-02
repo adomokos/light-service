@@ -36,8 +36,8 @@ module LightService
             next context
           end
 
-          if skip_all?(context)
-            write_skip_all_log(context, action)
+          if skip_remaining?(context)
+            write_skip_remaining_log(context, action)
             next context
           end
 
@@ -83,11 +83,11 @@ module LightService
         @logged = true
       end
 
-      def skip_all?(context)
-        context.respond_to?(:skip_all?) && context.skip_all?
+      def skip_remaining?(context)
+        context.respond_to?(:skip_remaining?) && context.skip_remaining?
       end
 
-      def write_skip_all_log(context, action)
+      def write_skip_remaining_log(context, action)
         msg = "[LightService] - ;-) <#{action}> has decided " \
               "to skip the rest of the actions"
         logger.info(msg)

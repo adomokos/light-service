@@ -8,7 +8,7 @@ describe CalculatesTax do
   let(:order) { double('order') }
   let(:ctx) do
     double('ctx', :keys => [:user],
-                  :failure? => false, :skip_all? => false)
+                  :failure? => false, :skip_remaining? => false)
   end
 
   it "calls the actions in order" do
