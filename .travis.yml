@@ -23,7 +23,7 @@ gemfile:
 
 matrix:
   exclude:
-  - rvm: 2.0.0
+  - rvm: 2.1.8
     gemfile: gemfiles/activesupport_5.gemfile
-  - rvm: 2.1.2
+  - rvm: 2.2.2
     gemfile: gemfiles/activesupport_5.gemfile
