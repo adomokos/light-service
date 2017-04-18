@@ -207,7 +207,7 @@ end
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
 ### Skipping the rest of the actions
-You can skip the rest of the actions by calling `context.skip_all!`. This behaves very similarly to the above-mentioned `fail!` mechanism, except this will not push the context into a failure state.
+You can skip the rest of the actions by calling `context.skip_remaining!`. This behaves very similarly to the above-mentioned `fail!` mechanism, except this will not push the context into a failure state.
 A good use case for this is executing the first couple of action and based on a check you might not need to execute the rest.
 Here is an example of how you do it:
 ```ruby
@@ -217,7 +217,7 @@ class ChecksOrderStatusAction
 
   executed do |context|
     if context.order.send_notification?
-      context.skip_all!("Everything is good, no need to execute the rest of the actions")
+      context.skip_remaining!("Everything is good, no need to execute the rest of the actions")
     end
   end
 end

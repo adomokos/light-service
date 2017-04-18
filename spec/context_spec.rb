@@ -50,10 +50,10 @@ describe LightService::Context do
     expect(context).to be_failure
   end
 
-  it "can be asked for skip_all?" do
-    context.skip_all!
+  it "can be asked for skip_remaining?" do
+    context.skip_remaining!
 
-    expect(context.skip_all?).to be_truthy
+    expect(context.skip_remaining?).to be_truthy
   end
 
   it "can be pushed into a SUCCESS state" do
@@ -129,9 +129,9 @@ describe LightService::Context do
   end
 
   it "can set a flag to skip all subsequent actions" do
-    context.skip_all!
+    context.skip_remaining!
 
-    expect(context).to be_skip_all
+    expect(context).to be_skip_remaining
   end
 
   context "stopping additional processing in an action" do
@@ -141,7 +141,7 @@ describe LightService::Context do
     end
 
     it "flags processing to stop when remaining actions should be skipped" do
-      context.skip_all!
+      context.skip_remaining!
       expect(context.stop_processing?).to be_truthy
     end
   end
