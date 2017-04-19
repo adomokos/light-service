@@ -158,6 +158,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 * [Action Rollback](#action-rollback)
 * [Localizing Messages](#localizing-messages)
 * [Orchestrators](#orchestrators)
+* [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
