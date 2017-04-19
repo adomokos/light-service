@@ -660,6 +660,57 @@ To take advantage of another organizer or action, you might need to tweak the co
 
 ** Thanks to [@bwvoss](https://github.com/bwvoss) for writing most of the Orchestrators code, I only ported his changes to LS and submitted the PR.
 
+## ContextFactory for Faster Action Testing
+
+As the complexity of your workflow increases, you will find yourself spending more and more time creating a context (LightService::Context it is). Some of this code can be reused by clever factories, but still, you are using a context that is artificial, and can be different from what the previous actions produced. This is especially true, when you use LightService in ETLs, where you start out with initial data and your actions are mutating its state.
+
+Here is an example:
+
+```ruby
+class SomeOrganizer
+  extend LightService::Organizer
+
+  def self.call(ctx)
+    with(ctx).reduce(actions)
+  end
+
+  def self.actions
+    [
+       ETL::ParsesPayloadAction,
+       ETL::BuildsEnititiesAction,
+       ETL::SetsUpMappingsAction,
+       ETL::SavesEntitiesAction,
+       ETL::SendsNotificationAction
+    ]
+  end
+end
+```
+
+You should test your workflow from the outside, invoking the organizer’s `call` method and verify that the data was properly created or updated in your data store. However, sometimes you need to zoom-into one action, and setting up the context to test it is tedious work. This is where `ContextFactory` can be helpful.
+
+In order to test the third action `ETL::SetsUpMappingAction`, you have to have several entities in the context. Depending on the logic you need to write code for, this could be a lot of work. However, by using the `ContextFactory` in your spec, you could easily have a prepared context that’s ready for testing:
+
+```ruby
+RSpec.describe SetsUpMappingsAction do
+  let(:context) do
+    LightService::Testing::ContextFactory
+      .make_from(SomeOrganizer)
+      .for(ETL::SetsUpMappingsAction)
+      .with(:payload => File.read(‘spec/data/payload.json’)
+  end
+
+  it ‘works like it should’ do
+    ETL::SetsUpMappingsAction.execute(context)
+  end
+end
+```
+
+This context then can be passed to the action under test, freeing you up from the 20 lines of factory or fixture calls to create a context for your specs.
+
+Your orchestrator must follow some conventions though:
+It should have `actions` class method
+Its `call` class method should take a hash that is used in the actions reduce call (In case you want different behavior, you can still open the class [ContextFactoryOrganizer](lib/light-service/testing/context_factory.rb) and change how the actions are invoked, but that might be scary for some.)
+
 ## Requirements
 
 This gem requires ruby 2.x
