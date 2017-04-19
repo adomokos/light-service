@@ -691,6 +691,9 @@ You should test your workflow from the outside, invoking the organizer’s `call
 In order to test the third action `ETL::SetsUpMappingAction`, you have to have several entities in the context. Depending on the logic you need to write code for, this could be a lot of work. However, by using the `ContextFactory` in your spec, you could easily have a prepared context that’s ready for testing:
 
 ```ruby
+require 'spec_helper'
+require 'light-service/testing'
+
 RSpec.describe SetsUpMappingsAction do
   let(:context) do
     LightService::Testing::ContextFactory
