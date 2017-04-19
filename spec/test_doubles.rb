@@ -224,11 +224,15 @@ module TestDoubles
     extend LightService::Organizer
 
     def self.call(number)
-      with(:number => number).reduce(
+      with(:number => number).reduce(actions)
+    end
+
+    def self.actions
+      [
         AddsOneAction,
         AddsTwoAction,
         AddsThreeAction
-      )
+      ]
     end
   end
 
