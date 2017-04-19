@@ -712,8 +712,9 @@ end
 This context then can be passed to the action under test, freeing you up from the 20 lines of factory or fixture calls to create a context for your specs.
 
 Your orchestrator must follow some conventions though:
-It should have `actions` class method
-Its `call` class method should take a hash that is used in the actions reduce call (In case you want different behavior, you can still open the class [ContextFactoryOrganizer](lib/light-service/testing/context_factory.rb) and change how the actions are invoked, but that might be scary for some.)
+
+* It should have `actions` class method
+* Its `call` class method should take a hash that is used in the actions reduce call (In case you want different behavior, you can still open the class [ContextFactoryOrganizer](lib/light-service/testing/context_factory.rb) and change how the actions are invoked, but that might be scary for some.)
 
 ## Requirements
 
