@@ -663,7 +663,7 @@ To take advantage of another organizer or action, you might need to tweak the co
 
 ## ContextFactory for Faster Action Testing
 
-As the complexity of your workflow increases, you will find yourself spending more and more time creating a context (LightService::Context it is) for your tests. Some of this code can be reused by clever factories, but still, you are using a context that is artificial, and can be different from what the previous actions produced. This is especially true, when you use LightService in ETLs, where you start out with initial data and your actions are mutating its state.
+As the complexity of your workflow increases, you will find yourself spending more and more time creating a context (LightService::Context it is) for your action tests. Some of this code can be reused by clever factories, but still, you are using a context that is artificial, and can be different from what the previous actions produced. This is especially true, when you use LightService in ETLs, where you start out with initial data and your actions are mutating its state.
 
 Here is an example:
 
