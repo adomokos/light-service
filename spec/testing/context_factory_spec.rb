@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'test_doubles'
-require 'light-service/testing'
 
 describe 'ContextFactory - used with AdditionOrganizer' do
   context 'when called with the first action' do

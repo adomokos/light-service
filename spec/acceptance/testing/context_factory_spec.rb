@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'test_doubles'
-require 'light-service/testing'
 
 class AdditionOrganizerContextFactory
   def self.make_for(action, number)
