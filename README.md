@@ -687,7 +687,7 @@ class SomeOrganizer
 end
 ```
 
-You should test your workflow from the outside, invoking the organizer’s `call` method and verify that the data was properly created or updated in your data store. However, sometimes you need to zoom-into one action, and setting up the context to test it is tedious work. This is where `ContextFactory` can be helpful.
+You should test your workflow from the outside, invoking the organizer’s `call` method and verify that the data was properly created or updated in your data store. However, sometimes you need to zoom into one action, and setting up the context to test it is tedious work. This is where `ContextFactory` can be helpful.
 
 In order to test the third action `ETL::SetsUpMappingAction`, you have to have several entities in the context. Depending on the logic you need to write code for, this could be a lot of work. However, by using the `ContextFactory` in your spec, you could easily have a prepared context that’s ready for testing:
 
@@ -695,26 +695,24 @@ In order to test the third action `ETL::SetsUpMappingAction`, you have to have s
 require 'spec_helper'
 require 'light-service/testing'
 
-RSpec.describe SetsUpMappingsAction do
+RSpec.describe ETL::SetsUpMappingsAction do
   let(:context) do
     LightService::Testing::ContextFactory
       .make_from(SomeOrganizer)
-      .for(ETL::SetsUpMappingsAction)
+      .for(described_class)
       .with(:payload => File.read(‘spec/data/payload.json’)
   end
 
   it ‘works like it should’ do
-    ETL::SetsUpMappingsAction.execute(context)
+    result = described_class.execute(context)
+    expect(result).to be_success
   end
 end
 ```
 
 This context then can be passed to the action under test, freeing you up from the 20 lines of factory or fixture calls to create a context for your specs.
 
-Your orchestrator must follow some conventions though:
-
-* It should have `actions` class method
-* Its `call` class method should take a hash that is used in the actions reduce call (In case you want different behavior, you can still open the class [ContextFactoryOrganizer](lib/light-service/testing/context_factory.rb#L4-L13) and change how the actions are invoked, but that might be scary for some.)
+In case your organizer has more logic in its `call` method, you could create your own test organizer in your specs like you can see it in this [acceptance test](spec/acceptance/testing/context_factory_spec.rb#L4-L11). This is reusable in all your action tests.
 
 ## Requirements
 
