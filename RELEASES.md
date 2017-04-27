@@ -1,5 +1,9 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.8.1
+* Renaming `skip_all!` to [skip_remaining!](https://github.com/adomokos/light-service/pull/103).
+* Adding [ContextFactory](https://github.com/adomokos/light-service/pull/107) for easier testing.
+
 ### 0.8.0
 * Adding [orchestrators](https://github.com/adomokos/light-service/pull/99).
 
