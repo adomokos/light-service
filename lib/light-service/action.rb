@@ -13,6 +13,12 @@ module LightService
       base_class.extend Macros
     end
 
+    def inherited(subclass)
+      subclass.instance_variable_set(:@_expected_keys, @_expected_keys)
+      subclass.instance_variable_set(:@_promised_keys, @_promised_keys)
+      super(subclass)
+    end
+
     module Macros
       def expects(*args)
         expected_keys.concat(args)
