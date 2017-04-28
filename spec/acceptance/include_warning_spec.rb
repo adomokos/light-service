@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'test_doubles'
 
 describe "Including is discouraged" do
   context "when including LightService::Organizer" do

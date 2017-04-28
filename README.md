@@ -158,6 +158,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 * [Action Rollback](#action-rollback)
 * [Localizing Messages](#localizing-messages)
 * [Orchestrators](#orchestrators)
+* [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
@@ -207,7 +208,7 @@ end
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd had a failure, that pushed the context into a failure state and the 4th action was skipped.
 
 ### Skipping the rest of the actions
-You can skip the rest of the actions by calling `context.skip_all!`. This behaves very similarly to the above-mentioned `fail!` mechanism, except this will not push the context into a failure state.
+You can skip the rest of the actions by calling `context.skip_remaining!`. This behaves very similarly to the above-mentioned `fail!` mechanism, except this will not push the context into a failure state.
 A good use case for this is executing the first couple of action and based on a check you might not need to execute the rest.
 Here is an example of how you do it:
 ```ruby
@@ -217,7 +218,7 @@ class ChecksOrderStatusAction
 
   executed do |context|
     if context.order.send_notification?
-      context.skip_all!("Everything is good, no need to execute the rest of the actions")
+      context.skip_remaining!("Everything is good, no need to execute the rest of the actions")
     end
   end
 end
@@ -659,6 +660,59 @@ The `reduce` method needs no interaction, it behaves similarly to organizers' `r
 To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of ceremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/orchestrator/execute_spec.rb) describes how you can use it.
 
 ** Thanks to [@bwvoss](https://github.com/bwvoss) for writing most of the Orchestrators code, I only ported his changes to LS and submitted the PR.
+
+## ContextFactory for Faster Action Testing
+
+As the complexity of your workflow increases, you will find yourself spending more and more time creating a context (LightService::Context it is) for your action tests. Some of this code can be reused by clever factories, but still, you are using a context that is artificial, and can be different from what the previous actions produced. This is especially true, when you use LightService in ETLs, where you start out with initial data and your actions are mutating its state.
+
+Here is an example:
+
+```ruby
+class SomeOrganizer
+  extend LightService::Organizer
+
+  def self.call(ctx)
+    with(ctx).reduce(actions)
+  end
+
+  def self.actions
+    [
+       ETL::ParsesPayloadAction,
+       ETL::BuildsEnititiesAction,
+       ETL::SetsUpMappingsAction,
+       ETL::SavesEntitiesAction,
+       ETL::SendsNotificationAction
+    ]
+  end
+end
+```
+
+You should test your workflow from the outside, invoking the organizer’s `call` method and verify that the data was properly created or updated in your data store. However, sometimes you need to zoom into one action, and setting up the context to test it is tedious work. This is where `ContextFactory` can be helpful.
+
+In order to test the third action `ETL::SetsUpMappingAction`, you have to have several entities in the context. Depending on the logic you need to write code for, this could be a lot of work. However, by using the `ContextFactory` in your spec, you could easily have a prepared context that’s ready for testing:
+
+```ruby
+require 'spec_helper'
+require 'light-service/testing'
+
+RSpec.describe ETL::SetsUpMappingsAction do
+  let(:context) do
+    LightService::Testing::ContextFactory
+      .make_from(SomeOrganizer)
+      .for(described_class)
+      .with(:payload => File.read(‘spec/data/payload.json’)
+  end
+
+  it ‘works like it should’ do
+    result = described_class.execute(context)
+    expect(result).to be_success
+  end
+end
+```
+
+This context then can be passed to the action under test, freeing you up from the 20 lines of factory or fixture calls to create a context for your specs.
+
+In case your organizer has more logic in its `call` method, you could create your own test organizer in your specs like you can see it in this [acceptance test](spec/acceptance/testing/context_factory_spec.rb#L4-L11). This is reusable in all your action tests.
 
 ## Requirements
 

@@ -1,14 +1,15 @@
 language: ruby
 
 rvm:
-  - 2.0.0
-  - 2.1.2
+  - 2.1.8
   - 2.2.2
-  - 2.3.0
+  - 2.3.3
+  - 2.4.0
 
 before_install:
   - 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc'
   - gem install bundler
+  - bundle update simplecov
   - bundle install --path vendor/bundle
 
 # uncomment this line if your project needs to run something other than `rake`:
@@ -23,7 +24,7 @@ gemfile:
 
 matrix:
   exclude:
-  - rvm: 2.0.0
+  - rvm: 2.1.8
     gemfile: gemfiles/activesupport_5.gemfile
-  - rvm: 2.1.2
+  - rvm: 2.2.2
     gemfile: gemfiles/activesupport_5.gemfile
