@@ -140,7 +140,7 @@ module LightService
     end
 
     def inspect
-      "#{self.class}(#{self.to_s}, " \
+      "#{self.class}(#{self}, " \
       + "success: #{success?}, " \
       + "message: #{check_nil(message)}, " \
       + "error_code: #{check_nil(error_code)}, " \

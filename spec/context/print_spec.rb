@@ -13,13 +13,13 @@ RSpec.describe LightService::Context do
   describe '#inspect' do
     it 'inspects the hash with all the fields' do
       inspected_context =
-          'LightService::Context({}, ' \
-          + 'success: true, ' \
-          + 'message: \'\', ' \
-          + 'error_code: nil, ' \
-          + 'skip_remaining: false, ' \
-          + 'aliases: {}' \
-          + ')'
+        'LightService::Context({}, ' \
+        + 'success: true, ' \
+        + 'message: \'\', ' \
+        + 'error_code: nil, ' \
+        + 'skip_remaining: false, ' \
+        + 'aliases: {}' \
+        + ')'
 
       expect(context.inspect).to eq(inspected_context)
     end
@@ -28,13 +28,13 @@ RSpec.describe LightService::Context do
       context.fail!('There was an error')
 
       inspected_context =
-          'LightService::Context({}, ' \
-          + 'success: false, ' \
-          + 'message: \'There was an error\', ' \
-          + 'error_code: nil, ' \
-          + 'skip_remaining: false, ' \
-          + 'aliases: {}' \
-          + ')'
+        'LightService::Context({}, ' \
+        + 'success: false, ' \
+        + 'message: \'There was an error\', ' \
+        + 'error_code: nil, ' \
+        + 'skip_remaining: false, ' \
+        + 'aliases: {}' \
+        + ')'
 
       expect(context.inspect).to eq(inspected_context)
     end
@@ -43,13 +43,13 @@ RSpec.describe LightService::Context do
       context.skip_remaining!('No need to process')
 
       inspected_context =
-          'LightService::Context({}, ' \
-          + 'success: true, ' \
-          + 'message: \'No need to process\', ' \
-          + 'error_code: nil, ' \
-          + 'skip_remaining: true, ' \
-          + 'aliases: {}' \
-          + ')'
+        'LightService::Context({}, ' \
+        + 'success: true, ' \
+        + 'message: \'No need to process\', ' \
+        + 'error_code: nil, ' \
+        + 'skip_remaining: true, ' \
+        + 'aliases: {}' \
+        + ')'
 
       expect(context.inspect).to eq(inspected_context)
     end
