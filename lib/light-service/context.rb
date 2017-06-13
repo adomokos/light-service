@@ -138,6 +138,23 @@ module LightService
     def fetch(key, default_or_block = nil)
       self[key] ||= super(key, default_or_block)
     end
+
+    def inspect
+      "#{self.class}(#{self.to_s}, " \
+      + "success: #{success?}, " \
+      + "message: #{check_nil(message)}, " \
+      + "error_code: #{check_nil(error_code)}, " \
+      + "skip_remaining: #{@skip_remaining}, " \
+      + "aliases: #{@aliases}" \
+      + ")"
+    end
+
+    private
+
+    def check_nil(value)
+      return 'nil' unless value
+      "'#{value}'"
+    end
   end
   # rubocop:enable ClassLength
 end
