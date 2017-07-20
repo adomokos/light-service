@@ -5,8 +5,8 @@ RSpec.describe LightService::Orchestrator do
   class TestReduceUntil
     extend LightService::Orchestrator
 
-    def self.run
-      with(:number => 1).reduce(steps)
+    def self.run(context)
+      with(context).reduce(steps)
     end
 
     def self.steps
@@ -17,10 +17,27 @@ RSpec.describe LightService::Orchestrator do
     end
   end
 
+  let(:empty_context) { LightService::Context.make }
+
   it 'reduces until the block evaluates to true' do
-    result = TestReduceUntil.run
+    context = { :number => 1 }
+    result = TestReduceUntil.run(context)
 
     expect(result).to be_success
     expect(result.number).to eq(3)
+  end
+
+  it 'does not execute on failed context' do
+    empty_context.fail!('Something bad happened')
+
+    result = TestReduceUntil.run(empty_context)
+    expect(result).to be_failure
+  end
+
+  it 'does not execute a skipped context' do
+    empty_context.skip_remaining!('No more needed')
+
+    result = TestReduceUntil.run(empty_context)
+    expect(result).to be_success
   end
 end

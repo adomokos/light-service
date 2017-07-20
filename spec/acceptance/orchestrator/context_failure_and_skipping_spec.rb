@@ -14,11 +14,11 @@ describe LightService::Orchestrator do
 
     def self.run_skip_after
       with(:number => 1).reduce([
-                                  TestDoubles::SkipAllAction,
+                                  TestDoubles::AddOneAction,
                                   reduce_until(->(ctx) { ctx.number == 3 }, [
-                                                 TestDoubles::AddOneAction,
-                                                 TestDoubles::SkipAllAction
+                                                 TestDoubles::AddOneAction
                                                ]),
+                                  TestDoubles::SkipAllAction,
                                   TestDoubles::AddOneAction
                                 ])
     end
@@ -33,18 +33,18 @@ describe LightService::Orchestrator do
     end
   end
 
-  it 'does not skip nested contexts' do
+  it 'skips all the rest of the actions' do
     result = TestSkipState.run_skip_before
 
     expect(result).to be_success
-    expect(result.number).to eq(3)
+    expect(result[:number]).to eq(1)
   end
 
-  it 'does not skip after a nested context' do
+  it 'skips after an action in nested context' do
     result = TestSkipState.run_skip_after
 
     expect(result).to be_success
-    expect(result.number).to eq(4)
+    expect(result[:number]).to eq(3)
   end
 
   it 'respects failure across all nestings' do
