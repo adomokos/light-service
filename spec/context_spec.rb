@@ -1,7 +1,7 @@
-require "spec_helper"
+require 'spec_helper'
 require 'test_doubles'
 
-describe LightService::Context do
+RSpec.describe LightService::Context do
   let(:context) { LightService::Context.make }
 
   describe "can be made" do
