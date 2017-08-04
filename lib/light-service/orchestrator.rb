@@ -24,6 +24,8 @@ module LightService
 
       def reduce_until(condition_block, steps)
         lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
           loop do
             ctx = scoped_reduction(ctx, steps)
             break if condition_block.call(ctx) || ctx.failure?
@@ -35,6 +37,8 @@ module LightService
 
       def reduce_if(condition_block, steps)
         lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
           ctx = scoped_reduction(ctx, steps) if condition_block.call(ctx)
           ctx
         end
@@ -42,6 +46,8 @@ module LightService
 
       def execute(code_block)
         lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
           ctx = code_block.call(ctx)
           ctx
         end
@@ -49,6 +55,8 @@ module LightService
 
       def iterate(collection_key, steps)
         lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
           collection = ctx[collection_key]
           item_key = collection_key.to_s.singularize.to_sym
           collection.each do |item|
