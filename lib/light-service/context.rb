@@ -87,6 +87,11 @@ module LightService
       @outcome = Outcomes::FAILURE
     end
 
+    def fail_and_return!(*args)
+      fail!(*args)
+      throw(:jump_when_failed, *args)
+    end
+
     def fail_with_rollback!(message = nil, error_code = nil)
       fail!(message, error_code)
       raise FailWithRollbackError
