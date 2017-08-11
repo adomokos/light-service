@@ -68,6 +68,22 @@ module LightService
         end
       end
 
+      def with_callback(action, steps)
+        lambda do |ctx|
+          ctx.reset_skip_remaining! unless ctx.failure?
+          previous_callback = ctx[:callback]
+
+          ctx[:callback] = lambda do |context|
+            reduce(steps, context)
+          end
+
+          ctx = action.execute(ctx)
+          ctx[:callback] = previous_callback
+
+          ctx
+        end
+      end
+
       private
 
       def scoped_reduction(ctx, steps)
