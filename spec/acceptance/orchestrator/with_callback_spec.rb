@@ -82,10 +82,10 @@ describe LightService::Orchestrator do
         [
           SetUpNestedContextAction,
           with_callback(IterateOuterCollectionAction,
-                        [ IncrementOuterCountAction,
-                          with_callback(IterateCollectionAction,
-                                        [IncrementCountAction,
-                                         AddToTotalAction])])
+                        [IncrementOuterCountAction,
+                         with_callback(IterateCollectionAction,
+                                       [IncrementCountAction,
+                                        AddToTotalAction])])
         ]
       end
     end
