@@ -187,6 +187,9 @@ When something goes wrong in an action and you want to halt the chain, you need 
 The context's `fail!` method can take an optional message argument, this message might help describing what went wrong.
 In case you need to return immediately from the point of failure, you have to do that by calling `next context`.
 
+In case you want to fail the context and stop the execution of the executed block, use the `fail_and_return!('something went wront')` method.
+This will immediately leave the block, you don't need to call `next context` to return from the block.
+
 Here is an example:
 ```ruby
 class SubmitsOrderAction
@@ -195,10 +198,10 @@ class SubmitsOrderAction
 
   executed do |context|
     unless context.order.submit_order_successful?
-      context.fail!("Failed to submit the order")
-      next context
+      context.fail_and_return!("Failed to submit the order")
     end
 
+    # This won't be executed
     context.mailer.send_order_notification!
   end
 end
