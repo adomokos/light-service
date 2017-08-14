@@ -70,7 +70,9 @@ module LightService
 
       def with_callback(action, steps)
         lambda do |ctx|
-          ctx.reset_skip_remaining! unless ctx.failure?
+          return ctx if ctx.stop_processing?
+
+          # This will only allow 2 level deep nesting of callbacks
           previous_callback = ctx[:callback]
 
           ctx[:callback] = lambda do |context|
