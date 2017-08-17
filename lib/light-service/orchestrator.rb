@@ -68,6 +68,24 @@ module LightService
         end
       end
 
+      def with_callback(action, steps)
+        lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
+          # This will only allow 2 level deep nesting of callbacks
+          previous_callback = ctx[:callback]
+
+          ctx[:callback] = lambda do |context|
+            reduce(steps, context)
+          end
+
+          ctx = action.execute(ctx)
+          ctx[:callback] = previous_callback
+
+          ctx
+        end
+      end
+
       private
 
       def scoped_reduction(ctx, steps)
