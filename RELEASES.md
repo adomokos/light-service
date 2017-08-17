@@ -1,5 +1,11 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.8.2
+* A better way to [inspect](https://github.com/adomokos/light-service/pull/110) the context.
+* [Short-circuiting](https://github.com/adomokos/light-service/pull/113) the Orchestrator methods.
+* [Fail and return - with one call](https://github.com/adomokos/light-service/pull/115), no `and next` is needed.
+* Adding [with_callback](https://github.com/adomokos/light-service/pull/116) to Orchestrators, allows us to process large data in smaller chunks.
+
 ### 0.8.1
 * Renaming `skip_all!` to [skip_remaining!](https://github.com/adomokos/light-service/pull/103).
 * Adding [ContextFactory](https://github.com/adomokos/light-service/pull/107) for easier testing.
