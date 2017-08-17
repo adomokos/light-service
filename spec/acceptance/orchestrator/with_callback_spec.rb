@@ -70,7 +70,7 @@ describe LightService::Orchestrator do
     end
   end
 
-  describe 'a more complex example with nexted callbacks' do
+  describe 'a more complex example with nested callbacks' do
     class TestWithNestedCallback
       extend LightService::Orchestrator
 
