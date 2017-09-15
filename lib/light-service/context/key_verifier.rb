@@ -45,33 +45,22 @@ module LightService
       def self.verify_keys(context, action, &block)
         ReservedKeysVerifier.new(context, action).verify
         ExpectedKeyVerifier.new(context, action).verify
-        ExpectedKeyUsedVerifier.new(context, action).verify do
+        accessed_keys = context.with_key_logging do
           block.call
         end
         PromisedKeyVerifier.new(context, action).verify
+        ExpectedKeyUsedVerifier.new(context, action, accessed_keys).verify
       end
     end
 
     class ExpectedKeyUsedVerifier < KeyVerifier
-      def initialize(context, action)
-        @key_logger = {}
-        super
-      end
-
-      def verify(&block)
-        old_logger = context[:_key_logger]
-        context[:_key_logger] = @key_logger
-
-        yield
-
-        context.delete(:_key_logger)
-        context[:_key_logger] = old_logger if old_logger
-
-        super
+      def initialize(context, action, accessed_keys)
+        @accessed_keys = accessed_keys
+        super(context, action)
       end
 
       def keys
-        action.expected_keys - @key_logger.keys
+        action.expected_keys - @accessed_keys
       end
 
       def error_to_throw
@@ -146,7 +135,7 @@ module LightService
       end
 
       def reserved_keys
-        [:message, :error_code, :current_action, :_key_logger].freeze
+        [:message, :error_code, :current_action].freeze
       end
     end
   end
