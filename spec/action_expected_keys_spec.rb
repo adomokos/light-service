@@ -38,8 +38,8 @@ describe ":expects macro" do
 
   context "when an expected key is not used" do
     it "raises an LightService::ExpectedKeysNotUsedError" do
-      exception_msg = "expected :milk to be used during " \
-                      "TestDoubles::MakesTeaWithMilkAction"
+      exception_msg = "Expected keys [:milk] to be used during " \
+                      "TestDoubles::MakesTeaWithoutMilkAction"
       expect do
         TestDoubles::MakesTeaWithoutMilkAction.execute(
           :tea => "black",

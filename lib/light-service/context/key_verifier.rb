@@ -45,10 +45,45 @@ module LightService
       def self.verify_keys(context, action, &block)
         ReservedKeysVerifier.new(context, action).verify
         ExpectedKeyVerifier.new(context, action).verify
-
-        block.call
-
+        ExpectedKeyUsedVerifier.new(context, action).verify do
+          block.call
+        end
         PromisedKeyVerifier.new(context, action).verify
+      end
+    end
+
+    class ExpectedKeyUsedVerifier < KeyVerifier
+      def initialize(context, action)
+        @key_logger = {}
+        super
+      end
+
+      def verify(&block)
+        old_logger = context[:_key_logger]
+        context[:_key_logger] = @key_logger
+
+        yield
+
+        context.delete(:_key_logger)
+        context[:_key_logger] = old_logger if old_logger
+
+        super
+      end
+
+      def keys
+        action.expected_keys - @key_logger.keys
+      end
+
+      def error_to_throw
+        ExpectedKeysNotUsedError
+      end
+
+      def throw_error_predicate(keys)
+        keys.any?
+      end
+
+      def error_message
+        "Expected keys [#{format_keys(keys)}] to be used during #{action}"
       end
     end
 
@@ -111,7 +146,7 @@ module LightService
       end
 
       def reserved_keys
-        [:message, :error_code, :current_action].freeze
+        [:message, :error_code, :current_action, :_key_logger].freeze
       end
     end
   end

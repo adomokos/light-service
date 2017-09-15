@@ -118,7 +118,10 @@ module LightService
       return if keys.nil?
       keys.each do |key|
         next if respond_to?(key.to_sym)
-        define_singleton_method(key.to_s) { fetch(key) }
+        define_singleton_method(key.to_s) do
+          log_access(key)
+          fetch(key)
+        end
         define_singleton_method("#{key}=") { |value| self[key] = value }
       end
     end
@@ -159,6 +162,12 @@ module LightService
     def check_nil(value)
       return 'nil' unless value
       "'#{value}'"
+    end
+
+    def log_access(key)
+      logger = self[:_key_logger]
+      return unless logger
+      logger[key] = true
     end
   end
   # rubocop:enable ClassLength
