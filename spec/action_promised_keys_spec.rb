@@ -71,7 +71,6 @@ describe ":promises macro" do
       module TestDoubles
         class MakesCappuccinoAction4
           extend LightService::Action
-          expects :coffee, :milk
           promises :cappuccino
           executed do |context|
             context.cappuccino = nil

@@ -59,7 +59,6 @@ describe ":expects and :promises macros" do
   context "when promised keys are not in context" do
     class FooNoPromisedKeyAction
       extend LightService::Action
-      expects :baz
       promises :bar
 
       executed do |context|

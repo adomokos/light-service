@@ -180,7 +180,7 @@ module TestDoubles
 
   class MultiplePromisesAction
     extend LightService::Action
-    expects :coffee, :milk
+    expects :coffee
     promises :cappuccino
     promises :latte
 
