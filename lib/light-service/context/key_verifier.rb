@@ -27,14 +27,14 @@ module LightService
         "to be in the context during #{action}"
       end
 
-      def throw_error_predicate(_keys)
+      def throw_error?
         raise NotImplementedError, 'Sorry, you have to override length'
       end
 
       def verify
         return context if context.failure?
 
-        if throw_error_predicate(keys)
+        if throw_error?
           Configuration.logger.error error_message
           raise error_to_throw, error_message
         end
@@ -67,7 +67,7 @@ module LightService
         ExpectedKeysNotUsedError
       end
 
-      def throw_error_predicate(keys)
+      def throw_error?
         keys.any?
       end
 
@@ -89,7 +89,7 @@ module LightService
         ExpectedKeysNotInContextError
       end
 
-      def throw_error_predicate(keys)
+      def throw_error?
         !are_all_keys_in_context?(keys)
       end
     end
@@ -107,7 +107,7 @@ module LightService
         PromisedKeysNotInContextError
       end
 
-      def throw_error_predicate(keys)
+      def throw_error?
         !are_all_keys_in_context?(keys)
       end
     end
@@ -130,7 +130,7 @@ module LightService
         ReservedKeysInContextError
       end
 
-      def throw_error_predicate(keys)
+      def throw_error?
         keys.any?
       end
 
