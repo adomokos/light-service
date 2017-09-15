@@ -36,6 +36,20 @@ describe ":expects macro" do
     end
   end
 
+  context "when an expected key is not used" do
+    it "raises an LightService::ExpectedKeysNotUsedError" do
+      exception_msg = "expected :milk to be used during " \
+                      "TestDoubles::MakesTeaWithMilkAction"
+      expect do
+        TestDoubles::MakesTeaWithoutMilkAction.execute(
+          :tea => "black",
+          :milk => "full cream"
+        )
+      end.to \
+        raise_error(LightService::ExpectedKeysNotUsedError, exception_msg)
+    end
+  end
+
   context "when a reserved key is listed as an expected key" do
     it "raises an error indicating a reserved key is expected" do
       exception_msg = "promised or expected keys cannot be a reserved key: " \

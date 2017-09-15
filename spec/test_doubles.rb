@@ -123,6 +123,16 @@ module TestDoubles
     end
   end
 
+  class MakesTeaWithoutMilkAction
+    extend LightService::Action
+    expects :tea, :milk
+    promises :milk_tea
+
+    executed do |context|
+      context.milk_tea = context.tea.to_s
+    end
+  end
+
   class MultipleExpectsAction
     extend LightService::Action
     expects :tea
