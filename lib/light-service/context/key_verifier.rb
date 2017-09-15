@@ -8,13 +8,7 @@ module LightService
         @action = action
       end
 
-      def are_all_keys_in_context?(keys)
-        not_found_keys = keys_not_found(keys)
-        !not_found_keys.any?
-      end
-
-      def keys_not_found(keys)
-        keys ||= context.keys
+      def keys_missing_from_context(keys)
         keys - context.keys
       end
 
@@ -23,7 +17,7 @@ module LightService
       end
 
       def error_message
-        "#{type_name} #{format_keys(keys_not_found(keys))} " \
+        "#{type_name} #{format_keys(keys_missing_from_context(keys))} " \
         "to be in the context during #{action}"
       end
 
@@ -87,7 +81,7 @@ module LightService
       end
 
       def throw_error?
-        !are_all_keys_in_context?(keys)
+        keys_missing_from_context(keys).any?
       end
     end
 
@@ -105,7 +99,7 @@ module LightService
       end
 
       def throw_error?
-        !are_all_keys_in_context?(keys)
+        keys_missing_from_context(keys).any?
       end
     end
 
