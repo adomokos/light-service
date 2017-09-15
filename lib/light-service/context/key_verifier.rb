@@ -33,13 +33,10 @@ module LightService
 
       def verify
         return context if context.failure?
+        return context unless throw_error?
 
-        if throw_error?
-          Configuration.logger.error error_message
-          raise error_to_throw, error_message
-        end
-
-        context
+        Configuration.logger.error error_message
+        raise error_to_throw, error_message
       end
 
       def self.verify_keys(context, action, &block)
