@@ -17,12 +17,13 @@ module LightService
       end
 
       def error_message
-        "#{type_name} #{format_keys(keys_missing_from_context(keys))} " \
+        "#{type_name} "\
+        "#{format_keys(keys_missing_from_context(offending_keys))} " \
         "to be in the context during #{action}"
       end
 
       def throw_error?
-        raise NotImplementedError, 'Sorry, you have to override length'
+        offending_keys.any?
       end
 
       def verify
@@ -50,7 +51,7 @@ module LightService
         super(context, action)
       end
 
-      def keys
+      def offending_keys
         action.expected_keys - @accessed_keys
       end
 
@@ -58,12 +59,9 @@ module LightService
         ExpectedKeysNotUsedError
       end
 
-      def throw_error?
-        keys.any?
-      end
-
       def error_message
-        "Expected keys [#{format_keys(keys)}] to be used during #{action}"
+        "Expected keys [#{format_keys(offending_keys)}] to be used during "\
+        "#{action}"
       end
     end
 
@@ -72,16 +70,12 @@ module LightService
         "expected"
       end
 
-      def keys
-        action.expected_keys
+      def offending_keys
+        keys_missing_from_context(action.expected_keys)
       end
 
       def error_to_throw
         ExpectedKeysNotInContextError
-      end
-
-      def throw_error?
-        keys_missing_from_context(keys).any?
       end
     end
 
@@ -90,39 +84,27 @@ module LightService
         "promised"
       end
 
-      def keys
-        action.promised_keys
+      def offending_keys
+        keys_missing_from_context(action.promised_keys)
       end
 
       def error_to_throw
         PromisedKeysNotInContextError
       end
-
-      def throw_error?
-        keys_missing_from_context(keys).any?
-      end
     end
 
     class ReservedKeysVerifier < KeyVerifier
-      def violated_keys
-        (action.promised_keys + action.expected_keys) & reserved_keys
-      end
-
       def error_message
         "promised or expected keys cannot be a " \
-        "reserved key: [#{format_keys(violated_keys)}]"
+        "reserved key: [#{format_keys(offending_keys)}]"
       end
 
-      def keys
-        violated_keys
+      def offending_keys
+        (action.promised_keys + action.expected_keys) & reserved_keys
       end
 
       def error_to_throw
         ReservedKeysInContextError
-      end
-
-      def throw_error?
-        keys.any?
       end
 
       def reserved_keys
