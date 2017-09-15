@@ -12,14 +12,12 @@ module LightService
         keys - context.keys
       end
 
-      def format_keys(keys)
-        keys.map { |k| ":#{k}" }.join(', ')
+      def formatted_keys
+        offending_keys.map { |k| ":#{k}" }.join(', ')
       end
 
       def error_message
-        "#{type_name} "\
-        "#{format_keys(keys_missing_from_context(offending_keys))} " \
-        "to be in the context during #{action}"
+        "#{type_name} #{formatted_keys} to be in the context during #{action}"
       end
 
       def throw_error?
@@ -60,8 +58,7 @@ module LightService
       end
 
       def error_message
-        "Expected keys [#{format_keys(offending_keys)}] to be used during "\
-        "#{action}"
+        "Expected keys [#{formatted_keys}] to be used during #{action}"
       end
     end
 
@@ -95,8 +92,8 @@ module LightService
 
     class ReservedKeysVerifier < KeyVerifier
       def error_message
-        "promised or expected keys cannot be a " \
-        "reserved key: [#{format_keys(offending_keys)}]"
+        "promised or expected keys cannot be a reserved key: "\
+        "[#{formatted_keys}]"
       end
 
       def offending_keys
