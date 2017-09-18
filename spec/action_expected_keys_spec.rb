@@ -48,6 +48,18 @@ describe ":expects macro" do
       end.to \
         raise_error(LightService::ExpectedKeysNotUsedError, exception_msg)
     end
+
+    context "when the unused key is marked as maybe" do
+      it "doesn't raise a LightService::ExpectedKeysNotUsedError" do
+        expect do
+          TestDoubles::MakesTeaMaybeWithMilkAction.execute(
+            :tea => "black",
+            :use_milk => false,
+            :milk => nil
+          )
+        end.to_not raise_error
+      end
+    end
   end
 
   context "when a reserved key is listed as an expected key" do

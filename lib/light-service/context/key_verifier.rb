@@ -60,7 +60,7 @@ module LightService
       end
 
       def keys
-        action.expected_keys - @accessed_keys
+        action.expected_keys - @accessed_keys - action.maybe_keys
       end
 
       def error_to_throw
