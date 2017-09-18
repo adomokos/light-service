@@ -22,12 +22,25 @@ module LightService
         promised_keys.concat(args)
       end
 
+      def maybe(*args)
+        unknowns = args - expected_keys
+        if unknowns.any?
+          raise ArgumentError,
+                "Cannot mark unexpected keys [#{unknowns.join(', ')}] as maybe"
+        end
+        maybe_keys.concat(args)
+      end
+
       def expected_keys
         @_expected_keys ||= []
       end
 
       def promised_keys
         @_promised_keys ||= []
+      end
+
+      def maybe_keys
+        @_maybe_keys ||= []
       end
 
       def executed
