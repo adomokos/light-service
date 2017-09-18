@@ -45,9 +45,9 @@ module LightService
       def self.verify_keys(context, action, &block)
         ReservedKeysVerifier.new(context, action).verify
         ExpectedKeyVerifier.new(context, action).verify
-        accessed_keys = context.with_key_logging do
-          block.call
-        end
+
+        accessed_keys = context.execute_with_key_logging(&block)
+
         PromisedKeyVerifier.new(context, action).verify
         ExpectedKeyUsedVerifier.new(context, action, accessed_keys).verify
       end

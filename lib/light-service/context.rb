@@ -35,7 +35,7 @@ module LightService
       context
     end
 
-    def with_key_logging
+    def execute_with_key_logging
       @_key_loggers.unshift({})
       yield
       @_key_loggers.shift.keys
