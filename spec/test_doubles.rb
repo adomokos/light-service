@@ -123,11 +123,20 @@ module TestDoubles
     end
   end
 
+  class MakesTeaWithMilkAllMaybesAction
+    extend LightService::Action
+    expects :maybe => [:tea, :milk]
+    promises :milk_tea
+
+    executed do |context|
+      context.milk_tea = "#{context.tea} - #{context.milk}"
+    end
+  end
+
   class MakesTeaMaybeWithMilkAction
     extend LightService::Action
-    expects :tea, :milk, :use_milk
+    expects :tea, :use_milk, :maybe => :milk
     promises :milk_tea
-    maybe :milk
 
     executed do |context|
       context.milk_tea = if context.use_milk

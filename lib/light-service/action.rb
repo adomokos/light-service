@@ -14,21 +14,17 @@ module LightService
     end
 
     module Macros
-      def expects(*args)
+      def expects(*args, maybe: [])
         expected_keys.concat(args)
+        maybe_keys.concat(Array(maybe))
+
+        # The WithReducerLogDecorator (and maybe other things) rely on the
+        # expects method returning the list of expected keys.
+        expected_keys + maybe_keys
       end
 
       def promises(*args)
         promised_keys.concat(args)
-      end
-
-      def maybe(*args)
-        unknowns = args - expected_keys
-        if unknowns.any?
-          raise ArgumentError,
-                "Cannot mark unexpected keys [#{unknowns.join(', ')}] as maybe"
-        end
-        maybe_keys.concat(args)
       end
 
       def expected_keys
@@ -81,7 +77,7 @@ module LightService
       end
 
       def all_keys
-        expected_keys + promised_keys
+        expected_keys + promised_keys + maybe_keys
       end
     end
   end

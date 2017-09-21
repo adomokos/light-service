@@ -13,6 +13,28 @@ describe ":expects macro" do
     end
   end
 
+  context "when an expected key is marked as maybe" do
+    it "can access the keys as class methods" do
+      resulting_context = TestDoubles::MakesTeaMaybeWithMilkAction.execute(
+        :tea => "black",
+        :use_milk => true,
+        :milk => "full cream"
+      )
+      expect(resulting_context[:milk_tea]).to eq("black - full cream")
+    end
+  end
+
+  context "when all expected keys are marked as maybe" do
+    it "can access the keys as class methods" do
+      resulting_context = TestDoubles::MakesTeaWithMilkAllMaybesAction.execute(
+        :tea => "black",
+        :milk => "full cream",
+        :something => "else"
+      )
+      expect(resulting_context[:milk_tea]).to eq("black - full cream")
+    end
+  end
+
   context "when an expected key is not in the context" do
     it "raises an LightService::ExpectedKeysNotInContextError" do
       exception_msg = "expected :milk to be in the context during " \
