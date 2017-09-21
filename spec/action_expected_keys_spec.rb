@@ -56,6 +56,16 @@ describe ":expects macro" do
       expect(result[:milk_tea]).to \
         eq("black - full cream - with dark chocolate")
     end
+
+    it "can mark multiple keys as maybe" do
+      class MultipleMaybeAction
+        extend LightService::Action
+        expects :foo, :bar, :maybe => :foo
+        expects :one, :two, :maybe => [:one, :two]
+      end
+
+      expect(MultipleMaybeAction.maybe_keys).to match_array [:foo, :one, :two]
+    end
   end
 
   context "when an expected key is not used" do
