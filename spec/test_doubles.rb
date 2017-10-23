@@ -123,6 +123,40 @@ module TestDoubles
     end
   end
 
+  class MakesTeaWithMilkAllMaybesAction
+    extend LightService::Action
+    expects :maybe => [:tea, :milk]
+    promises :milk_tea
+
+    executed do |context|
+      context.milk_tea = "#{context.tea} - #{context.milk}"
+    end
+  end
+
+  class MakesTeaMaybeWithMilkAction
+    extend LightService::Action
+    expects :tea, :use_milk, :maybe => :milk
+    promises :milk_tea
+
+    executed do |context|
+      context.milk_tea = if context.use_milk
+                           "#{context.tea} - #{context.milk}"
+                         else
+                           "#{context.tea} - NO MILK"
+                         end
+    end
+  end
+
+  class MakesTeaWithoutMilkAction
+    extend LightService::Action
+    expects :tea, :milk
+    promises :milk_tea
+
+    executed do |context|
+      context.milk_tea = context.tea.to_s
+    end
+  end
+
   class MultipleExpectsAction
     extend LightService::Action
     expects :tea
@@ -170,7 +204,7 @@ module TestDoubles
 
   class MultiplePromisesAction
     extend LightService::Action
-    expects :coffee, :milk
+    expects :coffee
     promises :cappuccino
     promises :latte
 

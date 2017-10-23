@@ -46,9 +46,33 @@ module LightService
         ReservedKeysVerifier.new(context, action).verify
         ExpectedKeyVerifier.new(context, action).verify
 
-        block.call
+        accessed_keys = context.execute_with_key_logging(&block)
 
         PromisedKeyVerifier.new(context, action).verify
+        ExpectedKeyUsedVerifier.new(context, action, accessed_keys).verify
+      end
+    end
+
+    class ExpectedKeyUsedVerifier < KeyVerifier
+      def initialize(context, action, accessed_keys)
+        @accessed_keys = accessed_keys
+        super(context, action)
+      end
+
+      def keys
+        action.expected_keys - @accessed_keys
+      end
+
+      def error_to_throw
+        ExpectedKeysNotUsedError
+      end
+
+      def throw_error_predicate(keys)
+        keys.any?
+      end
+
+      def error_message
+        "Expected keys [#{format_keys(keys)}] to be used during #{action}"
       end
     end
 

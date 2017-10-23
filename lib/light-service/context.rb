@@ -19,6 +19,7 @@ module LightService
       @error_code = error_code
       @skip_remaining = false
       context.to_hash.each { |k, v| self[k] = v }
+      @_key_loggers = []
       self
     end
 
@@ -32,6 +33,12 @@ module LightService
 
       context.assign_aliases(context.delete(:_aliases)) if context[:_aliases]
       context
+    end
+
+    def execute_with_key_logging
+      @_key_loggers.unshift({})
+      yield
+      @_key_loggers.shift.keys
     end
 
     def add_to_context(values)
@@ -118,7 +125,10 @@ module LightService
       return if keys.nil?
       keys.each do |key|
         next if respond_to?(key.to_sym)
-        define_singleton_method(key.to_s) { fetch(key) }
+        define_singleton_method(key.to_s) do
+          log_access(key)
+          fetch(key)
+        end
         define_singleton_method("#{key}=") { |value| self[key] = value }
       end
     end
@@ -159,6 +169,12 @@ module LightService
     def check_nil(value)
       return 'nil' unless value
       "'#{value}'"
+    end
+
+    def log_access(key)
+      logger = @_key_loggers.first
+      return unless logger
+      logger[key] = true
     end
   end
   # rubocop:enable ClassLength
