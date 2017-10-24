@@ -8,38 +8,28 @@ module LightService
         @action = action
       end
 
-      def are_all_keys_in_context?(keys)
-        not_found_keys = keys_not_found(keys)
-        !not_found_keys.any?
-      end
-
-      def keys_not_found(keys)
-        keys ||= context.keys
+      def keys_missing_from_context(keys)
         keys - context.keys
       end
 
-      def format_keys(keys)
-        keys.map { |k| ":#{k}" }.join(', ')
+      def formatted_keys
+        offending_keys.map { |k| ":#{k}" }.join(', ')
       end
 
       def error_message
-        "#{type_name} #{format_keys(keys_not_found(keys))} " \
-        "to be in the context during #{action}"
+        "#{type_name} #{formatted_keys} to be in the context during #{action}"
       end
 
-      def throw_error_predicate(_keys)
-        raise NotImplementedError, 'Sorry, you have to override length'
+      def throw_error?
+        offending_keys.any?
       end
 
       def verify
         return context if context.failure?
+        return context unless throw_error?
 
-        if throw_error_predicate(keys)
-          Configuration.logger.error error_message
-          raise error_to_throw, error_message
-        end
-
-        context
+        Configuration.logger.error error_message
+        raise error_to_throw, error_message
       end
 
       def self.verify_keys(context, action, &block)
@@ -59,7 +49,7 @@ module LightService
         super(context, action)
       end
 
-      def keys
+      def offending_keys
         action.expected_keys - @accessed_keys
       end
 
@@ -67,12 +57,8 @@ module LightService
         ExpectedKeysNotUsedError
       end
 
-      def throw_error_predicate(keys)
-        keys.any?
-      end
-
       def error_message
-        "Expected keys [#{format_keys(keys)}] to be used during #{action}"
+        "Expected keys [#{formatted_keys}] to be used during #{action}"
       end
     end
 
@@ -81,16 +67,12 @@ module LightService
         "expected"
       end
 
-      def keys
-        action.expected_keys
+      def offending_keys
+        keys_missing_from_context(action.expected_keys)
       end
 
       def error_to_throw
         ExpectedKeysNotInContextError
-      end
-
-      def throw_error_predicate(keys)
-        !are_all_keys_in_context?(keys)
       end
     end
 
@@ -99,39 +81,27 @@ module LightService
         "promised"
       end
 
-      def keys
-        action.promised_keys
+      def offending_keys
+        keys_missing_from_context(action.promised_keys)
       end
 
       def error_to_throw
         PromisedKeysNotInContextError
       end
-
-      def throw_error_predicate(keys)
-        !are_all_keys_in_context?(keys)
-      end
     end
 
     class ReservedKeysVerifier < KeyVerifier
-      def violated_keys
-        (action.promised_keys + action.expected_keys) & reserved_keys
-      end
-
       def error_message
-        "promised or expected keys cannot be a " \
-        "reserved key: [#{format_keys(violated_keys)}]"
+        "promised or expected keys cannot be a reserved key: "\
+        "[#{formatted_keys}]"
       end
 
-      def keys
-        violated_keys
+      def offending_keys
+        (action.promised_keys + action.expected_keys) & reserved_keys
       end
 
       def error_to_throw
         ReservedKeysInContextError
-      end
-
-      def throw_error_predicate(keys)
-        keys.any?
       end
 
       def reserved_keys
