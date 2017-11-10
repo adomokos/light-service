@@ -13,12 +13,14 @@ module LightService
       end
 
       def with(data = {})
-        logger.info("[LightService] - calling organizer <#{organizer}>")
+        logger.info { "[LightService] - calling organizer <#{organizer}>" }
 
         decorated.with(data)
 
-        logger.info("[LightService] -     keys in context: " \
-                    "#{extract_keys(decorated.context.keys)}")
+        logger.info do
+          "[LightService] -     keys in context: " \
+          "#{extract_keys(decorated.context.keys)}"
+        end
         self
       end
 
@@ -48,6 +50,8 @@ module LightService
       private
 
       def write_log(action, context)
+        return unless logger.info?
+
         logger.info("[LightService] - executing <#{action}>")
         log_expects(action)
         log_promises(action)
@@ -88,6 +92,8 @@ module LightService
       end
 
       def write_skip_remaining_log(context, action)
+        return unless logger.info?
+
         msg = "[LightService] - ;-) <#{action}> has decided " \
               "to skip the rest of the actions"
         logger.info(msg)

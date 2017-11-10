@@ -16,7 +16,7 @@ module LightService
 
       def _default_logger
         logger = Logger.new("/dev/null")
-        logger.level = Logger::INFO
+        logger.level = Logger::WARN
         logger
       end
     end
