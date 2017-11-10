@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.8.3
+* Make logging more [efficient](https://github.com/adomokos/light-service/pull/120) the context.
+
 ### 0.8.2
 * A better way to [inspect](https://github.com/adomokos/light-service/pull/110) the context.
 * [Short-circuiting](https://github.com/adomokos/light-service/pull/113) the Orchestrator methods.
