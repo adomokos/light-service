@@ -74,7 +74,7 @@ describe LightService::Action do
       result = TestDoubles::AddsTwoActionWithFetch.execute(ctx)
 
       expect(result).to be_success
-      expect(result.keys).to eq([:some_key, :number])
+      expect(result.keys).to eq(%i[some_key number])
     end
   end
 

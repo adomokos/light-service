@@ -125,7 +125,7 @@ module TestDoubles
 
   class MakesTeaWithMilkAllMaybesAction
     extend LightService::Action
-    expects :maybe => [:tea, :milk]
+    expects :maybe => %i[tea milk]
     promises :milk_tea
 
     executed do |context|

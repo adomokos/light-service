@@ -18,7 +18,7 @@ Style/Encoding:
 Style/StringLiterals:
   Enabled: false
 
-Style/TrailingBlankLines:
+Style/FormatStringToken:
   Enabled: false
 
 Style/RedundantReturn:
@@ -30,11 +30,19 @@ Style/SignalException:
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
-Style/PredicateName:
-  Enabled: false
-
 Style/TrivialAccessors:
   AllowPredicates: true
 
+Naming/PredicateName:
+  Enabled: false
+
 Metrics/MethodLength:
   Max: 15
+
+Metrics/BlockLength:
+  Max: 35
+  Exclude:
+    - 'spec/**/*.rb'
+
+Layout/TrailingBlankLines:
+  Enabled: false

@@ -61,10 +61,10 @@ describe ":expects macro" do
       class MultipleMaybeAction
         extend LightService::Action
         expects :foo, :bar, :maybe => :foo
-        expects :one, :two, :maybe => [:one, :two]
+        expects :one, :two, :maybe => %i[one two]
       end
 
-      expect(MultipleMaybeAction.maybe_keys).to match_array [:foo, :one, :two]
+      expect(MultipleMaybeAction.maybe_keys).to match_array %i[foo one two]
     end
   end
 

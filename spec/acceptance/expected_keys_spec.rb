@@ -12,7 +12,7 @@ RSpec.describe "verifying expected keys are used" do
 
   class OnlyMaybeKeysAction
     extend LightService::Action
-    expects :maybe => [:one, :two]
+    expects :maybe => %i[one two]
 
     executed do |ctx|
       ctx.one * 2

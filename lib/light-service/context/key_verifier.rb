@@ -105,7 +105,7 @@ module LightService
       end
 
       def reserved_keys
-        [:message, :error_code, :current_action].freeze
+        %i[message error_code current_action].freeze
       end
     end
   end

@@ -20,7 +20,6 @@ module LightService
       @skip_remaining = false
       context.to_hash.each { |k, v| self[k] = v }
       @_key_loggers = []
-      self
     end
 
     def self.make(context = {})
