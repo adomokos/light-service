@@ -17,7 +17,7 @@ module LightService
     # In case this module is included
     module ClassMethods
       def with(data = {})
-        VerifyCallMethodExists.call(self, caller.first)
+        VerifyCallMethodExists.call(self, caller(1..1).first)
         data[:_aliases] = @aliases if @aliases
         WithReducerFactory.make(self).with(data)
       end

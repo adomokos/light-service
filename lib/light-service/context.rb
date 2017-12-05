@@ -19,7 +19,6 @@ module LightService
       @error_code = error_code
       @skip_remaining = false
       context.to_hash.each { |k, v| self[k] = v }
-      self
     end
 
     def self.make(context = {})

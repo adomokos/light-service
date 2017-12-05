@@ -10,7 +10,7 @@ module LightService
 
       def are_all_keys_in_context?(keys)
         not_found_keys = keys_not_found(keys)
-        !not_found_keys.any?
+        not_found_keys.none?
       end
 
       def keys_not_found(keys)
@@ -111,7 +111,7 @@ module LightService
       end
 
       def reserved_keys
-        [:message, :error_code, :current_action].freeze
+        %i[message error_code current_action].freeze
       end
     end
   end
