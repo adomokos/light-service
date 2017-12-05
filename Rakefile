@@ -1,4 +1,3 @@
-#!/usr/bin/env rake
 require "bundler/gem_tasks"
 
 require "rubygems"
@@ -10,4 +9,4 @@ RuboCop::RakeTask.new
 RSpec::Core::RakeTask.new(:spec)
 
 task(:default).clear
-task :default => [:spec, :rubocop]
+task :default => %i[spec rubocop]
