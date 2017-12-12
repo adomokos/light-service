@@ -139,8 +139,12 @@ module LightService
       return super(key)
     end
 
-    def fetch(key, default_or_block = nil)
-      self[key] ||= super(key, default_or_block)
+    def fetch(key, default = nil, &blk)
+      self[key] ||= if block_given?
+                      super(key, &blk)
+                    else
+                      super
+                    end
     end
 
     def inspect
