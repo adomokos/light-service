@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.8.4
+* Only pass [default argument](https://github.com/adomokos/light-service/pull/123) to Hash#fetch in context if no block given.
+
 ### 0.8.3
 * Make logging more [efficient](https://github.com/adomokos/light-service/pull/120) the context.
 
