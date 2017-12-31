@@ -5,31 +5,34 @@ describe LightService::Orchestrator do
   class TestSkipState
     extend LightService::Orchestrator
     def self.run_skip_before
-      with(:number => 1).reduce([
-                                  TestDoubles::SkipAllAction,
-                                  reduce_until(->(ctx) { ctx.number == 3 },
-                                               TestDoubles::AddOneAction)
-                                ])
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::SkipAllAction,
+                  reduce_until(->(ctx) { ctx.number == 3 },
+                               TestDoubles::AddOneAction)
+                ])
     end
 
     def self.run_skip_after
-      with(:number => 1).reduce([
-                                  TestDoubles::AddOneAction,
-                                  reduce_until(->(ctx) { ctx.number == 3 }, [
-                                                 TestDoubles::AddOneAction
-                                               ]),
-                                  TestDoubles::SkipAllAction,
-                                  TestDoubles::AddOneAction
-                                ])
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::AddOneAction,
+                  reduce_until(->(ctx) { ctx.number == 3 }, [
+                                 TestDoubles::AddOneAction
+                               ]),
+                  TestDoubles::SkipAllAction,
+                  TestDoubles::AddOneAction
+                ])
     end
 
     def self.run_failure
-      with(:number => 1).reduce([
-                                  TestDoubles::FailureAction,
-                                  reduce_until(->(ctx) { ctx[:number] == 3 },
-                                               TestDoubles::AddOneAction),
-                                  TestDoubles::AddOneAction
-                                ])
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::FailureAction,
+                  reduce_until(->(ctx) { ctx[:number] == 3 },
+                               TestDoubles::AddOneAction),
+                  TestDoubles::AddOneAction
+                ])
     end
   end
 
