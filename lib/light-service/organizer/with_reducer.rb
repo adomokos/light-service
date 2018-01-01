@@ -46,10 +46,15 @@ module LightService
       private
 
       def invoke_action(current_context, action)
-        return action.execute(current_context) unless around_each_handler
+        # TODO: Use a NullObject for `around_each_handler`
+        if action.respond_to?(:call)
+          action.call(current_context)
+        else
+          return action.execute(current_context) unless around_each_handler
 
-        around_each_handler.call(current_context) do
-          action.execute(current_context)
+          around_each_handler.call(current_context) do
+            action.execute(current_context)
+          end
         end
       end
 
