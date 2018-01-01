@@ -183,13 +183,11 @@ module TestDoubles
     executed do |context|
       if context.milk == :very_hot
         context.fail!("Can't make a latte from a milk that's very hot!")
-        next context
       end
 
       if context.milk == :super_hot
         error_message = "Can't make a latte from a milk that's super hot!"
         context.fail_with_rollback!(error_message)
-        next context
       end
 
       context[:latte] = "#{context.coffee} - with lots of #{context.milk}"
