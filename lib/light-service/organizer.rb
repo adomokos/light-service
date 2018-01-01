@@ -26,6 +26,23 @@ module LightService
         with({}).reduce(actions)
       end
 
+      def reduce_if(condition_block, steps)
+        lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
+          ctx = scoped_reduction(ctx, steps) if condition_block.call(ctx)
+          ctx
+        end
+      end
+
+      def scoped_reduction(ctx, steps)
+        ctx.reset_skip_remaining! unless ctx.failure?
+        ctx = with(ctx).reduce([steps])
+        ctx.reset_skip_remaining! unless ctx.failure?
+
+        ctx
+      end
+
       # We need to make sure existing users will
       # use `call` method name going forward.
       # This should be removed eventually.
