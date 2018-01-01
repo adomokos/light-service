@@ -29,6 +29,10 @@ module LightService
       def reduce_if(condition_block, steps)
         ReduceIf.run(self, condition_block, steps)
       end
+
+      def reduce_until(condition_block, steps)
+        ReduceUntil.run(self, condition_block, steps)
+      end
     end
 
     module Macros
