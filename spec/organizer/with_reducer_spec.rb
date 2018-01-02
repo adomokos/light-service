@@ -3,16 +3,13 @@ require 'test_doubles'
 
 describe LightService::Organizer::WithReducer do
   let(:context) { LightService::Context.make }
-  let(:action1) { double(:action1) }
-  let(:action2) { double(:action2) }
+  let(:action1) { TestDoubles::NullAction }
+  let(:action2) { TestDoubles::NullAction.clone }
   let(:actions) { [action1, action2] }
 
   before { context.current_action = action2 }
 
   it "reduces the provided actions" do
-    expect(action1).to receive(:execute).with(context).and_return(context)
-    expect(action2).to receive(:execute).with(context).and_return(context)
-
     result = described_class.new.with(context).reduce(actions)
 
     expect(result).to eq(context)
@@ -21,8 +18,6 @@ describe LightService::Organizer::WithReducer do
 
   it "executes a handler around each action and continues reducing" do
     expect(action1).to receive(:execute).with(context).and_return(context)
-    expect(TestDoubles::AroundEachNullHandler).to receive(:call)
-      .with(context).and_yield
 
     result = described_class.new.with(context)
                             .around_each(TestDoubles::AroundEachNullHandler)
