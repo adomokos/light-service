@@ -12,10 +12,10 @@ module LightService
 
       def reduce(steps, context = @context)
         steps.each_with_object(context) do |step, ctx|
-          if step.respond_to?(:execute)
-            step.execute(ctx)
-          elsif step.respond_to?(:call)
+          if step.respond_to?(:call)
             step.call(ctx)
+          elsif step.respond_to?(:execute)
+            step.execute(ctx)
           else
             raise 'Pass either an action or organizer'
           end
