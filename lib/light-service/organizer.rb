@@ -33,6 +33,10 @@ module LightService
       def reduce_until(condition_block, steps)
         ReduceUntil.run(self, condition_block, steps)
       end
+
+      def iterate(collection_key, steps)
+        Iterate.run(self, collection_key, steps)
+      end
     end
 
     module Macros
