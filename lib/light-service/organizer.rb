@@ -41,6 +41,10 @@ module LightService
       def execute(code_block)
         Execute.run(code_block)
       end
+
+      def with_callback(action, steps)
+        WithCallback.run(self, action, steps)
+      end
     end
 
     module Macros
