@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe LightService::Orchestrator do
-  class TestExecute
+  class OrchestratorTestExecute
     extend LightService::Orchestrator
 
     def self.run(context)
@@ -22,7 +22,7 @@ describe LightService::Orchestrator do
   let(:empty_context) { LightService::Context.make }
 
   it 'calls the lambda in the execute block using the context' do
-    result = TestExecute.run(:number => 0)
+    result = OrchestratorTestExecute.run(:number => 0)
 
     expect(result).to be_success
     expect(result.number).to eq(3)
@@ -32,7 +32,7 @@ describe LightService::Orchestrator do
   it 'will not execute a failed context' do
     empty_context.fail!('Something bad happened')
 
-    result = TestExecute.run(empty_context)
+    result = OrchestratorTestExecute.run(empty_context)
 
     expect(result).to be_failure
   end
@@ -40,7 +40,7 @@ describe LightService::Orchestrator do
   it 'does not execute over a skipped context' do
     empty_context.skip_remaining!('No more needed')
 
-    result = TestExecute.run(empty_context)
+    result = OrchestratorTestExecute.run(empty_context)
     expect(result).to be_success
   end
 end

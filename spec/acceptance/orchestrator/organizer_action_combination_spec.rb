@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe LightService::Orchestrator do
-  class TestReduce
+  class OrchestratorTestReduce
     extend LightService::Orchestrator
 
     def self.run(context, steps)
@@ -11,7 +11,7 @@ describe LightService::Orchestrator do
   end
 
   it 'responds to both actions and organizers' do
-    result = TestReduce.run({ :number => 0 }, [
+    result = OrchestratorTestReduce.run({ :number => 0 }, [
                               TestDoubles::AddTwoOrganizer,
                               TestDoubles::AddOneAction
                             ])
@@ -21,7 +21,7 @@ describe LightService::Orchestrator do
   end
 
   it 'fails fast by skipping proceeding actions/organizers after failure' do
-    result = TestReduce.run({ :number => 0 }, [
+    result = OrchestratorTestReduce.run({ :number => 0 }, [
                               TestDoubles::AddTwoOrganizer,
                               TestDoubles::FailureAction,
                               TestDoubles::AddOneAction
@@ -33,7 +33,7 @@ describe LightService::Orchestrator do
 
   it 'does not allow anything but actions and organizers' do
     expect do
-      TestReduce.run({}, [double])
+      OrchestratorTestReduce.run({}, [double])
     end.to raise_error(RuntimeError)
   end
 end

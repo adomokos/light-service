@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe LightService::Orchestrator do
-  class TestIterate
+  class OrchestratorTestIterate
     extend LightService::Orchestrator
 
     def self.run(context)
@@ -23,14 +23,14 @@ describe LightService::Orchestrator do
   let(:empty_context) { LightService::Context.make }
 
   it 'reduces each item of a collection and singularizes the collection key' do
-    result = TestIterate.run(:numbers => [1, 2, 3, 4])
+    result = OrchestratorTestIterate.run(:numbers => [1, 2, 3, 4])
 
     expect(result).to be_success
     expect(result.number).to eq(5)
   end
 
   it 'accepts a single action or organizer' do
-    result = TestIterate.run_single(:numbers => [1, 2, 3, 4])
+    result = OrchestratorTestIterate.run_single(:numbers => [1, 2, 3, 4])
 
     expect(result).to be_success
     expect(result.number).to eq(5)
@@ -39,7 +39,7 @@ describe LightService::Orchestrator do
   it 'will not iterate over a failed context' do
     empty_context.fail!('Something bad happened')
 
-    result = TestIterate.run(empty_context)
+    result = OrchestratorTestIterate.run(empty_context)
 
     expect(result).to be_failure
   end
@@ -47,7 +47,7 @@ describe LightService::Orchestrator do
   it 'does not iterate over a skipped context' do
     empty_context.skip_remaining!('No more needed')
 
-    result = TestIterate.run(empty_context)
+    result = OrchestratorTestIterate.run(empty_context)
     expect(result).to be_success
   end
 end
