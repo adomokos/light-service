@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe LightService::Orchestrator do
-  class TestWithCallback
+  class OrchestratorTestWithCallback
     extend LightService::Orchestrator
 
     def self.run(context = {})
@@ -63,7 +63,7 @@ describe LightService::Orchestrator do
 
   describe 'a simple case with a single callback' do
     it 'calls the actions defined with callback' do
-      result = TestWithCallback.run
+      result = OrchestratorTestWithCallback.run
 
       expect(result.counter).to eq(3)
       expect(result.total).to eq(6)
