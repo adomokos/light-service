@@ -56,7 +56,6 @@ module LightService
       def invoke_action(current_context, action)
         around_each_handler.call(current_context) do
           if action.respond_to?(:call)
-
             action.call(current_context)
           else
             action.execute(current_context)
