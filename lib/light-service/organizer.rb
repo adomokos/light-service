@@ -37,6 +37,15 @@ module LightService
       def iterate(collection_key, steps)
         Iterate.run(self, collection_key, steps)
       end
+
+      def execute(code_block)
+        lambda do |ctx|
+          return ctx if ctx.stop_processing?
+
+          code_block.call(ctx)
+          ctx
+        end
+      end
     end
 
     module Macros
