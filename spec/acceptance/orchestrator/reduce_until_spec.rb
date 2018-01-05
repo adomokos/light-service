@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'test_doubles'
 
 RSpec.describe LightService::Orchestrator do
+  include_context 'expect orchestrator warning'
+
   class OrchestratorTestReduceUntil
     extend LightService::Orchestrator
 
