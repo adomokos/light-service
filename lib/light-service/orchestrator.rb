@@ -87,10 +87,11 @@ module LightService
       end
 
       def after_failing(symbols)
-        symbols = [symbols] unless symbols.kind_of?(Array)
-        @context.orchestrator_callbacks[:after_failing] = symbols.map do |symbol|
-          method(symbol)
-        end
+        symbols = [symbols] unless symbols.is_a?(Array)
+        @context.orchestrator_callbacks[:after_failing] =
+          symbols.map do |symbol|
+            method(symbol)
+          end
         self
       end
 
