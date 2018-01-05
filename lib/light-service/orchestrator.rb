@@ -86,6 +86,15 @@ module LightService
         end
       end
 
+      def after_failing(symbols)
+        symbols = [symbols] unless symbols.is_a?(Array)
+        @context.orchestrator_callbacks[:after_failing] =
+          symbols.map do |symbol|
+            method(symbol)
+          end
+        self
+      end
+
       private
 
       def scoped_reduction(ctx, steps)

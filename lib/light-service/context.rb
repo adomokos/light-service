@@ -8,16 +8,19 @@ module LightService
 
   # rubocop:disable ClassLength
   class Context < Hash
-    attr_accessor :message, :error_code, :current_action
+    attr_accessor :message, :error_code, :current_action,
+                  :orchestrator_callbacks
 
     def initialize(context = {},
                    outcome = Outcomes::SUCCESS,
                    message = '',
-                   error_code = nil)
+                   error_code = nil,
+                   orchestrator_callbacks = {})
       @outcome = outcome
       @message = message
       @error_code = error_code
       @skip_remaining = false
+      @orchestrator_callbacks = orchestrator_callbacks
       context.to_hash.each { |k, v| self[k] = v }
     end
 
@@ -84,6 +87,8 @@ module LightService
                                                             options)
       @error_code = error_code
       @outcome = Outcomes::FAILURE
+
+      run_callbacks :after_failing
     end
 
     def fail_and_return!(*args)
@@ -162,6 +167,13 @@ module LightService
     def check_nil(value)
       return 'nil' unless value
       "'#{value}'"
+    end
+
+    def run_callbacks(symbol)
+      return if @orchestrator_callbacks[symbol].nil?
+      @orchestrator_callbacks[symbol].each do |cb|
+        cb.call(self)
+      end
     end
   end
   # rubocop:enable ClassLength
