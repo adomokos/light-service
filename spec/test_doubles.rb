@@ -30,6 +30,13 @@ module TestDoubles
     executed(&:fail!)
   end
 
+  class FailureActionWithMessage
+    extend LightService::Action
+    executed do |ctx|
+      ctx.fail! 'A failure has occured.'
+    end
+  end
+
   class AddOneAction
     extend LightService::Action
     expects :number
