@@ -6,6 +6,13 @@
 [![Dependency Status](https://beta.gemnasium.com/badges/github.com/adomokos/light-service.svg)](https://beta.gemnasium.com/projects/github.com/adomokos/light-service)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
+<br><br>
+
+![Orchestrators-Deprecated](resources/orchestrators_deprecated.svg)
+<br>Version 0.9.0 deprecates Orchestrators and moves all their functionalities into Organizers. Please check out [this PR](https://github.com/adomokos/light-service/pull/132) to see the changes.
+
+<br><br>
+
 What do you think of this code?
 
 ```ruby
@@ -159,7 +166,7 @@ simple and elegant Rails code where I told the story of how LightService was ext
 * [Error Codes](#error-codes)
 * [Action Rollback](#action-rollback)
 * [Localizing Messages](#localizing-messages)
-* [Orchestrators](#orchestrators)
+* [Orchestrator Logic in Organizers](#orchestrator-logic-in-organizers)
 * [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
 
 ## Stopping the Series of Actions
@@ -578,7 +585,7 @@ end
 
 To get the value of a `fail!` or `succeed!` message, simply call `#message` on the returned context.
 
-## Orchestrators
+## Orchestrator Logic in Organizers
 
 The Organizer - Action combination works really well for simple use cases. However, as business logic gets more complex, or when LightService is used in an ETL workflow, the code that routes the different organizers becomes very complex and imperative. Let's look at a piece of code that does basic data transformations:
 
@@ -609,13 +616,13 @@ The `LightService::Context` is initialized with the first action, that context i
 
 ```ruby
 class ExtractsTransformsLoadsData
-  extend LightService::Orchestrator
+  extend LightService::Organizer
 
-  def self.run(connection)
+  def self.call(connection)
     with(:connection => connection).reduce(steps)
   end
 
-  def self.steps
+  def self.actions
     [
       RetrievesConnectionInfo,
       PullsDataFromRemoteApi,
@@ -634,40 +641,23 @@ end
 
 This code is much easier to reason about, it's less noisy and it captures the goal of LightService well: simple, declarative code that's easy to understand.
 
-Our convention for naming the public methods on the different items at different levels is this:
-```
-Orchestrators
-   |-> run - steps
-   Organizers
-       |-> call - actions
-       Actions
-           |-> execute
-```
+The 5 different orchestrator constructs an organizer can have:
 
-You can mix organizers with actions in the orchestrator steps, but mixing other organizers with actions in an organizer is discouraged for the sake of simplicity.
+1. `reduce_until`
+2. `reduce_if`
+3. `iterate`
+4. `execute`
+5. `with_callback`
 
-The 6 different constructs an orchestrator can have:
+`reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/organizer/reduce_until_spec.rb) to see how it's used.
 
-1. `reduce`
-2. `reduce_until`
-3. `reduce_if`
-4. `iterate`
-5. `execute`
-6. `with_callback`
+`reduce_if` will reduce the included organizers and/or actions if the predicate in the lambda evaluates to true. [This acceptance test](spec/acceptance/organizer/reduce_if_spec.rb) describes this functionality.
 
-The `reduce` method needs no introduction, it behaves similarly to organizers' `reduce` method.
+`iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example, to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The organizer will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. [This acceptance test](spec/acceptance/organizer/iterate_spec.rb) should provide you with an example.
 
-`reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/orchestrator/reduce_until_spec.rb) to see how it's used.
+To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of ceremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/organizer/execute_spec.rb) describes how you can use it.
 
-`reduce_if` will reduce the included organizers and/or actions if the predicate in the lambda evaluates to true. [This acceptance test](spec/acceptance/orchestrator/reduce_if_spec.rb) describes this functionality.
-
-`iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example. to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The orchestrator will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. [This acceptance test](spec/acceptance/orchestrator/iterate_spec.rb) should provide you with an example.
-
-To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of ceremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/orchestrator/execute_spec.rb) describes how you can use it.
-
-Use `with_callback` when you want to execute actions with a deferred and controlled callback. It works similar to a Sax parser, I've used it for processing large files. The advantage of it is not having to keep large amount of data in memory. See [this acceptance test](spec/acceptance/orchestrator/with_callback_spec.rb) as a working example.
-
-** Thanks to [@bwvoss](https://github.com/bwvoss) for writing most of the Orchestrators code, I only ported his changes to LS and submitted the PR.
+Use `with_callback` when you want to execute actions with a deferred and controlled callback. It works similar to a Sax parser, I've used it for processing large files. The advantage of it is not having to keep large amount of data in memory. See [this acceptance test](spec/acceptance/organizer/with_callback_spec.rb) as a working example.
 
 ## ContextFactory for Faster Action Testing
 

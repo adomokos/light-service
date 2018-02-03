@@ -49,7 +49,7 @@ module TestDoubles
   end
 
   class AroundEachNullHandler
-    def self.call(_action, _context)
+    def self.call(_action)
       yield
     end
   end
@@ -334,5 +334,11 @@ module TestDoubles
     executed do |ctx|
       ctx.final_key = ctx.expected_key
     end
+  end
+
+  class NullAction
+    extend LightService::Action
+
+    executed { |_ctx| }
   end
 end

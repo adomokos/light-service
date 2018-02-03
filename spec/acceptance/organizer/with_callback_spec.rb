@@ -1,17 +1,15 @@
 require 'spec_helper'
 require 'test_doubles'
 
-describe LightService::Orchestrator do
-  include_context 'expect orchestrator warning'
+RSpec.describe LightService::Organizer do
+  class TestWithCallback
+    extend LightService::Organizer
 
-  class OrchestratorTestWithCallback
-    extend LightService::Orchestrator
-
-    def self.run(context = {})
-      with(context).reduce(steps)
+    def self.call(context = {})
+      with(context).reduce(actions)
     end
 
-    def self.steps
+    def self.actions
       [
         SetUpContextAction,
         with_callback(IterateCollectionAction,
@@ -65,7 +63,7 @@ describe LightService::Orchestrator do
 
   describe 'a simple case with a single callback' do
     it 'calls the actions defined with callback' do
-      result = OrchestratorTestWithCallback.run
+      result = TestWithCallback.call
 
       expect(result.counter).to eq(3)
       expect(result.total).to eq(6)
@@ -73,14 +71,14 @@ describe LightService::Orchestrator do
   end
 
   describe 'a more complex example with nested callbacks' do
-    class OrchestratorTestWithNextedCallback
-      extend LightService::Orchestrator
+    class TestWithNestedCallback
+      extend LightService::Organizer
 
-      def self.run(context = {})
-        with(context).reduce(steps)
+      def self.call(context = {})
+        with(context).reduce(actions)
       end
 
-      def self.steps
+      def self.actions
         [
           SetUpNestedContextAction,
           with_callback(IterateOuterCollectionAction,
@@ -129,7 +127,7 @@ describe LightService::Orchestrator do
     end
 
     it 'calls both the action and the nested callbacks' do
-      result = OrchestratorTestWithNextedCallback.run
+      result = TestWithNestedCallback.call
 
       expect(result.outer_counter).to eq(2)
       # Counts and total are the duplicates of
@@ -143,14 +141,14 @@ describe LightService::Orchestrator do
   end
 
   describe 'with failed or skipped context' do
-    class OrchestratorTestWithFailureCallback
-      extend LightService::Orchestrator
+    class TestWithFailureCallback
+      extend LightService::Organizer
 
-      def self.run(context = {})
-        with(context).reduce(steps)
+      def self.call(context = {})
+        with(context).reduce(actions)
       end
 
-      def self.steps
+      def self.actions
         [
           SetUpContextAction,
           with_callback(IterateCollectionAction,
@@ -161,7 +159,7 @@ describe LightService::Orchestrator do
     end
 
     it 'will not process the routine' do
-      result = OrchestratorTestWithFailureCallback.run
+      result = TestWithFailureCallback.call
 
       expect(result).to be_failure
       expect(result.counter).to eq(1)

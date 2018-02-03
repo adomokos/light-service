@@ -1,17 +1,15 @@
 require 'spec_helper'
 require 'test_doubles'
 
-RSpec.describe LightService::Orchestrator do
-  include_context 'expect orchestrator warning'
+RSpec.describe LightService::Organizer do
+  class TestReduceUntil
+    extend LightService::Organizer
 
-  class OrchestratorTestReduceUntil
-    extend LightService::Orchestrator
-
-    def self.run(context)
-      with(context).reduce(steps)
+    def self.call(context)
+      with(context).reduce(actions)
     end
 
-    def self.steps
+    def self.actions
       [
         reduce_until(->(ctx) { ctx.number == 3 },
                      TestDoubles::AddOneAction)
@@ -23,7 +21,7 @@ RSpec.describe LightService::Orchestrator do
 
   it 'reduces until the block evaluates to true' do
     context = { :number => 1 }
-    result = OrchestratorTestReduceUntil.run(context)
+    result = TestReduceUntil.call(context)
 
     expect(result).to be_success
     expect(result.number).to eq(3)
@@ -32,14 +30,14 @@ RSpec.describe LightService::Orchestrator do
   it 'does not execute on failed context' do
     empty_context.fail!('Something bad happened')
 
-    result = OrchestratorTestReduceUntil.run(empty_context)
+    result = TestReduceUntil.call(empty_context)
     expect(result).to be_failure
   end
 
   it 'does not execute a skipped context' do
     empty_context.skip_remaining!('No more needed')
 
-    result = OrchestratorTestReduceUntil.run(empty_context)
+    result = TestReduceUntil.call(empty_context)
     expect(result).to be_success
   end
 end

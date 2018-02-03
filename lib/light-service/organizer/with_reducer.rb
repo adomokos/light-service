@@ -1,7 +1,7 @@
 module LightService
   module Organizer
     class WithReducer
-      attr_reader :context, :around_each_handler
+      attr_reader :context
 
       def with(data = {})
         @context = LightService::Context.make(data)
@@ -11,6 +11,14 @@ module LightService
       def around_each(handler)
         @around_each_handler = handler
         self
+      end
+
+      def around_each_handler
+        @around_each_handler ||= Class.new do
+          def self.call(_context)
+            yield
+          end
+        end
       end
 
       def reduce(*actions)
@@ -46,10 +54,12 @@ module LightService
       private
 
       def invoke_action(current_context, action)
-        return action.execute(current_context) unless around_each_handler
-
         around_each_handler.call(current_context) do
-          action.execute(current_context)
+          if action.respond_to?(:call)
+            action.call(current_context)
+          else
+            action.execute(current_context)
+          end
         end
       end
 

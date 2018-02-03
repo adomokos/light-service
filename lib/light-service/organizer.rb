@@ -17,7 +17,7 @@ module LightService
     # In case this module is included
     module ClassMethods
       def with(data = {})
-        VerifyCallMethodExists.call(self, caller(1..1).first)
+        VerifyCallMethodExists.run(self, caller(1..1).first)
         data[:_aliases] = @aliases if @aliases
         WithReducerFactory.make(self).with(data)
       end
@@ -26,29 +26,24 @@ module LightService
         with({}).reduce(actions)
       end
 
-      # We need to make sure existing users will
-      # use `call` method name going forward.
-      # This should be removed eventually.
-      class VerifyCallMethodExists
-        def self.call(klass, first_caller = '')
-          invoker_method = caller_method(first_caller)
-          return if invoker_method == 'call'
+      def reduce_if(condition_block, steps)
+        ReduceIf.run(self, condition_block, steps)
+      end
 
-          call_method_exists = klass.methods.include?(:call)
-          return if call_method_exists
+      def reduce_until(condition_block, steps)
+        ReduceUntil.run(self, condition_block, steps)
+      end
 
-          warning_msg = "The <#{klass.name}> class is an organizer, " \
-                        "its entry method (the one that calls with & reduce) " \
-                        "should be named `call`. " \
-                        "Please use #{klass}.call going forward."
-          ActiveSupport::Deprecation.warn(warning_msg)
-        end
+      def iterate(collection_key, steps)
+        Iterate.run(self, collection_key, steps)
+      end
 
-        def self.caller_method(first_caller)
-          return nil unless first_caller =~ /`(.*)'/
+      def execute(code_block)
+        Execute.run(code_block)
+      end
 
-          Regexp.last_match[1]
-        end
+      def with_callback(action, steps)
+        WithCallback.run(self, action, steps)
       end
     end
 

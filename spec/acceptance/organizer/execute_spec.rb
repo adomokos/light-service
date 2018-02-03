@@ -1,13 +1,11 @@
 require 'spec_helper'
 require 'test_doubles'
 
-describe LightService::Orchestrator do
-  include_context 'expect orchestrator warning'
+RSpec.describe LightService::Organizer do
+  class TestExecute
+    extend LightService::Organizer
 
-  class OrchestratorTestExecute
-    extend LightService::Orchestrator
-
-    def self.run(context)
+    def self.call(context)
       with(context).reduce(steps)
     end
 
@@ -24,7 +22,7 @@ describe LightService::Orchestrator do
   let(:empty_context) { LightService::Context.make }
 
   it 'calls the lambda in the execute block using the context' do
-    result = OrchestratorTestExecute.run(:number => 0)
+    result = TestExecute.call(:number => 0)
 
     expect(result).to be_success
     expect(result.number).to eq(3)
@@ -34,7 +32,7 @@ describe LightService::Orchestrator do
   it 'will not execute a failed context' do
     empty_context.fail!('Something bad happened')
 
-    result = OrchestratorTestExecute.run(empty_context)
+    result = TestExecute.call(empty_context)
 
     expect(result).to be_failure
   end
@@ -42,7 +40,7 @@ describe LightService::Orchestrator do
   it 'does not execute over a skipped context' do
     empty_context.skip_remaining!('No more needed')
 
-    result = OrchestratorTestExecute.run(empty_context)
+    result = TestExecute.call(empty_context)
     expect(result).to be_success
   end
 end
