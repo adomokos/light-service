@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.9.0
+* [Deprecate Orchestrator](https://github.com/adomokos/light-service/pull/132) by moving its functionality to Organizers.
+
 ### 0.8.4
 * Only pass [default argument](https://github.com/adomokos/light-service/pull/123) to Hash#fetch in context if no block given.
 
