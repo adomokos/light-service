@@ -6,8 +6,12 @@
 [![Dependency Status](https://beta.gemnasium.com/badges/github.com/adomokos/light-service.svg)](https://beta.gemnasium.com/projects/github.com/adomokos/light-service)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
-<p style="color:maroon">Orchestrators are deprecated!</p>
-Version of 0.9.0 deprecates Orchestrators and moves all their functionalities into Organizers. Please check out [this PR](https://github.com/adomokos/light-service/pull/132) to see the changes.
+<br><br>
+
+![Orchestrators-Deprecated](resources/orchestrators_deprecated.svg)
+<br>Version 0.9.0 deprecates Orchestrators and moves all their functionalities into Organizers. Please check out [this PR](https://github.com/adomokos/light-service/pull/132) to see the changes.
+
+<br><br>
 
 What do you think of this code?
 
