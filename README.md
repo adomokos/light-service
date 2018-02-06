@@ -116,8 +116,10 @@ class CalculatesOrderTaxAction
   extend ::LightService::Action
   expects :order, :tax_percentage
 
-  executed do |context|
-    order.tax = (order.total * (tax_percentage/100)).round(2)
+  # I am using ctx as an abbreviation for context
+  executed do |ctx|
+    order = ctx.order
+    order.tax = (order.total * (ctx.tax_percentage/100)).round(2)
   end
 
 end
@@ -126,9 +128,9 @@ class ProvidesFreeShippingAction
   extend LightService::Action
   expects :order
 
-  executed do |context|
-    if order.total_with_tax > 200
-      order.provide_free_shipping!
+  executed do |ctx|
+    if ctx.order.total_with_tax > 200
+      ctx.order.provide_free_shipping!
     end
   end
 end
