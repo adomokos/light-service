@@ -259,7 +259,8 @@ module TestDoubles
     promises :product
 
     executed do |context|
-      context.product = context.number + 3
+      context.number  = context.number + 3
+      context.product = context.number
     end
   end
 
