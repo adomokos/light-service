@@ -37,4 +37,21 @@ describe 'ContextFactory - used with AdditionOrganizer' do
       expect(ctx.number).to eq(4)
     end
   end
+
+  context 'when called with an invalid action' do
+    let(:invalid_action) { TestDoubles::MakesLatteAction }
+    let(:organizer) { TestDoubles::AdditionOrganizer }
+
+    it 'raises an argument error' do
+      expect {
+        LightService::Testing::ContextFactory
+          .make_from(organizer)
+          .for(invalid_action)
+          .with(:number => 1)
+      }.to raise_error(
+        ArgumentError,
+        "#{invalid_action} is not in #{organizer}"
+      )
+    end
+  end
 end
