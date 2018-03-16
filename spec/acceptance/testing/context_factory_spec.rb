@@ -31,3 +31,15 @@ RSpec.describe TestDoubles::AddsThreeAction do
     expect(context.number).to eq(7)
   end
 end
+
+RSpec.describe TestDoubles::AddsTwoAction do
+  xit "does not execute a callback entirely from a ContextFactory" do
+    context = LightService::Testing::ContextFactory
+                .make_from(TestDoubles::CallbackOrganizer)
+                .for(described_class)
+                .with(:number => 0)
+
+    # add 1, add 10, then stop before executing first add 2
+    expect(context.number).to eq(11)
+  end
+end
