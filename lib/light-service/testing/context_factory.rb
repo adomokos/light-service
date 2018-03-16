@@ -33,6 +33,12 @@ module LightService
 
       def find_up_to(action)
         original_actions = organizer.actions
+        source_actions = organizer
+          .method(:actions).source # get the source for the method
+          .split[2...-1] # split on whitespace, remove method text
+          .join(' ')     # and join into a string
+
+        raise ArgumentError, "#{action} is not in #{organizer.name}" unless source_actions =~ %r(#{action.name.demodulize})
 
         original_actions.take_while do |current_action|
           current_action != action
