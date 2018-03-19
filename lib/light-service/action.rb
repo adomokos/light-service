@@ -23,11 +23,11 @@ module LightService
       end
 
       def expected_keys
-        @_expected_keys ||= []
+        @expected_keys ||= []
       end
 
       def promised_keys
-        @_promised_keys ||= []
+        @promised_keys ||= []
       end
 
       def executed
