@@ -6,32 +6,55 @@ describe LightService::Orchestrator do
 
   class OrchestratorTestSkipState
     extend LightService::Orchestrator
+
+    class FailureOrganizer
+      extend LightService::Organizer
+
+      def self.call(context)
+        with(context).reduce(TestDoubles::FailureAction)
+      end
+    end
+
     def self.run_skip_before
-      with(:number => 1).reduce([
-                                  TestDoubles::SkipAllAction,
-                                  reduce_until(->(ctx) { ctx.number == 3 },
-                                               TestDoubles::AddOneAction)
-                                ])
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::SkipAllAction,
+                  reduce_until(->(ctx) { ctx.number == 3 },
+                               TestDoubles::AddOneAction)
+                ])
     end
 
     def self.run_skip_after
-      with(:number => 1).reduce([
-                                  TestDoubles::AddOneAction,
-                                  reduce_until(->(ctx) { ctx.number == 3 }, [
-                                                 TestDoubles::AddOneAction
-                                               ]),
-                                  TestDoubles::SkipAllAction,
-                                  TestDoubles::AddOneAction
-                                ])
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::AddOneAction,
+                  reduce_until(->(ctx) { ctx.number == 3 }, [
+                                 TestDoubles::AddOneAction
+                               ]),
+                  TestDoubles::SkipAllAction,
+                  TestDoubles::AddOneAction
+                ])
     end
 
     def self.run_failure
-      with(:number => 1).reduce([
-                                  TestDoubles::FailureAction,
-                                  reduce_until(->(ctx) { ctx[:number] == 3 },
-                                               TestDoubles::AddOneAction),
-                                  TestDoubles::AddOneAction
-                                ])
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::FailureAction,
+                  reduce_until(->(ctx) { ctx[:number] == 3 },
+                               TestDoubles::AddOneAction),
+                  TestDoubles::AddOneAction
+                ])
+    end
+
+    def self.run_failure_in_organizer
+      with(:number => 1)
+        .reduce([
+                  TestDoubles::AddOneAction,
+                  reduce_until(->(ctx) { ctx[:number] == 3 },
+                               TestDoubles::AddOneAction),
+                  FailureOrganizer,
+                  TestDoubles::AddOneAction
+                ])
     end
   end
 
@@ -54,5 +77,12 @@ describe LightService::Orchestrator do
 
     expect(result).to be_failure
     expect(result[:number]).to eq(1)
+  end
+
+  it 'stops processing when fails in an organizer' do
+    result = TestSkipState.run_failure_in_organizer
+
+    expect(result).to be_failure
+    expect(result[:number]).to eq(3)
   end
 end
