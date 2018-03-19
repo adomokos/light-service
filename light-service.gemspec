@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency("activesupport", ">= 3.0")
 
   gem.add_development_dependency("rspec", "~> 3.0")
-  gem.add_development_dependency("simplecov", "~> 0.15.1")
+  gem.add_development_dependency("simplecov", "~> 0.16.1")
   gem.add_development_dependency("rubocop", "~> 0.51")
   gem.add_development_dependency("pry", "~> 0.10")
 end
