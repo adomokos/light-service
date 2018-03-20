@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'test_doubles'
 
 RSpec.describe LightService::Testing::ContextFactory::ActionParser do
-
   subject { described_class.new(action_source) }
 
   context 'when given sets in an organizer' do
@@ -15,27 +14,33 @@ RSpec.describe LightService::Testing::ContextFactory::ActionParser do
     end
 
     it 'compounds them correctly' do
-      rebuilt_actions = subject.rebuild_to(TestDoubles::AddsThreeAction, namespaces)
+      rebuilt_actions =
+        subject.rebuild_to(TestDoubles::AddsThreeAction, namespaces)
 
       expect(rebuilt_actions).to eq(actions)
     end
 
     context 'that are nested' do
       let(:actions) do
-        [ TestDoubles::AddsOneAction, [
+        [TestDoubles::AddsOneAction, [
+          TestDoubles::AddsTwoAction, [
             TestDoubles::AddsTwoAction, [
               TestDoubles::AddsTwoAction, [
-                TestDoubles::AddsTwoAction, [
-                  TestDoubles::AddsTwoAction
-          ]]]]]
+                TestDoubles::AddsTwoAction
+              ]
+            ]
+          ]
+        ]]
       end
       let(:action_source) do
-        'AddsOneAction, [ AddsTwoAction, [ AddsTwoAction, [ AddsTwoAction, [ AddsTwoAction, AddsThreeAction ] ] ] ]'
+        'AddsOneAction, [ AddsTwoAction, [ AddsTwoAction, ' \
+          '[ AddsTwoAction, [ AddsTwoAction, AddsThreeAction ] ] ] ]'
       end
       let(:namespaces) { [TestDoubles] }
 
       it 'compounds them correctly' do
-        rebuilt_actions = subject.rebuild_to(TestDoubles::AddsThreeAction, namespaces)
+        rebuilt_actions =
+          subject.rebuild_to(TestDoubles::AddsThreeAction, namespaces)
 
         expect(rebuilt_actions).to eq(actions)
       end
@@ -43,7 +48,9 @@ RSpec.describe LightService::Testing::ContextFactory::ActionParser do
   end
 
   context 'when given an organizer method' do
-    let(:action_source) { 'AddsOneAction, with_callback(AddsTwoAction, [ AddsThreeAction ])' }
+    let(:action_source) do
+      'AddsOneAction, with_callback(AddsTwoAction, [ AddsThreeAction ])'
+    end
 
     it 'tokenizes them' do
       expect(subject.tokens.count).to eq(6)

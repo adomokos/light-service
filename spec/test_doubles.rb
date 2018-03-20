@@ -275,9 +275,9 @@ module TestDoubles
       [
         AddsOneIteratesAction,
         iterate(:numbers, [
-          AddsTwoAction,
-          AddsThreeAction
-        ])
+                  AddsTwoAction,
+                  AddsThreeAction
+                ])
       ]
     end
   end
@@ -288,7 +288,7 @@ module TestDoubles
     promises :numbers
 
     executed do |context|
-      context.numbers.map! {|n| n + 1}
+      context.numbers.map! { |n| n + 1 }
     end
   end
 
@@ -303,9 +303,9 @@ module TestDoubles
       [
         AddsOneAction,
         with_callback(AddTenCallbackAction, [
-          AddsTwoAction,
-          AddsThreeAction
-        ])
+                        AddsTwoAction,
+                        AddsThreeAction
+                      ])
       ]
     end
   end

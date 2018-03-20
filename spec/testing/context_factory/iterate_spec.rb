@@ -5,7 +5,7 @@ RSpec.describe 'ContextFactory - used with IterateOrganizer' do
   let(:organizer) { TestDoubles::IterateOrganizer }
 
   context 'when called with the callback action' do
-    it 'creates a context up-to the action defined if that is a method argument' do
+    it 'creates a context up-to the action defined before the iteration' do
       ctx =
         LightService::Testing::ContextFactory
         .make_from(organizer)
@@ -26,13 +26,14 @@ RSpec.describe 'ContextFactory - used with IterateOrganizer' do
     end
 
     it 'errors on an iteration looking for action defined in context steps' do
-      expect {
+      expect do
         LightService::Testing::ContextFactory
-        .make_from(organizer)
-        .for(TestDoubles::AddsThreeAction)
-        .with(:numbers => [1, 2])
-      }.to raise_error(
-        RuntimeError, "Cannot partially iterate an Organizer with a ContextFactory"
+          .make_from(organizer)
+          .for(TestDoubles::AddsThreeAction)
+          .with(:numbers => [1, 2])
+      end.to raise_error(
+        RuntimeError,
+        "Cannot partially iterate in an Organizer with a ContextFactory"
       )
     end
   end

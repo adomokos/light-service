@@ -35,7 +35,7 @@ module LightService
         source_string = source_actions
 
         raise ArgumentError, "#{action} is not in #{organizer.name}" unless
-          source_string =~ %r(#{action.name.demodulize})
+          source_string =~ /#{action.name.demodulize}/
 
         rebuild_actions_to(action, source_string)
       end
@@ -50,9 +50,9 @@ module LightService
       end
 
       def organizer_namespaces
-        organizer.ancestors.first    # get the ancestors of the class for namespaces
-          .to_s.split('::')[0...-1]  # split apart each module name, ignoring classname
-          .map { |s| s.constantize } # constantize them to use with action strings
+        organizer.ancestors.first # get class ancestors for namespaces
+                 .to_s.split('::')[0...-1] # split module names, ignore class
+                 .map(&:constantize) # constantize for use with action strings
       end
 
       def rebuild_actions_to(action, source)
@@ -83,16 +83,17 @@ module LightService
             delegate :to_s, :to => :token
           end
 
-          class OpenBoundaryLexeme < SimpleLexeme; end;
-          class CloseBoundaryLexeme < SimpleLexeme; end;
-          class MethodLexeme < SimpleLexeme; end;
+          class OpenBoundaryLexeme < SimpleLexeme; end
+          class CloseBoundaryLexeme < SimpleLexeme; end
+          class MethodLexeme < SimpleLexeme; end
           class SymbolLexeme < SimpleLexeme
             def initialize(token)
               @token = token.tr(':', '')
             end
           end
-          class ActionLexeme < SimpleLexeme; end;
+          class ActionLexeme < SimpleLexeme; end
 
+          # rubocop:disable Metrics/MethodLength
           def lex(tokens)
             tokens.map do |token|
               type = if token == '['
@@ -106,12 +107,14 @@ module LightService
                      elsif token.present?
                        ActionLexeme
                      else
-                       raise ArgumentError, "Unable to parse #{token} for ContextFactory generation"
+                       raise ArgumentError, "ContextFactory generation:" \
+                         " unable to parse #{token}"
                      end
 
               type.new(token)
             end
           end
+          # rubocop:enable Metrics/MethodLength
 
           private
 
@@ -126,7 +129,9 @@ module LightService
 
         def initialize(string, tokenizer: Tokenizer, lexer: Lexer)
           @original = string
-          @tokens   = tokenizer.new(/[,\s\(\)]/).tokenize(string).reject {|s| s.empty?}
+          @tokens   = tokenizer.new(/[,\s\(\)]/)
+                               .tokenize(string)
+                               .reject(&:empty?)
           @lexemes  = lexer.new.lex(tokens)
         end
 
@@ -138,7 +143,7 @@ module LightService
             next if found_action
 
             const = namespace_token(lexeme.token, namespaces)
-            next if found_action = action == const
+            next if (found_action = action == const)
             const
           end.compact
 
@@ -158,8 +163,13 @@ module LightService
         end
 
         def compound_boundaries(actions)
-          open_bound  = actions.find_index { |lexeme| lexeme.is_a? Lexer::OpenBoundaryLexeme }
-          close_bound = actions.rindex     { |lexeme| lexeme.is_a? Lexer::CloseBoundaryLexeme }
+          open_bound = actions.find_index do |lexeme|
+            lexeme.is_a? Lexer::OpenBoundaryLexeme
+          end
+          close_bound = actions.rindex do |lexeme|
+            lexeme.is_a? Lexer::CloseBoundaryLexeme
+          end
+
           return actions unless open_bound && close_bound
 
           reduced_set = actions.slice!(Range.new(open_bound, close_bound))
@@ -173,7 +183,8 @@ module LightService
           method_index = actions.rindex { |ele| ele.is_a? Lexer::MethodLexeme }
           return actions unless method_index
 
-          pulled_expression = actions.slice!(method_index, method_argument_count + 1)
+          pulled_expression = actions.slice!(method_index,
+                                             method_argument_count + 1)
 
           expanded_method =
             expand_method(
@@ -203,10 +214,10 @@ module LightService
                        argument
                      end
 
-          raise RuntimeError, "Cannot partially iterate an Organizer with a ContextFactory" if
-            method == :iterate && steps.any?
-          raise RuntimeError, "Cannot partially reduce_until an Organizer with a ContextFactory" if
-            method == :reduce_until && steps.any?
+          if (method == :reduce_until || method == :iterate) && steps.any?
+            raise "Cannot partially #{method} in" \
+            " an Organizer with a ContextFactory"
+          end
 
           LightService::Testing::ContextFactory::ContextFactoryOrganizer
             .send(method, argument, steps)

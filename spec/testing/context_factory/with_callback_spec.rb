@@ -5,7 +5,7 @@ RSpec.describe 'ContextFactory - used with CallbackOrganizer' do
   let(:organizer) { TestDoubles::CallbackOrganizer }
 
   context 'when called with the callback action' do
-    it 'creates a context up-to the action defined if that is a method argument' do
+    it 'creates a context up-to the callback action' do
       ctx =
         LightService::Testing::ContextFactory
         .make_from(organizer)
