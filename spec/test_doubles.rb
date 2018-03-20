@@ -264,6 +264,34 @@ module TestDoubles
     end
   end
 
+  class IterateOrganizer
+    extend LightService::Organizer
+
+    def self.call(numbers)
+      with(:numbers => numbers).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsOneIteratesAction,
+        iterate(:numbers, [
+          AddsTwoAction,
+          AddsThreeAction
+        ])
+      ]
+    end
+  end
+
+  class AddsOneIteratesAction
+    extend LightService::Action
+    expects :numbers
+    promises :numbers
+
+    executed do |context|
+      context.numbers.map! {|n| n + 1}
+    end
+  end
+
   class CallbackOrganizer
     extend LightService::Organizer
 

@@ -33,7 +33,7 @@ RSpec.describe TestDoubles::AddsThreeAction do
 end
 
 RSpec.describe TestDoubles::AddsTwoAction do
-  xit "does not execute a callback entirely from a ContextFactory" do
+  it "does not execute a callback entirely from a ContextFactory" do
     context = LightService::Testing::ContextFactory
                 .make_from(TestDoubles::CallbackOrganizer)
                 .for(described_class)
