@@ -2,13 +2,15 @@ require 'spec_helper'
 require 'test_doubles'
 
 RSpec.describe 'Action before hooks' do
-  class TestIterate
-    extend LightService::Organizer
+  module BeforeHooks
+    class TestIterate
+      extend LightService::Organizer
 
-    def self.call(context)
-      with(context)
-        .reduce([iterate(:numbers,
-                         [TestDoubles::AddsOneAction])])
+      def self.call(context)
+        with(context)
+          .reduce([iterate(:numbers,
+                           [TestDoubles::AddsOneAction])])
+      end
     end
   end
 
@@ -25,13 +27,13 @@ RSpec.describe 'Action before hooks' do
   end
 
   it 'Adds 1, 2 and 3 to the initial value of 1' do
-    TestIterate.before_action = [
+    BeforeHooks::TestIterate.before_action = [
       lambda do |ctx|
         ctx.number -= 2 if ctx.current_action == TestDoubles::AddsOneAction
       end
     ]
 
-    result = TestIterate.call(:numbers => [1, 2, 3, 4])
+    result = BeforeHooks::TestIterate.call(:numbers => [1, 2, 3, 4])
 
     expect(result).to be_success
     expect(result.number).to eq(3)
