@@ -80,7 +80,7 @@ module LightService
               @token = token
             end
 
-            delegate :to_s, :to => :token
+            alias to_s token
           end
 
           class OpenBoundaryLexeme < SimpleLexeme; end
