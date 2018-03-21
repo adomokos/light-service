@@ -19,6 +19,12 @@ module LightService
       def with(data = {})
         VerifyCallMethodExists.run(self, caller(1..1).first)
         data[:_aliases] = @aliases if @aliases
+
+        if @before_action_logic
+          data[:_before_action] = @before_action_logic
+          @before_action_logic = nil
+        end
+
         WithReducerFactory.make(self).with(data)
       end
 
@@ -50,6 +56,10 @@ module LightService
     module Macros
       def aliases(key_hash)
         @aliases = key_hash
+      end
+
+      def before_action=(logic)
+        @before_action_logic = logic
       end
     end
   end
