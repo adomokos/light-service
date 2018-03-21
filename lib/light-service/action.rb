@@ -42,6 +42,7 @@ module LightService
             action_context.define_accessor_methods_for_keys(all_keys)
 
             catch(:jump_when_failed) do
+              call_before_action(action_context)
               yield(action_context)
             end
           end
@@ -69,6 +70,16 @@ module LightService
 
       def all_keys
         expected_keys + promised_keys
+      end
+
+      def call_before_action(context)
+        return unless context.keys.include?(:_before_action)
+
+        before_action_callbacks = context[:_before_action]
+
+        before_action_callbacks.each do |cb|
+          cb.call(context)
+        end
       end
     end
   end
