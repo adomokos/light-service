@@ -256,11 +256,9 @@ module TestDoubles
   class AddsThreeAction
     extend LightService::Action
     expects :number
-    promises :product
 
     executed do |context|
-      context.number  = context.number + 3
-      context.product = context.number
+      context.number += 3
     end
   end
 
