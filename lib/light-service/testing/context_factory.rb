@@ -12,8 +12,6 @@ module LightService
           lambda do |ctx|
              if ctx.current_action == action
                ctx.skip_remaining!
-               binding.pry
-               next ctx
              end
           end
         ]
