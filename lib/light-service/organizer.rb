@@ -21,7 +21,7 @@ module LightService
         data[:_aliases] = @aliases if @aliases
 
         if @before_action_logic
-          data[:_before_action] = @before_action_logic
+          data[:_before_action] = @before_action_logic.dup
           @before_action_logic = nil
         end
 
