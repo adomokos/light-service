@@ -63,10 +63,20 @@ RSpec.describe LightService::Organizer do
 
   describe 'a simple case with a single callback' do
     it 'calls the actions defined with callback' do
+      TestWithCallback.before_action = [
+        lambda do |ctx|
+          ctx.total -= 1000 if ctx.current_action == AddToTotalAction
+        end
+      ]
       result = TestWithCallback.call
 
       expect(result.counter).to eq(3)
-      expect(result.total).to eq(6)
+      expect(result.total).to eq(-2994)
+    end
+  end
+
+  describe 'before_action' do
+    it 'can interact with actions from the outside' do
     end
   end
 
