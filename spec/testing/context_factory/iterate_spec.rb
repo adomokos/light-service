@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'test_doubles'
 
-RSpec.describe 'ContextFactory - used with IterateOrganizer' do
+RSpec.describe 'ContextFactory - used with ReduceUntilOrganizer' do
   let(:organizer) { TestDoubles::IterateOrganizer }
 
   context 'when called with the callback action' do
@@ -23,18 +23,6 @@ RSpec.describe 'ContextFactory - used with IterateOrganizer' do
         .with(:numbers => [1, 2])
 
       expect(ctx.numbers).to eq([2, 3])
-    end
-
-    it 'errors on an iteration looking for action defined in context steps' do
-      expect do
-        LightService::Testing::ContextFactory
-          .make_from(organizer)
-          .for(TestDoubles::AddsThreeAction)
-          .with(:numbers => [1, 2])
-      end.to raise_error(
-        RuntimeError,
-        "Cannot partially iterate in an Organizer with a ContextFactory"
-      )
     end
   end
 end

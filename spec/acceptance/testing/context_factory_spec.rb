@@ -8,7 +8,7 @@ class AdditionOrganizerContextFactory
     LightService::Testing::ContextFactory
       .make_from(TestDoubles::AdditionOrganizer)
       .for(action)
-      .with(:number => number)
+      .with(number)
   end
 end
 
@@ -26,7 +26,7 @@ RSpec.describe TestDoubles::AddsThreeAction do
       LightService::Testing::ContextFactory
       .make_from(TestDoubles::AdditionOrganizer)
       .for(TestDoubles::AddsThreeAction)
-      .with(:number => 4) # Context is a "glorified" hash
+      .with(4) # Context is a "glorified" hash
 
     expect(context.number).to eq(7)
   end
@@ -37,7 +37,7 @@ RSpec.describe TestDoubles::AddsTwoAction do
     context = LightService::Testing::ContextFactory
               .make_from(TestDoubles::CallbackOrganizer)
               .for(described_class)
-              .with(:number => 0)
+              .with(0)
 
     # add 1, add 10, then stop before executing first add 2
     expect(context.number).to eq(11)

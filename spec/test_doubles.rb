@@ -221,8 +221,8 @@ module TestDoubles
   class AdditionOrganizer
     extend LightService::Organizer
 
-    def self.call(number)
-      with(:number => number).reduce(actions)
+    def self.call(ctx)
+      with(ctx).reduce(actions)
     end
 
     def self.actions
@@ -265,8 +265,8 @@ module TestDoubles
   class IterateOrganizer
     extend LightService::Organizer
 
-    def self.call(numbers)
-      with(:numbers => numbers).reduce(actions)
+    def self.call(ctx)
+      with(ctx).reduce(actions)
     end
 
     def self.actions
@@ -286,15 +286,15 @@ module TestDoubles
     promises :numbers
 
     executed do |context|
-      context.numbers.map! { |n| n + 1 }
+      context.numbers = context.numbers.map { |n| n + 1 }
     end
   end
 
   class CallbackOrganizer
     extend LightService::Organizer
 
-    def self.call(number)
-      with(:number => number).reduce(actions)
+    def self.call(ctx)
+      with(ctx).reduce(actions)
     end
 
     def self.actions
@@ -316,6 +316,24 @@ module TestDoubles
       context.number += 10
       context.number =
         context.callback.call(context).fetch(:number)
+    end
+  end
+
+  class ReduceIfOrganizer
+    extend LightService::Organizer
+
+    def self.call(ctx)
+      with(ctx).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsOneAction,
+        reduce_if(->(ctx) { ctx.number > 1 }, [
+                        AddsTwoAction,
+                        AddsThreeAction
+                      ])
+      ]
     end
   end
 
