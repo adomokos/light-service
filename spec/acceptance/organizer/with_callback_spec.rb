@@ -103,7 +103,7 @@ RSpec.describe LightService::Organizer do
         end
       ]
       begin
-        result = TestWithCallback.call
+        TestWithCallback.call
       rescue SkipContextError => e
         expect(e.ctx).not_to be_empty
       end
