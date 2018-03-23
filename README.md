@@ -621,7 +621,7 @@ class ExtractsTransformsLoadsData
   extend LightService::Organizer
 
   def self.call(connection)
-    with(:connection => connection).reduce(steps)
+    with(:connection => connection).reduce(actions)
   end
 
   def self.actions
