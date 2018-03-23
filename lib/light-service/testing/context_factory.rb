@@ -10,9 +10,9 @@ module LightService
       def for(action)
         @organizer.before_action = [
           lambda do |ctx|
-             if ctx.current_action == action
-               ctx.skip_remaining!
-             end
+            if ctx.current_action == action
+              throw(:return_ctx_from_execution, ctx)
+            end
           end
         ]
 
@@ -20,7 +20,11 @@ module LightService
       end
 
       def with(ctx)
-        @organizer.call(ctx)
+        escaped = catch(:return_ctx_from_execution) do
+          @organizer.call(ctx)
+        end
+
+        escaped
       end
 
       def initialize(organizer)

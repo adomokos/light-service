@@ -221,8 +221,8 @@ module TestDoubles
   class AdditionOrganizer
     extend LightService::Organizer
 
-    def self.call(ctx)
-      with(ctx).reduce(actions)
+    def self.call(number)
+      with(:number => number).reduce(actions)
     end
 
     def self.actions
@@ -319,6 +319,24 @@ module TestDoubles
     end
   end
 
+  class ReduceUntilOrganizer
+    extend LightService::Organizer
+
+    def self.call(ctx)
+      with(ctx).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsOneAction,
+        reduce_until(->(ctx) { ctx.number > 3 }, [
+                       AddsTwoAction,
+                       AddsThreeAction
+                     ])
+      ]
+    end
+  end
+
   class ReduceIfOrganizer
     extend LightService::Organizer
 
@@ -330,9 +348,9 @@ module TestDoubles
       [
         AddsOneAction,
         reduce_if(->(ctx) { ctx.number > 1 }, [
-                        AddsTwoAction,
-                        AddsThreeAction
-                      ])
+                    AddsTwoAction,
+                    AddsThreeAction
+                  ])
       ]
     end
   end

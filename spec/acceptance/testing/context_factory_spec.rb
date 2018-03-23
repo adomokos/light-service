@@ -37,7 +37,7 @@ RSpec.describe TestDoubles::AddsTwoAction do
     context = LightService::Testing::ContextFactory
               .make_from(TestDoubles::CallbackOrganizer)
               .for(described_class)
-              .with(0)
+              .with(:number => 0)
 
     # add 1, add 10, then stop before executing first add 2
     expect(context.number).to eq(11)
