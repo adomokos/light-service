@@ -70,6 +70,46 @@ RSpec.describe LightService::Organizer do
     end
   end
 
+  describe 'before_action' do
+    it 'can interact with actions from the outside' do
+      TestWithCallback.before_action = [
+        lambda do |ctx|
+          ctx.total -= 1000 if ctx.current_action == AddToTotalAction
+        end
+      ]
+      result = TestWithCallback.call
+
+      expect(result.counter).to eq(3)
+      expect(result.total).to eq(-2994)
+    end
+  end
+
+  describe 'when the hook breaks execution' do
+    it 'does not call the rest of the callback steps' do
+      class SkipContextError < StandardError
+        attr_reader :ctx
+
+        def initialize(msg, ctx)
+          @ctx = ctx
+          super(msg)
+        end
+      end
+      TestWithCallback.before_action = [
+        lambda do |ctx|
+          if ctx.current_action == IncrementCountAction
+            ctx.total -= 1000
+            raise SkipContextError.new("stop context now", ctx)
+          end
+        end
+      ]
+      begin
+        TestWithCallback.call
+      rescue SkipContextError => e
+        expect(e.ctx).not_to be_empty
+      end
+    end
+  end
+
   describe 'a more complex example with nested callbacks' do
     class TestWithNestedCallback
       extend LightService::Organizer
