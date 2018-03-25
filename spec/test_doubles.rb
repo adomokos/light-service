@@ -30,21 +30,10 @@ module TestDoubles
     executed(&:fail!)
   end
 
-  class AddOneAction
-    extend LightService::Action
-    expects :number
-    promises :number
-
-    executed do |ctx|
-      ctx.number += 1
-      ctx.message = 'Added 1'
-    end
-  end
-
   class AddTwoOrganizer
     extend LightService::Organizer
     def self.call(context)
-      with(context).reduce([AddOneAction, AddOneAction])
+      with(context).reduce([AddsOneAction, AddsOneAction])
     end
   end
 
@@ -339,5 +328,21 @@ module TestDoubles
     extend LightService::Action
 
     executed { |_ctx| }
+  end
+
+  class TestIterate
+    extend LightService::Organizer
+
+    def self.call(context)
+      with(context)
+        .reduce([iterate(:numbers,
+                         [TestDoubles::AddsOneAction])])
+    end
+
+    def self.call_single(context)
+      with(context)
+        .reduce([iterate(:numbers,
+                         TestDoubles::AddsOneAction)])
+    end
   end
 end

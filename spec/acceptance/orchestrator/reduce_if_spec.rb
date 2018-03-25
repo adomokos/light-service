@@ -13,9 +13,9 @@ describe LightService::Orchestrator do
 
     def self.steps
       [
-        TestDoubles::AddOneAction,
+        TestDoubles::AddsOneAction,
         reduce_if(->(ctx) { ctx.number == 1 },
-                  TestDoubles::AddOneAction)
+                  TestDoubles::AddsOneAction)
       ]
     end
   end

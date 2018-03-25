@@ -15,7 +15,7 @@ describe LightService::Orchestrator do
   it 'responds to both actions and organizers' do
     result = OrchestratorTestReduce.run({ :number => 0 }, [
                                           TestDoubles::AddTwoOrganizer,
-                                          TestDoubles::AddOneAction
+                                          TestDoubles::AddsOneAction
                                         ])
 
     expect(result).to be_success
@@ -26,7 +26,7 @@ describe LightService::Orchestrator do
     result = OrchestratorTestReduce.run({ :number => 0 }, [
                                           TestDoubles::AddTwoOrganizer,
                                           TestDoubles::FailureAction,
-                                          TestDoubles::AddOneAction
+                                          TestDoubles::AddsOneAction
                                         ])
 
     expect(result).not_to be_success

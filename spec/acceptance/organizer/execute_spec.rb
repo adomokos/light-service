@@ -11,10 +11,10 @@ RSpec.describe LightService::Organizer do
 
     def self.steps
       [
-        TestDoubles::AddOneAction,
+        TestDoubles::AddsOneAction,
         execute(->(ctx) { ctx.number += 1 }),
         execute(->(ctx) { ctx[:something] = 'hello' }),
-        TestDoubles::AddOneAction
+        TestDoubles::AddsOneAction
       ]
     end
   end
