@@ -2,111 +2,12 @@ require 'spec_helper'
 require 'test_doubles'
 
 RSpec.describe LightService::Organizer do
-  class TestWithCallback
-    extend LightService::Organizer
-
-    def self.call(context = {})
-      with(context).reduce(actions)
-    end
-
-    def self.actions
-      [
-        SetUpContextAction,
-        with_callback(IterateCollectionAction,
-                      [IncrementCountAction,
-                       AddToTotalAction])
-      ]
-    end
-  end
-
-  class SetUpContextAction
-    extend LightService::Action
-    promises :numbers, :counter, :total
-
-    executed do |ctx|
-      ctx.numbers = [1, 2, 3]
-      ctx.counter = 0
-      ctx.total = 0
-    end
-  end
-
-  class IterateCollectionAction
-    extend LightService::Action
-    expects :numbers, :callback
-    promises :number
-
-    executed do |ctx|
-      ctx.numbers.each do |number|
-        ctx.number = number
-        ctx.callback.call(ctx)
-      end
-    end
-  end
-
-  class IncrementCountAction
-    extend LightService::Action
-    expects :counter
-
-    executed do |ctx|
-      ctx.counter = ctx.counter + 1
-    end
-  end
-
-  class AddToTotalAction
-    extend LightService::Action
-    expects :number, :total
-
-    executed do |ctx|
-      ctx.total += ctx.number
-    end
-  end
-
   describe 'a simple case with a single callback' do
     it 'calls the actions defined with callback' do
-      result = TestWithCallback.call
+      result = TestDoubles::TestWithCallback.call
 
       expect(result.counter).to eq(3)
       expect(result.total).to eq(6)
-    end
-  end
-
-  describe 'before_action' do
-    it 'can interact with actions from the outside' do
-      TestWithCallback.before_action = [
-        lambda do |ctx|
-          ctx.total -= 1000 if ctx.current_action == AddToTotalAction
-        end
-      ]
-      result = TestWithCallback.call
-
-      expect(result.counter).to eq(3)
-      expect(result.total).to eq(-2994)
-    end
-  end
-
-  describe 'when the hook breaks execution' do
-    it 'does not call the rest of the callback steps' do
-      class SkipContextError < StandardError
-        attr_reader :ctx
-
-        def initialize(msg, ctx)
-          @ctx = ctx
-          super(msg)
-        end
-      end
-      TestWithCallback.before_action = [
-        lambda do |ctx|
-          if ctx.current_action == IncrementCountAction
-            ctx.total -= 1000
-            raise SkipContextError.new("stop context now", ctx)
-          end
-        end
-      ]
-      begin
-        TestWithCallback.call
-      rescue SkipContextError => e
-        expect(e.ctx).not_to be_empty
-      end
     end
   end
 
@@ -123,9 +24,9 @@ RSpec.describe LightService::Organizer do
           SetUpNestedContextAction,
           with_callback(IterateOuterCollectionAction,
                         [IncrementOuterCountAction,
-                         with_callback(IterateCollectionAction,
-                                       [IncrementCountAction,
-                                        AddToTotalAction])])
+                         with_callback(TestDoubles::IterateCollectionAction,
+                                       [TestDoubles::IncrementCountAction,
+                                        TestDoubles::AddToTotalAction])])
         ]
       end
     end
@@ -190,9 +91,9 @@ RSpec.describe LightService::Organizer do
 
       def self.actions
         [
-          SetUpContextAction,
-          with_callback(IterateCollectionAction,
-                        [IncrementCountAction,
+          TestDoubles::SetUpContextAction,
+          with_callback(TestDoubles::IterateCollectionAction,
+                        [TestDoubles::IncrementCountAction,
                          TestDoubles::FailureAction])
         ]
       end
