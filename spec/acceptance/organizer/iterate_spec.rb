@@ -5,14 +5,16 @@ RSpec.describe LightService::Organizer do
   let(:empty_context) { LightService::Context.make }
 
   it 'reduces each item of a collection and singularizes the collection key' do
-    result = TestDoubles::TestIterate.call(:numbers => [1, 2, 3, 4])
+    result = TestDoubles::TestIterate.call(:number => 1,
+                                           :counters => [1, 2, 3, 4])
 
     expect(result).to be_success
     expect(result.number).to eq(5)
   end
 
   it 'accepts a single action or organizer' do
-    result = TestDoubles::TestIterate.call_single(:numbers => [1, 2, 3, 4])
+    result = TestDoubles::TestIterate.call_single(:number => 1,
+                                                  :counters => [1, 2, 3, 4])
 
     expect(result).to be_success
     expect(result.number).to eq(5)

@@ -335,13 +335,13 @@ module TestDoubles
 
     def self.call(context)
       with(context)
-        .reduce([iterate(:numbers,
+        .reduce([iterate(:counters,
                          [TestDoubles::AddsOneAction])])
     end
 
     def self.call_single(context)
       with(context)
-        .reduce([iterate(:numbers,
+        .reduce([iterate(:counters,
                          TestDoubles::AddsOneAction)])
     end
   end

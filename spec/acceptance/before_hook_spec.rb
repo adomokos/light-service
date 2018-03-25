@@ -22,10 +22,11 @@ RSpec.describe 'Action before hooks' do
         end
       ]
 
-      result = TestDoubles::TestIterate.call(:numbers => [1, 2, 3, 4])
+      result = TestDoubles::TestIterate.call(:number => 0,
+                                             :counters => [1, 2, 3, 4])
 
       expect(result).to be_success
-      expect(result.number).to eq(3)
+      expect(result.number).to eq(-4)
     end
   end
 
