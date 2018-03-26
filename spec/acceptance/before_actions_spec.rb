@@ -4,11 +4,10 @@ require 'test_doubles'
 RSpec.describe 'Action before_actions' do
   describe 'works with simple organizers - from outside' do
     it 'can be used to inject code block before each action' do
-      TestDoubles::AdditionOrganizer.before_actions = [
+      TestDoubles::AdditionOrganizer.before_actions =
         lambda do |ctx|
           ctx.number -= 2 if ctx.current_action == TestDoubles::AddsThreeAction
         end
-      ]
 
       result = TestDoubles::AdditionOrganizer.call(0)
 

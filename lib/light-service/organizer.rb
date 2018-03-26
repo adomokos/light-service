@@ -68,7 +68,7 @@ module LightService
       end
 
       def before_actions=(logic)
-        @before_actions = logic
+        @before_actions = [logic].flatten
       end
 
       def after_actions(*logic)
@@ -76,7 +76,7 @@ module LightService
       end
 
       def after_actions=(logic)
-        @after_actions = logic
+        @after_actions = [logic].flatten
       end
     end
   end
