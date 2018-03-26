@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'test_doubles'
 
-RSpec.describe 'Action before hooks' do
+RSpec.describe 'Action before_actions' do
   describe 'works with simple organizers - from outside' do
     it 'can be used to inject code block before each action' do
       TestDoubles::AdditionOrganizer.before_actions = [
@@ -30,7 +30,7 @@ RSpec.describe 'Action before hooks' do
     end
   end
 
-  describe 'can be added to the organizer' do
+  describe 'can be added to the organizers declaratively' do
     module BeforeHook
       class AdditionOrganizer
         extend LightService::Organizer
