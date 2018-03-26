@@ -21,8 +21,13 @@ module LightService
         data[:_aliases] = @aliases if @aliases
 
         if @before_actions
-          data[:_before_action] = @before_actions.dup
+          data[:_before_actions] = @before_actions.dup
           @before_actions = nil
+        end
+
+        if @after_actions
+          data[:_after_actions] = @after_actions.dup
+          @after_actions = nil
         end
 
         WithReducerFactory.make(self).with(data)
@@ -64,6 +69,14 @@ module LightService
 
       def before_actions=(logic)
         @before_actions = logic
+      end
+
+      def after_actions(*logic)
+        self.after_actions = logic
+      end
+
+      def after_actions=(logic)
+        @after_actions = logic
       end
     end
   end

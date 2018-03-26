@@ -15,7 +15,7 @@ RSpec.describe 'Action before_actions' do
       expect(result.fetch(:number)).to eq(4)
     end
 
-    it 'Adds 1, 2 and 3 to the initial value of 1' do
+    it 'works with iterator' do
       TestDoubles::TestIterate.before_actions = [
         lambda do |ctx|
           ctx.number -= 2 if ctx.current_action == TestDoubles::AddsOneAction
@@ -30,8 +30,8 @@ RSpec.describe 'Action before_actions' do
     end
   end
 
-  describe 'can be added to the organizers declaratively' do
-    module BeforeHook
+  describe 'can be added to organizers declaratively' do
+    module BeforeActions
       class AdditionOrganizer
         extend LightService::Organizer
         before_actions (lambda do |ctx|
@@ -60,7 +60,7 @@ RSpec.describe 'Action before_actions' do
     end
 
     it 'accepts before_actions hook lambdas from organizer' do
-      result = BeforeHook::AdditionOrganizer.call(0)
+      result = BeforeActions::AdditionOrganizer.call(0)
 
       expect(result.fetch(:number)).to eq(1)
     end
