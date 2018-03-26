@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'test_doubles'
 
 RSpec.describe 'Action before hooks' do
-  describe 'works with simple organizers' do
+  describe 'works with simple organizers - from outside' do
     it 'can be used to inject code block before each action' do
-      TestDoubles::AdditionOrganizer.before_action = [
+      TestDoubles::AdditionOrganizer.before_actions = [
         lambda do |ctx|
           ctx.number -= 2 if ctx.current_action == TestDoubles::AddsThreeAction
         end
@@ -16,7 +16,7 @@ RSpec.describe 'Action before hooks' do
     end
 
     it 'Adds 1, 2 and 3 to the initial value of 1' do
-      TestDoubles::TestIterate.before_action = [
+      TestDoubles::TestIterate.before_actions = [
         lambda do |ctx|
           ctx.number -= 2 if ctx.current_action == TestDoubles::AddsOneAction
         end
@@ -30,9 +30,45 @@ RSpec.describe 'Action before hooks' do
     end
   end
 
+  describe 'can be added to the organizer' do
+    module BeforeHook
+      class AdditionOrganizer
+        extend LightService::Organizer
+        before_actions (lambda do |ctx|
+                          if ctx.current_action == TestDoubles::AddsOneAction
+                            ctx.number -= 2
+                          end
+                        end),
+                       (lambda do |ctx|
+                          if ctx.current_action == TestDoubles::AddsThreeAction
+                            ctx.number -= 3
+                          end
+                        end)
+
+        def self.call(number)
+          with(:number => number).reduce(actions)
+        end
+
+        def self.actions
+          [
+            TestDoubles::AddsOneAction,
+            TestDoubles::AddsTwoAction,
+            TestDoubles::AddsThreeAction
+          ]
+        end
+      end
+    end
+
+    it 'accepts before_actions hook lambdas from organizer' do
+      result = BeforeHook::AdditionOrganizer.call(0)
+
+      expect(result.fetch(:number)).to eq(1)
+    end
+  end
+
   describe 'works with callbacks' do
     it 'can interact with actions from the outside' do
-      TestDoubles::TestWithCallback.before_action = [
+      TestDoubles::TestWithCallback.before_actions = [
         lambda do |ctx|
           if ctx.current_action == TestDoubles::AddToTotalAction
             ctx.total -= 1000
@@ -56,7 +92,7 @@ RSpec.describe 'Action before hooks' do
           super(msg)
         end
       end
-      TestDoubles::TestWithCallback.before_action = [
+      TestDoubles::TestWithCallback.before_actions = [
         lambda do |ctx|
           if ctx.current_action == TestDoubles::IncrementCountAction
             ctx.total -= 1000
