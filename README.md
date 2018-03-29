@@ -204,7 +204,7 @@ When something goes wrong in an action and you want to halt the chain, you need 
 The context's `fail!` method can take an optional message argument, this message might help describing what went wrong.
 In case you need to return immediately from the point of failure, you have to do that by calling `next context`.
 
-In case you want to fail the context and stop the execution of the executed block, use the `fail_and_return!('something went wront')` method.
+In case you want to fail the context and stop the execution of the executed block, use the `fail_and_return!('something went wrong')` method.
 This will immediately leave the block, you don't need to call `next context` to return from the block.
 
 Here is an example:
