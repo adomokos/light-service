@@ -12,7 +12,7 @@ RSpec.describe LightService::Organizer do
     def self.actions
       [
         reduce_until(->(ctx) { ctx.number == 3 },
-                     TestDoubles::AddOneAction)
+                     TestDoubles::AddsOneAction)
       ]
     end
   end

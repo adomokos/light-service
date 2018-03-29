@@ -13,9 +13,9 @@ RSpec.describe LightService::Organizer do
 
     def self.actions
       [
-        TestDoubles::AddOneAction,
+        TestDoubles::AddsOneAction,
         reduce_if(->(ctx) { ctx.number == 1 },
-                  TestDoubles::AddOneAction)
+                  TestDoubles::AddsOneAction)
       ]
     end
   end
@@ -29,11 +29,11 @@ RSpec.describe LightService::Organizer do
     expect(result.fetch(:number)).to eq(2)
     expect(result[:logger].logs).to eq(
       [{
-        :action => TestDoubles::AddOneAction,
+        :action => TestDoubles::AddsOneAction,
         :before => 0,
         :after => 1
       }, {
-        :action => TestDoubles::AddOneAction,
+        :action => TestDoubles::AddsOneAction,
         :before => 1,
         :after => 2
       }]

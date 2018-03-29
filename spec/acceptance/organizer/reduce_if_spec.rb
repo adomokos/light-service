@@ -11,9 +11,9 @@ RSpec.describe LightService::Organizer do
 
     def self.actions
       [
-        TestDoubles::AddOneAction,
+        TestDoubles::AddsOneAction,
         reduce_if(->(ctx) { ctx.number == 1 },
-                  TestDoubles::AddOneAction)
+                  TestDoubles::AddsOneAction)
       ]
     end
   end
