@@ -8,7 +8,7 @@ module LightService
       end
 
       def for(action)
-        @organizer.before_action = [
+        @organizer.before_actions = [
           lambda do |ctx|
             if ctx.current_action == action
               throw(:return_ctx_from_execution, ctx)
