@@ -9,7 +9,7 @@ RSpec.describe LightService::Organizer do
         .reduce([
                   TestDoubles::SkipAllAction,
                   reduce_until(->(ctx) { ctx.number == 3 },
-                               TestDoubles::AddOneAction)
+                               TestDoubles::AddsOneAction)
                 ])
     end
   end
@@ -19,12 +19,12 @@ RSpec.describe LightService::Organizer do
     def self.call
       with(:number => 1)
         .reduce([
-                  TestDoubles::AddOneAction,
+                  TestDoubles::AddsOneAction,
                   reduce_until(->(ctx) { ctx.number == 3 }, [
-                                 TestDoubles::AddOneAction
+                                 TestDoubles::AddsOneAction
                                ]),
                   TestDoubles::SkipAllAction,
-                  TestDoubles::AddOneAction
+                  TestDoubles::AddsOneAction
                 ])
     end
   end
@@ -36,8 +36,8 @@ RSpec.describe LightService::Organizer do
         .reduce([
                   TestDoubles::FailureAction,
                   reduce_until(->(ctx) { ctx[:number] == 3 },
-                               TestDoubles::AddOneAction),
-                  TestDoubles::AddOneAction
+                               TestDoubles::AddsOneAction),
+                  TestDoubles::AddsOneAction
                 ])
     end
   end

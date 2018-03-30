@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.10.0
+* Adding [before_actions and after_actions hooks](https://github.com/adomokos/light-service/pull/144).
+
 ### 0.9.0
 * [Deprecate Orchestrator](https://github.com/adomokos/light-service/pull/132) by moving its functionality to Organizers.
 

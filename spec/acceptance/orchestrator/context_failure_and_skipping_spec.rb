@@ -10,18 +10,18 @@ describe LightService::Orchestrator do
       with(:number => 1).reduce([
                                   TestDoubles::SkipAllAction,
                                   reduce_until(->(ctx) { ctx.number == 3 },
-                                               TestDoubles::AddOneAction)
+                                               TestDoubles::AddsOneAction)
                                 ])
     end
 
     def self.run_skip_after
       with(:number => 1).reduce([
-                                  TestDoubles::AddOneAction,
+                                  TestDoubles::AddsOneAction,
                                   reduce_until(->(ctx) { ctx.number == 3 }, [
-                                                 TestDoubles::AddOneAction
+                                                 TestDoubles::AddsOneAction
                                                ]),
                                   TestDoubles::SkipAllAction,
-                                  TestDoubles::AddOneAction
+                                  TestDoubles::AddsOneAction
                                 ])
     end
 
@@ -29,8 +29,8 @@ describe LightService::Orchestrator do
       with(:number => 1).reduce([
                                   TestDoubles::FailureAction,
                                   reduce_until(->(ctx) { ctx[:number] == 3 },
-                                               TestDoubles::AddOneAction),
-                                  TestDoubles::AddOneAction
+                                               TestDoubles::AddsOneAction),
+                                  TestDoubles::AddsOneAction
                                 ])
     end
   end

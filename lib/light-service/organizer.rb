@@ -20,9 +20,14 @@ module LightService
         VerifyCallMethodExists.run(self, caller(1..1).first)
         data[:_aliases] = @aliases if @aliases
 
-        if @before_action_logic
-          data[:_before_action] = @before_action_logic.dup
-          @before_action_logic = nil
+        if @before_actions
+          data[:_before_actions] = @before_actions.dup
+          @before_actions = nil
+        end
+
+        if @after_actions
+          data[:_after_actions] = @after_actions.dup
+          @after_actions = nil
         end
 
         WithReducerFactory.make(self).with(data)
@@ -58,8 +63,20 @@ module LightService
         @aliases = key_hash
       end
 
-      def before_action=(logic)
-        @before_action_logic = logic
+      def before_actions(*logic)
+        self.before_actions = logic
+      end
+
+      def before_actions=(logic)
+        @before_actions = [logic].flatten
+      end
+
+      def after_actions(*logic)
+        self.after_actions = logic
+      end
+
+      def after_actions=(logic)
+        @after_actions = [logic].flatten
       end
     end
   end
