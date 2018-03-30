@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.10.1
+* [Fixing ContextFactory](https://github.com/adomokos/light-service/pull/141) for orchestrator methods in Organizers.
+
 ### 0.10.0
 * Adding [before_actions and after_actions hooks](https://github.com/adomokos/light-service/pull/144).
 
