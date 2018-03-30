@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.10.2
+* [Revert 0.10.1](https://github.com/adomokos/light-service/pull/146), it breaks tests in our apps :-(.
+
 ### 0.10.1
 * [Fixing ContextFactory](https://github.com/adomokos/light-service/pull/141) for orchestrator methods in Organizers.
 
