@@ -257,12 +257,12 @@ Check out this example:
 
 ```ruby
 class LogDuration
-  def self.call(action, context)
+  def self.call(context)
     start_time = Time.now
     result = yield
     duration = Time.now - start_time
     LightService::Configuration.logger.info(
-      :action   => action,
+      :action   => context.current_action,
       :duration => duration
     )
 
