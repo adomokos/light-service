@@ -30,6 +30,15 @@ RSpec.describe TestDoubles::AddsThreeAction do
 
     expect(context.number).to eq(7)
   end
+
+  it "works with multiple arguments passed to Organizer's call method" do
+    context = LightService::Testing::ContextFactory
+              .make_from(TestDoubles::ExtraArgumentAdditionOrganizer)
+              .for(described_class)
+              .with(4, 2)
+
+    expect(context.number).to eq(9)
+  end
 end
 
 RSpec.describe TestDoubles::AddsTwoAction do

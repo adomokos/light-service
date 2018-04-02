@@ -223,6 +223,22 @@ module TestDoubles
     end
   end
 
+  class ExtraArgumentAdditionOrganizer
+    extend LightService::Organizer
+
+    def self.call(number, another_number)
+      with(:number => number + another_number).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsOneAction,
+        AddsTwoAction,
+        AddsThreeAction
+      ]
+    end
+  end
+
   class AddsOneAction
     extend LightService::Action
     expects :number
