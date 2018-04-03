@@ -1,6 +1,9 @@
 A brief list of new features and changes introduced with the specified version.
 
 ### 0.10.2
+* [Adding ContextFactory](https://github.com/adomokos/light-service/pull/147).
+
+### 0.10.2
 * [Revert 0.10.1](https://github.com/adomokos/light-service/pull/146), it breaks tests in our apps :-(.
 
 ### 0.10.1
