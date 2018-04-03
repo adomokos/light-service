@@ -13,7 +13,7 @@ class AdditionOrganizerContextFactory
 end
 
 RSpec.describe TestDoubles::AddsThreeAction do
-  it "creates a context for the action with ContextFactory wrapper" do
+  it 'creates a context for the action with ContextFactory wrapper' do
     context =
       AdditionOrganizerContextFactory
       .make_for(TestDoubles::AddsThreeAction, 1)
@@ -21,7 +21,7 @@ RSpec.describe TestDoubles::AddsThreeAction do
     expect(context.number).to eq(7)
   end
 
-  it "creates a context for the action using the ContextFactory" do
+  it 'creates a context for the action using the ContextFactory' do
     context =
       LightService::Testing::ContextFactory
       .make_from(TestDoubles::AdditionOrganizer)
@@ -42,7 +42,7 @@ RSpec.describe TestDoubles::AddsThreeAction do
 end
 
 RSpec.describe TestDoubles::AddsTwoAction do
-  it "does not execute a callback entirely from a ContextFactory" do
+  it 'does not execute a callback entirely from a ContextFactory' do
     context = LightService::Testing::ContextFactory
               .make_from(TestDoubles::CallbackOrganizer)
               .for(described_class)

@@ -64,4 +64,17 @@ RSpec.describe 'Action after_actions' do
       expect(result.fetch(:number)).to eq(1)
     end
   end
+
+  describe 'after_actions can be appended' do
+    it 'adds to the :_after_actions collection' do
+      TestDoubles::AdditionOrganizer.append_after_actions(
+        lambda do |ctx|
+          ctx.number -= 3 if ctx.current_action == TestDoubles::AddsThreeAction
+        end
+      )
+
+      result = TestDoubles::AdditionOrganizer.call(0)
+      expect(result.fetch(:number)).to eq(3)
+    end
+  end
 end

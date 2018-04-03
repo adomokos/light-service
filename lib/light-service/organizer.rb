@@ -63,6 +63,8 @@ module LightService
         @aliases = key_hash
       end
 
+      # This looks like an accessor,
+      # but it's used as a macro in the Organizer
       def before_actions(*logic)
         self.before_actions = logic
       end
@@ -71,12 +73,24 @@ module LightService
         @before_actions = [logic].flatten
       end
 
+      def append_before_actions(action)
+        @before_actions ||= []
+        @before_actions.push(action)
+      end
+
+      # This looks like an accessor,
+      # but it's used as a macro in the Organizer
       def after_actions(*logic)
         self.after_actions = logic
       end
 
       def after_actions=(logic)
         @after_actions = [logic].flatten
+      end
+
+      def append_after_actions(action)
+        @after_actions ||= []
+        @after_actions.push(action)
       end
     end
   end
