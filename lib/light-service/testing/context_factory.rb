@@ -1,17 +1,6 @@
 module LightService
   module Testing
     class ContextFactory
-      class ContextFactoryOrganizer
-        extend LightService::Organizer
-        class << self
-          attr_accessor :actions
-        end
-
-        def self.call(ctx)
-          with(ctx).reduce(actions)
-        end
-      end
-
       attr_reader :organizer
 
       def self.make_from(organizer)
@@ -19,24 +8,32 @@ module LightService
       end
 
       def for(action)
-        ContextFactoryOrganizer.actions = find_up_to(action)
+        @organizer.append_before_actions(
+          lambda do |ctx|
+            if ctx.current_action == action
+              # The last `:_before_actions` hook is for
+              # ContextFactory, remove it, so it won't
+              # be invoked again
+              ctx[:_before_actions].pop
+
+              throw(:return_ctx_from_execution, ctx)
+            end
+          end
+        )
+
         self
       end
 
-      def with(ctx)
-        ContextFactoryOrganizer.call(ctx)
+      # More than one arguments can be passed to the
+      # Organizer's #call method
+      def with(*args, &block)
+        catch(:return_ctx_from_execution) do
+          @organizer.call(*args, &block)
+        end
       end
 
       def initialize(organizer)
         @organizer = organizer
-      end
-
-      def find_up_to(action)
-        original_actions = organizer.actions
-
-        original_actions.take_while do |current_action|
-          current_action != action
-        end
       end
     end
   end
