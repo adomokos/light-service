@@ -1,6 +1,6 @@
 A brief list of new features and changes introduced with the specified version.
 
-### 0.10.2
+### 0.10.3
 * [Adding ContextFactory](https://github.com/adomokos/light-service/pull/147).
 
 ### 0.10.2
