@@ -44,20 +44,6 @@ describe LightService::Organizer do
     end
   end
 
-  context "when no starting context is specified" do
-    it "creates one implicitly" do
-      expect(TestDoubles::AnAction).to receive(:execute)
-        .with({})
-        .and_return(ctx)
-      expect(TestDoubles::AnotherAction).to receive(:execute)
-        .with(ctx)
-        .and_return(ctx)
-
-      expect { TestDoubles::AnOrganizer.do_something_with_no_starting_context }
-        .not_to raise_error
-    end
-  end
-
   context "when aliases are declared" do
     let(:organizer) do
       Class.new do

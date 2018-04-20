@@ -25,7 +25,7 @@ module LightService
         raise "No action(s) were provided" if actions.empty?
         actions.flatten!
 
-        actions.reduce(context) do |current_context, action|
+        actions.each_with_object(context) do |action, current_context|
           begin
             result = invoke_action(current_context, action)
           rescue FailWithRollbackError
