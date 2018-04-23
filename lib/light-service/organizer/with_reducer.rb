@@ -34,8 +34,6 @@ module LightService
             # For logging
             yield(current_context, action) if block_given?
           end
-
-          result
         end
       end
 
