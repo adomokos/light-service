@@ -69,4 +69,17 @@ describe LightService::Organizer do
       organizer.call
     end
   end
+
+  context "when an organizer is nested within another" do
+    it "Does not raise an error" do
+      expect { TestDoubles::NestingOrganizer.call(ctx) }
+        .to_not raise_error
+    end
+
+    it "adds :foo and :bar to the context" do
+      TestDoubles::NestingOrganizer.call(ctx)
+      expect(ctx[:foo]).to eq([1, 2, 3])
+      expect(ctx[:bar]).to eq(ctx[:foo])
+    end
+  end
 end

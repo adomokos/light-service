@@ -102,6 +102,32 @@ module TestDoubles
     end
   end
 
+  class NestedOrganizer
+    extend LightService::Organizer
+
+    def self.call(context)
+      context[:foo] = [1, 2, 3]
+    end
+  end
+
+  class NestingOrganizer
+    extend LightService::Organizer
+
+    def self.call(context)
+      with(context).reduce([NestedOrganizer, NestedAction])
+    end
+  end
+
+  class NestedAction
+    extend LightService::Action
+
+    expects :foo
+
+    executed do |context|
+      context[:bar] = context.foo
+    end
+  end
+
   class MakesTeaWithMilkAction
     extend LightService::Action
     expects :tea, :milk
