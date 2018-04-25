@@ -27,9 +27,9 @@ module LightService
 
         actions.each_with_object(context) do |action, current_context|
           begin
-            result = invoke_action(current_context, action)
+            invoke_action(current_context, action)
           rescue FailWithRollbackError
-            result = reduce_rollback(actions)
+            reduce_rollback(actions)
           ensure
             # For logging
             yield(current_context, action) if block_given?
