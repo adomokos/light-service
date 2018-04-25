@@ -102,7 +102,7 @@ module TestDoubles
     end
   end
 
-  class NestedOrganizer
+  class ReturningOrganizer
     extend LightService::Organizer
 
     def self.call(context)
@@ -114,7 +114,7 @@ module TestDoubles
     extend LightService::Organizer
 
     def self.call(context)
-      with(context).reduce([NestedOrganizer, NestedAction])
+      with(context).reduce([ReturningOrganizer, NestedAction])
     end
   end
 
