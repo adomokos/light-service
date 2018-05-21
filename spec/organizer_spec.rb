@@ -72,9 +72,12 @@ describe LightService::Organizer do
 
   context "when an organizer is nested and reduced within another" do
     let(:reduced) { TestDoubles::NestingOrganizer.call(ctx) }
+    let(:organizer_result) do
+      TestDoubles::NotExplicitlyReturningContextOrganizer.call(ctx)
+    end
 
     it "reduces an organizer which returns something" do
-      expect(TestDoubles::ReturningOrganizer.call(ctx)).to eq([1, 2, 3])
+      expect(organizer_result).to eq([1, 2, 3])
     end
 
     it "adds :foo and :bar to the context" do
