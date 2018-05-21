@@ -114,7 +114,11 @@ module TestDoubles
     extend LightService::Organizer
 
     def self.call(context)
-      with(context).reduce([NotExplicitlyReturningContextOrganizer, NestedAction])
+      with(context).reduce(actions)
+    end
+
+    def self.actions
+      [NotExplicitlyReturningContextOrganizer, NestedAction]
     end
   end
 
