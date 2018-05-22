@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.11.0
+* [Switch to 'each_with_object' in WithReducer](https://github.com/adomokos/light-service/pull/149).
+
 ### 0.10.3
 * [Adding ContextFactory](https://github.com/adomokos/light-service/pull/147).
 
