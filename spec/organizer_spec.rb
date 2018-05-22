@@ -44,20 +44,6 @@ describe LightService::Organizer do
     end
   end
 
-  context "when no starting context is specified" do
-    it "creates one implicitly" do
-      expect(TestDoubles::AnAction).to receive(:execute)
-        .with({})
-        .and_return(ctx)
-      expect(TestDoubles::AnotherAction).to receive(:execute)
-        .with(ctx)
-        .and_return(ctx)
-
-      expect { TestDoubles::AnOrganizer.do_something_with_no_starting_context }
-        .not_to raise_error
-    end
-  end
-
   context "when aliases are declared" do
     let(:organizer) do
       Class.new do
@@ -81,6 +67,27 @@ describe LightService::Organizer do
         .and_return(with_reducer)
 
       organizer.call
+    end
+  end
+
+  context "when an organizer is nested and reduced within another" do
+    let(:reduced) { TestDoubles::NestingOrganizer.call(ctx) }
+    let(:organizer_result) do
+      TestDoubles::NotExplicitlyReturningContextOrganizer.call(ctx)
+    end
+
+    it "reduces an organizer which returns something" do
+      expect(organizer_result).to eq([1, 2, 3])
+    end
+
+    it "adds :foo and :bar to the context" do
+      reduced
+      expect(ctx[:foo]).to eq([1, 2, 3])
+      expect(ctx[:bar]).to eq(ctx[:foo])
+    end
+
+    it "returns the context" do
+      expect(reduced).to eq(ctx)
     end
   end
 end
