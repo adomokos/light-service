@@ -63,6 +63,12 @@ RSpec.describe 'Action after_actions' do
 
       expect(result.fetch(:number)).to eq(1)
     end
+
+    it 'calls the callback more than once' do
+      result = AfterActions::AdditionOrganizer.call(0)
+
+      expect(result.fetch(:number)).to eq(6)
+    end
   end
 
   describe 'after_actions can be appended' do
