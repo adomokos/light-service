@@ -15,7 +15,6 @@ end
 require 'light-service'
 require 'light-service/testing'
 require 'ostruct'
-require 'active_support/core_ext/string'
 require 'pry'
 require 'support'
 
