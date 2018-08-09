@@ -294,14 +294,16 @@ Consider this code:
 class SomeOrganizer
   extend LightService::Organizer
 
-  def call(ctx)
+  def self.call(ctx)
     with(ctx).reduce(actions)
   end
 
-  def actions
-    OneAction,
-    TwoAction,
-    ThreeAction
+  def self.actions
+    [
+      OneAction,
+      TwoAction,
+      ThreeAction
+    ]
   end
 end
 
@@ -345,14 +347,16 @@ class SomeOrganizer
                           end
                         end)
 
-  def call(ctx)
+  def self.call(ctx)
     with(ctx).reduce(actions)
   end
 
-  def actions
-    OneAction,
-    TwoAction,
-    ThreeAction
+  def self.actions
+    [
+      OneAction,
+      TwoAction,
+      ThreeAction
+    ]
   end
 end
 
@@ -451,9 +455,9 @@ class AnOrganizer
 
   def self.call(order)
     with(:order => order).reduce(
-        AnAction,
-        AnotherAction,
-      )
+      AnAction,
+      AnotherAction,
+    )
   end
 end
 
