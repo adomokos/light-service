@@ -14,7 +14,7 @@ RSpec.describe LightService::Organizer do
         TestDoubles::AddsOneAction,
         execute(->(ctx) { ctx.number += 1 }),
         execute(->(ctx) { ctx[:something] = 'hello' }),
-        TestDoubles::AddsOneAction
+        TestDoubles::AddsOne.actions
       ]
     end
   end
