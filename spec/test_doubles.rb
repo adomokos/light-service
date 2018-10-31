@@ -269,6 +269,18 @@ module TestDoubles
     end
   end
 
+  class AddsOne
+    extend LightService::Organizer
+
+    def call(ctx)
+      with(ctx).reduce(actions)
+    end
+
+    def self.actions
+      [AddsOneAction]
+    end
+  end
+
   class AddsOneAction
     extend LightService::Action
     expects :number
