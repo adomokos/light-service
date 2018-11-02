@@ -8,7 +8,7 @@ module LightService
       def initialize(organizer, decorated = WithReducer.new)
         @decorated = decorated
         @organizer = organizer
-        @logger = LightService::Configuration.logger
+        @logger = organizer.logger || LightService::Configuration.logger
         @logged = false
       end
 

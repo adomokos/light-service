@@ -1,5 +1,8 @@
 A brief list of new features and changes introduced with the specified version.
 
+### Unreleased
+* [Per organizer logger](https://github.com/adomokos/light-service/pull/162)
+
 ### 0.11.0
 * [Switch to 'each_with_object' in WithReducer](https://github.com/adomokos/light-service/pull/149).
 

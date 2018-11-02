@@ -56,6 +56,14 @@ module LightService
       def with_callback(action, steps)
         WithCallback.run(self, action, steps)
       end
+
+      def log_with(logger)
+        @logger = logger
+      end
+
+      def logger
+        @logger
+      end
     end
 
     module Macros
