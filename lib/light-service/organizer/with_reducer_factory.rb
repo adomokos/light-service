@@ -6,13 +6,13 @@ module LightService
                  LightService::Configuration.logger
         decorated = WithReducer.new
 
-        if logger.nil?
-          # :nocov:
-          WithReducer.new
-          # :nocov:
-        else
-          WithReducerLogDecorator.new(monitored_organizer, WithReducer.new)
-        end
+        return decorated if logger.nil?
+
+        WithReducerLogDecorator.new(
+          monitored_organizer,
+          :decorated => decorated,
+          :logger => logger
+        )
       end
     end
   end
