@@ -3,8 +3,6 @@ require 'test_doubles'
 require 'stringio'
 
 describe "Logs from organizer" do
-  # NOTE: method name should probably change because it will only collect the
-  # globally set logger
   def collects_log
     original_logger = LightService::Configuration.logger
 
@@ -151,50 +149,6 @@ describe "Logs from organizer" do
                               "<TestDoubles::AddsTwoAction> has decided " \
                               "to skip the rest of the actions"
       expect(log_message).not_to include(organizer_log_message)
-    end
-  end
-
-  context "when overriding the global LightService organizer" do
-    let(:global_logger_organizer) do
-      Class.new do
-        extend LightService::Organizer
-
-        def self.call(number)
-          with(number: number).reduce(actions)
-        end
-
-        def self.actions
-          [
-            TestDoubles::AddsOneAction,
-            TestDoubles::AddsTwoAction,
-            TestDoubles::AddsThreeAction
-          ]
-        end
-      end
-    end
-
-    let(:custom_logger_string) { StringIO.new }
-    let(:custom_logger_organizer) do
-      custom_logger = Logger.new(custom_logger_string)
-
-      Class.new do
-        extend LightService::Organizer
-        log_with custom_logger
-
-        def self.call(coffee, this_hot = :very_hot)
-          with(:milk => this_hot, :coffee => coffee)
-            .reduce(TestDoubles::MakesLatteAction,
-                    TestDoubles::AddsTwoActionWithFetch)
-        end
-      end
-    end
-
-    it "logs in own logger" do
-      global_logger_organizer.call(1)
-      custom_logger_organizer.call(coffee: "Cappucino")
-
-      expect(custom_logger_string.string).to include("MakesLatteAction")
-      expect(custom_logger_string.string).to_not include("AddsOneAction")
     end
   end
 end
