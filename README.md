@@ -538,6 +538,15 @@ I, [DATE]  INFO -- : [LightService] - ;-) <TestDoubles::MakesLatteAction> has de
 I, [DATE]  INFO -- : [LightService] - context message: Can't make a latte with a fatty milk like that!
 ```
 
+You can specify the logger on the organizer level, so the organizer does not use the global logger.
+
+```ruby
+class FooOrganizer
+  extend LightService::Organizer
+  log_with Logger.new("/my/special.log")
+end
+```
+
 ## Error Codes
 You can add some more structure to your error handling by taking advantage of error codes in the context.
 Normally, when something goes wrong in your actions, you fail the process by setting the context to failure:

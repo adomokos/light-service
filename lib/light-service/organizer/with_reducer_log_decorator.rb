@@ -5,10 +5,10 @@ module LightService
 
       alias logged? logged
 
-      def initialize(organizer, decorated = WithReducer.new)
+      def initialize(organizer, decorated: WithReducer.new, logger:)
         @decorated = decorated
         @organizer = organizer
-        @logger = LightService::Configuration.logger
+        @logger = logger
         @logged = false
       end
 

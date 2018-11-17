@@ -17,5 +17,7 @@ require 'light-service/testing'
 require 'ostruct'
 require 'pry'
 require 'support'
+require 'test_doubles'
+require 'stringio'
 
 I18n.enforce_available_locales = true
