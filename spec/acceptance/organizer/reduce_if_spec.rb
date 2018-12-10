@@ -48,4 +48,36 @@ RSpec.describe LightService::Organizer do
     result = TestReduceIf.call(empty_context)
     expect(result).to be_success
   end
+
+  it 'skips actions within in its own scope' do
+    org = Class.new do
+      extend LightService::Organizer
+
+      def self.call
+        reduce(actions)
+      end
+
+      def self.actions
+        [
+          reduce_if(
+            ->(c) { !c.nil? },
+            [
+              execute(->(c) { c[:first_reduce_if] = true }),
+              execute(->(c) { c.skip_remaining! }),
+              execute(->(c) { c[:second_reduce_if] = true })
+            ]
+          ),
+          execute(->(c) { c[:last_outside] = true })
+        ]
+      end
+    end
+
+    result = org.call
+
+    aggregate_failures do
+      expect(result[:first_reduce_if]).to be true
+      expect(result[:second_reduce_if]).to be_nil
+      expect(result[:last_outside]).to be true
+    end
+  end
 end
