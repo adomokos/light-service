@@ -46,3 +46,6 @@ Metrics/BlockLength:
 
 Layout/TrailingBlankLines:
   Enabled: false
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
