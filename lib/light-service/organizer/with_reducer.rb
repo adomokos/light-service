@@ -27,12 +27,14 @@ module LightService
         actions.flatten!
 
         actions.each_with_object(context) do |action, current_context|
-          invoke_action(current_context, action)
-        rescue FailWithRollbackError
-          reduce_rollback(actions)
-        ensure
-          # For logging
-          yield(current_context, action) if block_given?
+          begin
+            invoke_action(current_context, action)
+          rescue FailWithRollbackError
+            reduce_rollback(actions)
+          ensure
+            # For logging
+            yield(current_context, action) if block_given?
+          end
         end
       end
 
