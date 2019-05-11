@@ -1,6 +1,6 @@
 A brief list of new features and changes introduced with the specified version.
 
-### Unreleased
+### 0.12.0
 * [Per organizer logger](https://github.com/adomokos/light-service/pull/162)
 * [Fix 'fail_and_return!' not accepting 'error_code' option](https://github.com/adomokos/light-service/pull/168)
 
