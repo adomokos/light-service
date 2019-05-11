@@ -1,4 +1,7 @@
+require: rubocop-performance
+
 AllCops:
+  TargetRubyVersion: 2.3
   Exclude:
     - 'lib/light-service.rb'
     - 'vendor/bundle/**/*'
