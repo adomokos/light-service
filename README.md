@@ -1,8 +1,8 @@
 ![LightService](https://raw.githubusercontent.com/adomokos/light-service/master/resources/light-service.png)
 
 [![Gem Version](https://img.shields.io/gem/v/light-service.svg)](https://rubygems.org/gems/light-service)
-[![Build Status](https://secure.travis-ci.org/adomokos/light-service.png)](http://travis-ci.org/adomokos/light-service)
-[![Code Climate](https://codeclimate.com/github/adomokos/light-service.png)](https://codeclimate.com/github/adomokos/light-service)
+[![Build Status](https://secure.travis-ci.org/adomokos/light-service.svg)](http://travis-ci.org/adomokos/light-service)
+[![Code Climate](https://codeclimate.com/github/adomokos/light-service.svg)](https://codeclimate.com/github/adomokos/light-service)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
 <br><br>
