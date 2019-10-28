@@ -16,7 +16,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = LightService::VERSION
 
-  gem.add_development_dependency("activesupport", ">= 5.2.2")
+  gem.add_runtime_dependency("activesupport", ">= 3.0.0")
+
   gem.add_development_dependency("rspec", "~> 3.0")
   gem.add_development_dependency("simplecov", "~> 0.16.1")
   gem.add_development_dependency("rubocop", "~> 0.68.0")
