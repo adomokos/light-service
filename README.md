@@ -78,7 +78,7 @@ Wouldn't it be nice to see this instead?
 (
   LooksUpTaxPercentage,
   CalculatesOrderTax,
-  ChecksFreeShipping
+  ProvidesFreeShipping
 )
 ```
 
