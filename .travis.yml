@@ -4,8 +4,7 @@ env:
   - RUN_COVERAGE_REPORT=true
 
 rvm:
-  - 2.3.3
-  - 2.4.1
+  - 2.4.2
   - 2.5.3
   - 2.6.0
 
