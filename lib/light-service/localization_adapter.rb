@@ -34,7 +34,7 @@ module LightService
       scope = i18n_scope_from_class(action_class, type)
       options[:scope] = scope
 
-      I18n.t(key, options)
+      I18n.t(key, **options)
     end
 
     def i18n_scope_from_class(action_class, type)
