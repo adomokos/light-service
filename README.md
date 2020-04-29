@@ -759,13 +759,15 @@ end
 
 This code is much easier to reason about, it's less noisy and it captures the goal of LightService well: simple, declarative code that's easy to understand.
 
-The 5 different orchestrator constructs an organizer can have:
+The 7 different orchestrator constructs an organizer can have:
 
 1. `reduce_until`
 2. `reduce_if`
 3. `iterate`
 4. `execute`
 5. `with_callback`
+6. `add_to_context`
+7. `add_aliases`
 
 `reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/organizer/reduce_until_spec.rb) to see how it's used.
 
@@ -776,6 +778,10 @@ The 5 different orchestrator constructs an organizer can have:
 To take advantage of another organizer or action, you might need to tweak the context a bit. Let's say you have a hash, and you need to iterate over its values in a series of action. To alter the context and have the values assigned into a variable, you need to create a new action with 1 line of code in it. That seems a lot of ceremony for a simple change. You can do that in a `execute` method like this `execute(->(ctx) { ctx[:some_values] = ctx.some_hash.values })`. [This test](spec/acceptance/organizer/execute_spec.rb) describes how you can use it.
 
 Use `with_callback` when you want to execute actions with a deferred and controlled callback. It works similar to a Sax parser, I've used it for processing large files. The advantage of it is not having to keep large amount of data in memory. See [this acceptance test](spec/acceptance/organizer/with_callback_spec.rb) as a working example.
+
+`add_to_context` can add key-value pairs on the fly to the context. This functionality is useful when you need a value injected into the context under a specific key right before the subsequent actions are executed. [This test](spec/acceptance/organizer/add_to_context_spec.rb) describes its functionality.
+
+Your action needs a certain key in the context but it's under a different one? Use the function `add_aliases` to alias an existing key in the context under the desired key. Take a look at [this test](spec/acceptance/organizer/add_aliases_spec.rb) to see an example.
 
 ## ContextFactory for Faster Action Testing
 

@@ -556,6 +556,16 @@ module TestDoubles
     end
   end
 
+  class CapitalizeMessage
+    extend LightService::Action
+    expects :a_message
+    promises :final_message
+
+    executed do |ctx|
+      ctx.final_message = ctx.a_message.upcase
+    end
+  end
+
   class AnOrganizerThatAddsToContext
     extend LightService::Organizer
     def self.call
@@ -564,8 +574,8 @@ module TestDoubles
 
     def self.actions
       [add_to_context(
-        :strongest_avenger => "The Thor",
-        :last_jedi => "Rey"
+        :strongest_avenger => 'The Thor',
+        :last_jedi => 'Rey'
       )]
     end
   end
