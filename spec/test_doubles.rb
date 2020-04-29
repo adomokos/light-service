@@ -563,9 +563,10 @@ module TestDoubles
     end
 
     def self.actions
-      [
-        add_to_context(:strongest_avenger => :thor)
-      ]
+      [add_to_context(
+        :strongest_avenger => "The Thor",
+        :last_jedi => "Rey"
+      )]
     end
   end
 
@@ -576,9 +577,7 @@ module TestDoubles
     end
 
     def self.actions
-      [
-        add_aliases(:foo => :baz)
-      ]
+      [add_aliases(:foo => :baz)]
     end
   end
 end

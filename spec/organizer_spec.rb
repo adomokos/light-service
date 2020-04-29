@@ -91,16 +91,18 @@ describe LightService::Organizer do
     end
   end
 
-  context "#add_to_context" do
-    it 'should add to the context' do
+  context 'can add items to the context' do
+    specify 'with #add_to_context' do
       result = TestDoubles::AnOrganizerThatAddsToContext.call
-      expect(result[:strongest_avenger]).to eq :thor
+      expect(result[:strongest_avenger]).to eq 'The Thor'
+      expect(result[:last_jedi]).to eq 'Rey'
     end
   end
 
-  context "#add_aliases" do
-    it 'should add to the aliases' do
+  context 'can assign key aliaeses' do
+    it 'with #add_aliases' do
       result = TestDoubles::AnOrganizerThatAddsAliases.call
+      expect(result[:foo]).to eq :bar
       expect(result[:baz]).to eq :bar
     end
   end
