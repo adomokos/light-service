@@ -90,4 +90,20 @@ describe LightService::Organizer do
       expect(reduced).to eq(ctx)
     end
   end
+
+  context 'can add items to the context' do
+    specify 'with #add_to_context' do
+      result = TestDoubles::AnOrganizerThatAddsToContext.call
+      expect(result[:strongest_avenger]).to eq 'The Thor'
+      expect(result[:last_jedi]).to eq 'Rey'
+    end
+  end
+
+  context 'can assign key aliaeses' do
+    it 'with #add_aliases' do
+      result = TestDoubles::AnOrganizerThatAddsAliases.call
+      expect(result[:foo]).to eq :bar
+      expect(result[:baz]).to eq :bar
+    end
+  end
 end

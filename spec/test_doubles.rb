@@ -555,4 +555,29 @@ module TestDoubles
       ctx.total += ctx.number
     end
   end
+
+  class AnOrganizerThatAddsToContext
+    extend LightService::Organizer
+    def self.call
+      with.reduce(actions)
+    end
+
+    def self.actions
+      [add_to_context(
+        :strongest_avenger => "The Thor",
+        :last_jedi => "Rey"
+      )]
+    end
+  end
+
+  class AnOrganizerThatAddsAliases
+    extend LightService::Organizer
+    def self.call
+      with(:foo => :bar).reduce(actions)
+    end
+
+    def self.actions
+      [add_aliases(:foo => :baz)]
+    end
+  end
 end
