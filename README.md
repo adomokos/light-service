@@ -624,7 +624,28 @@ Using the `rolled_back` macro is optional for the actions in the chain. You shou
 
 The actions are rolled back in reversed order from the point of failure starting with the action that triggered it.
 
-See [this](spec/acceptance/rollback_spec.rb) acceptance test to learn more about this functionality.
+See [this acceptance test](spec/acceptance/rollback_spec.rb) to learn more about this functionality.
+
+You may find yourself directly using an action that can roll back by calling `.execute` instead of using it from within an Organizer.
+If this action fails and attempts a rollback, a `FailWithRollbackError` exception will be raised. This is so that the organizer can
+rollback the actions one by one. If you don't want to wrap your call to the action with a `begin, rescue FailWithRollbackError`
+block, you can introspect the context like so, and keep your usage of the action clean:
+
+```ruby
+class FooAction
+  extend LightService::Action
+
+  executed do |context|
+    # context.organized_by will be nil if run from an action,
+    # or will be the class name if run from an organizer
+    if context.organized_by.nil?
+      context.fail!
+    else
+      context.fail_with_rollback!
+    end
+  end
+end
+```
 
 ## Localizing Messages
 By default LightService provides a mechanism for easily translating your error or success messages via I18n.  You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
