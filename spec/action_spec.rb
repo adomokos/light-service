@@ -68,6 +68,14 @@ describe LightService::Action do
     expect(result.to_hash).to eq(:number => 2)
   end
 
+  context "when called directly" do
+    it "is expected to not be organized" do
+      result = TestDoubles::AddsTwoActionWithFetch.execute(context)
+
+      expect(result.organized_by).to be_nil
+    end
+  end
+
   context "when invoked with hash" do
     it "creates LightService::Context implicitly" do
       ctx = { :some_key => "some value" }

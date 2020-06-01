@@ -19,6 +19,11 @@ describe LightService::Organizer do
       result = TestDoubles::AnOrganizer.call(:user => user)
       expect(result).to eq(ctx)
     end
+
+    it "sets itself as the organizer" do
+      result = TestDoubles::AnOrganizer.call(:user => user)
+      expect(result.organized_by).to eq TestDoubles::AnOrganizer
+    end
   end
 
   context "when #with is called with Context" do

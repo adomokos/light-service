@@ -20,6 +20,12 @@ RSpec.describe LightService::Organizer do
     expect(result.number).to eq(5)
   end
 
+  it "knows that it's being iterated from within an organizer" do
+    result = TestDoubles::TestIterate.call(:number => 1, :counters => [1, 2, 3, 4])
+
+    expect(result.organized_by).to eq TestDoubles::TestIterate
+  end
+
   it 'will not iterate over a failed context' do
     empty_context.fail!('Something bad happened')
 
