@@ -8,6 +8,9 @@ module LightService
       def initialize(organizer, decorated: WithReducer.new, logger:)
         @decorated = decorated
         @organizer = organizer
+
+        decorated.organizer = organizer
+
         @logger = logger
         @logged = false
       end

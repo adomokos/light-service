@@ -1,10 +1,16 @@
 module LightService
   module Organizer
     class WithReducer
-      attr_reader :context
+      attr_reader   :context
+      attr_accessor :organizer
+
+      def initialize(monitored_organizer = nil)
+        @organizer = monitored_organizer
+      end
 
       def with(data = {})
         @context = LightService::Context.make(data)
+        @context.organized_by = organizer
         self
       end
 
