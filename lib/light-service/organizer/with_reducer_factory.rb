@@ -4,7 +4,7 @@ module LightService
       def self.make(monitored_organizer)
         logger = monitored_organizer.logger ||
                  LightService::Configuration.logger
-        decorated = WithReducer.new
+        decorated = WithReducer.new(monitored_organizer)
 
         return decorated if logger.nil?
 
