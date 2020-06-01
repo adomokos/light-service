@@ -8,16 +8,17 @@ module LightService
 
   # rubocop:disable ClassLength
   class Context < Hash
-    attr_accessor :message, :error_code, :current_action
+    attr_accessor :message, :error_code, :current_action, :organized_by
 
     def initialize(context = {},
                    outcome = Outcomes::SUCCESS,
                    message = '',
                    error_code = nil)
-      @outcome = outcome
-      @message = message
-      @error_code = error_code
+      @outcome        = outcome
+      @message        = message
+      @error_code     = error_code
       @skip_remaining = false
+
       context.to_hash.each { |k, v| self[k] = v }
     end
 
