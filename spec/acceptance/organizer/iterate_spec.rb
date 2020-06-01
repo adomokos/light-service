@@ -21,7 +21,8 @@ RSpec.describe LightService::Organizer do
   end
 
   it "knows that it's being iterated from within an organizer" do
-    result = TestDoubles::TestIterate.call(:number => 1, :counters => [1, 2, 3, 4])
+    result = TestDoubles::TestIterate.call(:number => 1,
+                                           :counters => [1, 2, 3, 4])
 
     expect(result.organized_by).to eq TestDoubles::TestIterate
   end
