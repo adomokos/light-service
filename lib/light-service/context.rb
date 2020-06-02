@@ -14,9 +14,9 @@ module LightService
                    outcome = Outcomes::SUCCESS,
                    message = '',
                    error_code = nil)
-      @outcome        = outcome
-      @message        = message
-      @error_code     = error_code
+      @outcome = outcome
+      @message = message
+      @error_code = error_code
       @skip_remaining = false
 
       context.to_hash.each { |k, v| self[k] = v }
