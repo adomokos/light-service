@@ -41,7 +41,7 @@ RSpec.describe LightService::Organizer do
     expect(result).to be_success
   end
 
-  it "knows that it's being reduced from within an organizer" do
+  it "is expected to know its organizer when reducing until a condition" do
     result = TestReduceUntil.call(:number => 1)
 
     expect(result.organized_by).to eq TestReduceUntil
