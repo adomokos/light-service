@@ -50,10 +50,9 @@ RSpec.describe LightService::Organizer do
   end
 
   it "knows that it's being conditionally reduced from within an organizer" do
-    result = TestDoubles::TestIterate.call(:number => 1,
-                                           :counters => [1, 2, 3, 4])
+    result = TestReduceIf.call(:number => 2)
 
-    expect(result.organized_by).to eq TestDoubles::TestIterate
+    expect(result.organized_by).to eq TestReduceIf
   end
 
   it 'skips actions within in its own scope' do
