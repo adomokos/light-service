@@ -49,7 +49,7 @@ RSpec.describe LightService::Organizer do
     expect(result).to be_success
   end
 
-  it "knows that it's being reduced from within an organizer" do
+  it "knows that it's being conditionally reduced from within an organizer" do
     result = TestDoubles::TestIterate.call(:number => 1,
                                            :counters => [1, 2, 3, 4])
 
