@@ -1,0 +1,22 @@
+<%- indent = !@module_path.empty? ? '  ' : '' -%>
+# frozen_string_literal: true
+
+<%= "module #{@module_path}\n" unless @module_path.empty? -%>
+<%= "#{indent}class #{@class_name}" %>
+  <%= indent %>extend ::LightService::Organizer
+
+  <%= indent %>def self.call(params)
+  <%= indent %>  with(
+  <%= indent %>    #foo: params[:foo],
+  <%= indent %>    #bar: params[:bar]
+  <%= indent %>  ).reduce(actions)
+  <%= indent %>end
+
+  <%= indent %>def self.actions
+  <%= indent %>  [
+  <%= indent %>    #<%= "#{@module_path}::" if @module_path.present? %>OneAction,
+  <%= indent %>    #<%= "#{@module_path}::" if @module_path.present? %>TwoAction,
+  <%= indent %>  ]
+  <%= indent %>end
+<%= indent %>end
+<%= 'end' unless @module_path.empty? -%>
