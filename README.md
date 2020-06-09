@@ -862,7 +862,7 @@ In case your organizer has more logic in its `call` method, you could create you
 LightService includes Rails generators for creating both Organizers and Actions along with corresponding tests. Currently only RSpec is
 supported (PR's for supporting MiniTest are welcome)
 
-Note: Generators are namespaced to `light_service` not `light-service` do to Rake name constraints.
+Note: Generators are namespaced to `light_service` not `light-service` due to Rake name constraints.
 
 ### Organizer generation
 
@@ -896,11 +896,11 @@ Options for this generator are:
 You are able to optionally specify `expects` and/or `promises` keys during generation
 
 ```shell
-rails generate light_service:action My::SuperFancy::Action expects:one_fish,two_fish promises:red_fish,blue_fish
+rails generate light_service:action CrankWidget expects:one_fish,two_fish promises:red_fish,blue_fish
 ```
 
 When specifying `expects`, convenience variables will be initialised in the `executed` block so that you don't have to call them through the context. A stub
-context will also be created in the test file to get that boilerplate out the way.
+context will be created in the test file using these keys too.
 
 When specifying `promises`, specs will be created testing for their existence after executing the action.
 
