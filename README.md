@@ -28,7 +28,7 @@
 * [Localizing Messages](#localizing-messages)
 * [Orchestrator Logic in Organizers](#orchestrator-logic-in-organizers)
 * [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
-
+* [Rails support](#rails-support)
 
 ## Why LightService?
 
@@ -858,9 +858,56 @@ This context then can be passed to the action under test, freeing you up from th
 
 In case your organizer has more logic in its `call` method, you could create your own test organizer in your specs like you can see it in this [acceptance test](spec/acceptance/testing/context_factory_spec.rb#L4-L11). This is reusable in all your action tests.
 
+## Rails support
+
+LightService includes Rails generators for creating both Organizers and Actions along with corresponding tests. Currently only RSpec is
+supported (PR's for supporting MiniTest are welcome)
+
+Note: Generators are namespaced to `light_service` not `light-service` do to Rake name constraints.
+
+### Organizer generation
+
+```shell
+rails generate light_service:organizer My::SuperFancy::Organizer
+# -- or
+rails generate light_service:organizer my/super_fancy/organizer
+```
+
+Options for this generator are:
+
+* `--dir=<SOME_DIR>`. `<SOME_DIR>` defaults to `organizers`. Will write organizers to `/app/organizers`, and specs to `/spec/organizers`
+* `--no-tests`. Defaults is `--tests`. Will generate a test file matching the namespace you've supplied.
+
+### Action generation
+
+```shell
+rails generate light_service:action My::SuperFancy::Action
+# -- or
+rails generate light_service:action my/super_fancy/action
+```
+
+Options for this generator are:
+
+* `--dir=<SOME_DIR>`. `<SOME_DIR>` defaults to `actions`. Will write actions to `/app/actions`, and specs to `/spec/actions`
+* `--no-tests`. Defaults is `--tests`. Will generate a test file matching the namespace you've supplied.
+* `--no-roll-back`. Default is `--roll-back`. Will generate a `rolled_back` block for you to implement with [roll back functionality](#action-rollback).
+
+### Advanced action generation
+
+You are able to optionally specify `expects` and/or `promises` keys during generation
+
+```shell
+rails generate light_service:action My::SuperFancy::Action expects:one_fish,two_fish promises:red_fish,blue_fish
+```
+
+When specifying `expects`, convenience variables will be initialised in the `executed` block so that you don't have to call them through the context. A stub
+context will also be created in the test file to get that boilerplate out the way.
+
+When specifying `promises`, specs will be created testing for their existence after executing the action.
+
 ## Requirements
 
-This gem requires ruby 2.x
+This gem requires ruby 2.x. Use of generators requires Rails 5+ (tested on Rails 5.x & 6.x only. Will probably work on Rails versions as old as 3.2)
 
 ## Installation
 Add this line to your application's Gemfile:
