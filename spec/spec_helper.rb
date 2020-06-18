@@ -8,8 +8,10 @@ if ENV['RUN_COVERAGE_REPORT']
     add_filter 'vendor/'
     add_filter %r{^/spec/}
   end
-
   SimpleCov.minimum_coverage_by_file 90
+
+  require 'codecov'
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
 require 'light-service'
