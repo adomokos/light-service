@@ -18,6 +18,7 @@ before_install:
 script:
   - bundle exec rspec spec
   - bundle exec rubocop
+  - bash <(curl -s https://codecov.io/bash) 
 
 gemfile:
   - gemfiles/activesupport_3.gemfile
