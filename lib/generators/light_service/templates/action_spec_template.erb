@@ -16,13 +16,13 @@ RSpec.describe <%= @full_class_name %>, type: :action do
   end
 
   context "when executed" do
-    it "is expected to be successful" do
+    xit "is expected to be successful" do
       expect(subject).to be_a_success
     end
     <%- if @promises.any? -%>
     <%- @promises.each do |key| -%>
 
-    it "is expected to promise '<%= key %>'" do
+    xit "is expected to promise '<%= key %>'" do
       expect(subject.<%= key %>).to eq Some<%= key.classify %>Class
     end
     <%- end -%>
