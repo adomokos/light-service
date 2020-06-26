@@ -1,6 +1,10 @@
+require_relative './generator_utils'
+
 module LightService
   module Generators
     class OrganizerGenerator < Rails::Generators::Base
+      include GeneratorUtils
+
       argument :name, type: :string
 
       class_option :dir,   type: :string,  default: "organizers", desc: "Path to write organizers to"
@@ -48,29 +52,6 @@ module LightService
           make_nested_dir(spec_dir)
           template("organizer_spec_template.erb", spec_file)
         end
-      end
-
-      private
-
-      def make_nested_dir(dir)
-        FileUtils.mkdir_p(dir)
-      end
-
-      def supported_test_frameworks
-        %i[rspec]
-      end
-
-      def test_framework_supported?
-        supported_test_frameworks.include? test_framework
-      end
-
-      def test_framework
-        # Don't know a better way to get to this value, unfortunately.
-        Rails.application.config.generators.options[:rails][:test_framework]
-      end
-
-      def must_gen_tests?
-        options.tests? && test_framework_supported?
       end
     end
   end
