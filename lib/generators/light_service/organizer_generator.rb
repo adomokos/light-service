@@ -8,6 +8,20 @@ module LightService
 
       source_root File.expand_path('../templates', __FILE__)
 
+      desc <<~DESCRIPTION
+        Description:
+          Will create the boilerplate for an organizer. Pass it an organizer name, e.g.
+            thing_maker, or ThingMaker   - will create ThingMaker in app/organizers/thing_doer.rb
+            thing/maker, or Thing::Maker - will create Thing::Maker in app/organizers/thing/doer.rb
+
+        Options:
+          Skip rspec test creation with --no-tests
+          Write organizers to a specified dir with --dir="workflows". Default is "organizers" in app/organizers
+
+        Full Example:
+          rails g light_service:organizer My::Awesome::Organizer
+      DESCRIPTION
+
       def create_organzier
         path_parts = name.underscore.split('/')
 
