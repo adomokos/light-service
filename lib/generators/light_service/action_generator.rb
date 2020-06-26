@@ -10,6 +10,18 @@ module LightService
 
       source_root File.expand_path('../templates', __FILE__)
 
+      desc <<~DESCRIPTION
+        Description:
+          Will create the boilerplate for an action. Pass it an action name, e.g.
+            thing_doer, or ThingDoer   - will create ThingDoer in app/actions/thing_doer.rb
+            thing/doer, or Thing::Doer - will create Thing::Doer in app/actions/thing/doer.rb
+
+        Advanced usage:
+          Skip rspec test creation with --no-tests
+          Skip ActionRollback creation with --no-roll-back
+          Write actions to a specified dir with --dir="services". Default is "actions" in app/actions
+      DESCRIPTION
+
       def create_action
         path_parts = name.underscore.split('/')
 
