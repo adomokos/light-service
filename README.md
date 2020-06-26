@@ -861,7 +861,7 @@ In case your organizer has more logic in its `call` method, you could create you
 ## Rails support
 
 LightService includes Rails generators for creating both Organizers and Actions along with corresponding tests. Currently only RSpec is
-supported (PR's for supporting MiniTest are welcome)
+supported ([PR's for supporting MiniTest are welcome](https://github.com/adomokos/light-service/pulls))
 
 Note: Generators are namespaced to `light_service` not `light-service` due to Rake name constraints.
 
@@ -876,7 +876,7 @@ rails generate light_service:organizer my/super_fancy/organizer
 Options for this generator are:
 
 * `--dir=<SOME_DIR>`. `<SOME_DIR>` defaults to `organizers`. Will write organizers to `/app/organizers`, and specs to `/spec/organizers`
-* `--no-tests`. Defaults is `--tests`. Will generate a test file matching the namespace you've supplied.
+* `--no-tests`. Default is `--tests`. Will generate a test file matching the namespace you've supplied.
 
 ### Action generation
 
@@ -900,14 +900,15 @@ You are able to optionally specify `expects` and/or `promises` keys during gener
 rails generate light_service:action CrankWidget expects:one_fish,two_fish promises:red_fish,blue_fish
 ```
 
-When specifying `expects`, convenience variables will be initialised in the `executed` block so that you don't have to call them through the context. A stub
-context will be created in the test file using these keys too.
+When specifying `expects`, convenience variables will be initialised in the `executed` block so that you don't have to call
+them through the context. A stub context will be created in the test file using these keys too.
 
 When specifying `promises`, specs will be created testing for their existence after executing the action.
 
 ## Requirements
 
-This gem requires ruby 2.x. Use of generators requires Rails 5+ (tested on Rails 5.x & 6.x only. Will probably work on Rails versions as old as 3.2)
+This gem requires ruby 2.x. Use of generators requires Rails 5+ (tested on Rails 5.x & 6.x only. Will probably work on
+Rails versions as old as 3.2)
 
 ## Installation
 Add this line to your application's Gemfile:
