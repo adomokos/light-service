@@ -16,10 +16,25 @@ module LightService
             thing_doer, or ThingDoer   - will create ThingDoer in app/actions/thing_doer.rb
             thing/doer, or Thing::Doer - will create Thing::Doer in app/actions/thing/doer.rb
 
-        Advanced usage:
+        Expects & Promises:
+          Specify a list of expected context keys by passing expects and a comma separated
+          list of keys. Adds keys to the `expects` list, creates convenience variables in
+          the action, and generates a stub context in generated specs.
+
+            expects:foo,bar,baz
+
+          Specify promised context keys in the same manner as 'expects' above. This adds
+          keys to the `promises` list, and creates stub expectations in generated specs.
+
+            promises:quux,quark
+
+        Options:
           Skip rspec test creation with --no-tests
           Skip ActionRollback creation with --no-roll-back
           Write actions to a specified dir with --dir="services". Default is "actions" in app/actions
+
+        Full Example:
+          rails g light_service:action My::Awesome::Action expects:foo,bar promises:baz,qux
       DESCRIPTION
 
       def create_action
