@@ -42,30 +42,28 @@ module LightService
       DESCRIPTION
 
       def create_action
-        path_parts = name.underscore.split('/')
+        gen_vals = create_required_gen_vals_from(name)
 
-        action_root = options.dir.downcase
-        file_name   = "#{path_parts.last}.rb"
-        file_path   = path_parts.reverse.drop(1).reverse
+        @module_path     = gen_vals[:module_path]
+        @class_name      = gen_vals[:class_name]
+        @full_class_name = gen_vals[:full_class_name]
+        @expects         = keys["expects"].to_s.downcase.split(',')
+        @promises        = keys["promises"].to_s.downcase.split(',')
 
-        @module_path = path_parts.reverse.drop(1).reverse.join('/').classify
-        @class_name  = path_parts.last.classify
+        file_name = gen_vals[:file_name]
+        file_path = gen_vals[:file_path]
 
-        @expects  = keys["expects"].to_s.downcase.split(',')
-        @promises = keys["promises"].to_s.downcase.split(',')
-
-        action_dir  = Rails.root.join('app', action_root, *file_path)
+        root_dir    = options.dir.downcase
+        action_dir  = Rails.root.join('app', root_dir, *file_path)
         action_file = action_dir + file_name
 
         make_nested_dir(action_dir)
         template("action_template.erb", action_file)
 
         if must_gen_tests?
-          spec_dir       = Rails.root.join('spec', action_root, *file_path)
-          spec_file_name = "#{path_parts.last}_spec.rb"
+          spec_dir       = Rails.root.join('spec', root_dir, *file_path)
+          spec_file_name = gen_vals[:spec_file_name]
           spec_file      = spec_dir + spec_file_name
-
-          @full_class_name = name.classify
 
           make_nested_dir(spec_dir)
           template("action_spec_template.erb", spec_file)
