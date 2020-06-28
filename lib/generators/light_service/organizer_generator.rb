@@ -38,7 +38,7 @@ module LightService
 
         root_dir       = options.dir.downcase
         organizer_dir  = File.join('app', root_dir, *file_path)
-        organizer_file = organizer_dir + file_name
+        organizer_file = "#{organizer_dir}/#{file_name}"
 
         make_nested_dir(organizer_dir)
         template("organizer_template.erb", organizer_file)
@@ -46,7 +46,7 @@ module LightService
         if must_gen_tests?
           spec_dir       = File.join('spec', root_dir, *file_path)
           spec_file_name = gen_vals[:spec_file_name]
-          spec_file      = spec_dir + spec_file_name
+          spec_file      = "#{spec_dir}/#{spec_file_name}"
 
           make_nested_dir(spec_dir)
           template("organizer_spec_template.erb", spec_file)
