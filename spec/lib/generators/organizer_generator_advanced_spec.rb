@@ -19,7 +19,7 @@ describe LightService::Generators::OrganizerGenerator, :type => :generator do
     arguments %w[my/fancy/organizer --dir=processes]
 
     specify do
-      expect(destination_root).to have_structure {
+      expect(destination_root).to(have_structure do
         directory "app/processes/my/fancy" do
           file "organizer.rb" do
             contains FullGeneratorTestBlobs.advanced_organizer_blob
@@ -31,7 +31,7 @@ describe LightService::Generators::OrganizerGenerator, :type => :generator do
             contains FullGeneratorTestBlobs.advanced_organizer_spec_blob
           end
         end
-      }
+      end)
     end
   end
 end

@@ -19,7 +19,7 @@ describe LightService::Generators::ActionGenerator, :type => :generator do
     arguments %w[my_action]
 
     specify do
-      expect(destination_root).to have_structure {
+      expect(destination_root).to(have_structure do
         directory "app/actions" do
           file "my_action.rb" do
             contains FullGeneratorTestBlobs.simple_action_blob
@@ -31,7 +31,7 @@ describe LightService::Generators::ActionGenerator, :type => :generator do
             contains FullGeneratorTestBlobs.simple_action_spec_blob
           end
         end
-      }
+      end)
     end
   end
 end

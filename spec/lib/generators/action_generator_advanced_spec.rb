@@ -25,7 +25,7 @@ describe LightService::Generators::ActionGenerator, :type => :generator do
     ]
 
     specify do
-      expect(destination_root).to have_structure {
+      expect(destination_root).to(have_structure do
         directory "app/services/my/fancy" do
           file "action.rb" do
             contains FullGeneratorTestBlobs.advanced_action_blob
@@ -37,7 +37,7 @@ describe LightService::Generators::ActionGenerator, :type => :generator do
             contains FullGeneratorTestBlobs.advanced_action_spec_blob
           end
         end
-      }
+      end)
     end
   end
 end
