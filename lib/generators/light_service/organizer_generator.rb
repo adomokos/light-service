@@ -33,6 +33,7 @@ module LightService
           rails g light_service:organizer My::Awesome::Organizer
       DESCRIPTION
 
+      # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       def create_organzier
         gen_vals = create_required_gen_vals_from(name)
 
@@ -59,6 +60,7 @@ module LightService
         make_nested_dir(spec_dir)
         template("organizer_spec_template.erb", spec_file)
       end
+      # rubocop:enable Metrics/MethodLength,Metrics/AbcSize
     end
   end
 end

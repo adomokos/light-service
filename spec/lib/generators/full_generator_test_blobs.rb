@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength
 module FullGeneratorTestBlobs
   def simple_action_blob
     <<~BLOB
@@ -173,3 +174,4 @@ module FullGeneratorTestBlobs
     BLOB
   end
 end
+# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength
