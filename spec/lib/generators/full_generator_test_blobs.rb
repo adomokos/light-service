@@ -7,7 +7,6 @@ class FullGeneratorTestBlobs
       class MyAction
         extend ::LightService::Action
 
-
         executed do |ctx|
         end
 
