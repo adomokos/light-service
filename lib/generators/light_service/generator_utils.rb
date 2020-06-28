@@ -13,9 +13,12 @@ module LightService
         supported_test_frameworks.include? test_framework
       end
 
+      # Don't know a better way to get to this value, unfortunately.
       def test_framework
-        # Don't know a better way to get to this value, unfortunately.
-        Rails.application.config.generators.options[:rails][:test_framework]
+        #Rails.application.config.generators.options[:rails][:test_framework]
+        # When/if Minitest is supported, this will need to be updated to detect
+        # the selected test framework, and switch templates accordingly
+        :rspec
       end
 
       def must_gen_tests?
