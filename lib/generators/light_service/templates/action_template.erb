@@ -11,7 +11,9 @@
   <%- if @promises.any? -%>
   <%= indent %>promises <%= @promises.map { |k| ":#{k}" }.join(', ') %>
   <%- end -%>
+  <%- if (@expects + @promises).any? -%>
 
+  <%- end -%>
   <%= indent %>executed do |ctx|
     <%- if @expects.any? -%>
     <%- @expects.each do |key| -%>
