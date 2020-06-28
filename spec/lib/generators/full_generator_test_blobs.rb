@@ -1,6 +1,6 @@
-# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength
-module FullGeneratorTestBlobs
-  def simple_action_blob
+# rubocop:disable Metrics/ClassLength, Metrics/MethodLength
+class FullGeneratorTestBlobs
+  def self.simple_action_blob
     <<~BLOB
       # frozen_string_literal: true
 
@@ -17,7 +17,7 @@ module FullGeneratorTestBlobs
     BLOB
   end
 
-  def simple_action_spec_blob
+  def self.simple_action_spec_blob
     <<~BLOB
       # frozen_string_literal: true
 
@@ -42,7 +42,7 @@ module FullGeneratorTestBlobs
 
   # There's some weird whitespace issue which prevents
   # using HEREDOCS :(
-  def advanced_action_blob
+  def self.advanced_action_blob
     "# frozen_string_literal: true\n" \
       "\n" \
       "module My::Fancy\n" \
@@ -60,7 +60,7 @@ module FullGeneratorTestBlobs
       "end"
   end
 
-  def advanced_action_spec_blob
+  def self.advanced_action_spec_blob
     <<~BLOB
       # frozen_string_literal: true
 
@@ -93,7 +93,7 @@ module FullGeneratorTestBlobs
     BLOB
   end
 
-  def simple_organizer_blob
+  def self.simple_organizer_blob
     <<~BLOB
       # frozen_string_literal: true
 
@@ -117,7 +117,7 @@ module FullGeneratorTestBlobs
     BLOB
   end
 
-  def simple_organizer_spec_blob
+  def self.simple_organizer_spec_blob
     <<~BLOB
       # frozen_string_literal: true
 
@@ -142,7 +142,7 @@ module FullGeneratorTestBlobs
     BLOB
   end
 
-  def advanced_organizer_blob
+  def self.advanced_organizer_blob
     "# frozen_string_literal: true\n" \
       "\n" \
       "module My::Fancy\n" \
@@ -166,7 +166,7 @@ module FullGeneratorTestBlobs
       "end"
   end
 
-  def advanced_organizer_spec_blob
+  def self.advanced_organizer_spec_blob
     <<~BLOB
       # frozen_string_literal: true
 
@@ -191,4 +191,4 @@ module FullGeneratorTestBlobs
     BLOB
   end
 end
-# rubocop:enable Metrics/ModuleLength, Metrics/MethodLength
+# rubocop:enable Metrics/ClassLength, Metrics/MethodLength
