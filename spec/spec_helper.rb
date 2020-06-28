@@ -21,5 +21,7 @@ require 'pry'
 require 'support'
 require 'test_doubles'
 require 'stringio'
+require 'fileutils'
+require 'generator_spec'
 
 I18n.enforce_available_locales = true
