@@ -3,8 +3,6 @@ require 'spec_helper'
 require_relative '../../../lib/generators/light_service/organizer_generator.rb'
 require_relative './full_generator_test_blobs'
 
-include FullGeneratorTestBlobs
-
 describe LightService::Generators::OrganizerGenerator, :type => :generator do
   destination File.expand_path('tmp', __dir__)
 
@@ -24,13 +22,13 @@ describe LightService::Generators::OrganizerGenerator, :type => :generator do
       expect(destination_root).to have_structure {
         directory "app/organizers" do
           file "my_organizer.rb" do
-            contains simple_organizer_blob
+            contains FullGeneratorTestBlobs.simple_organizer_blob
           end
         end
 
         directory "spec/organizers" do
           file "my_organizer_spec.rb" do
-            contains simple_organizer_spec_blob
+            contains FullGeneratorTestBlobs.simple_organizer_spec_blob
           end
         end
       }
