@@ -55,6 +55,7 @@ module LightService
           rails g light_service:action My::Awesome::Action expects:foo,bar promises:baz,qux
       DESCRIPTION
 
+      # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
       def create_action
         gen_vals = create_required_gen_vals_from(name)
 
@@ -83,6 +84,7 @@ module LightService
         make_nested_dir(spec_dir)
         template("action_spec_template.erb", spec_file)
       end
+      # rubocop:enable Metrics/MethodLength,Metrics/AbcSize
     end
   end
 end
