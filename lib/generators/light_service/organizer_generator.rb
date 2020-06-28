@@ -5,12 +5,12 @@ module LightService
     class OrganizerGenerator < Rails::Generators::Base
       include GeneratorUtils
 
-      argument :name, type: :string
+      argument :name, :type => :string
 
-      class_option :dir,   type: :string,  default: "organizers", desc: "Path to write organizers to"
-      class_option :tests, type: :boolean, default: true,         desc: "Generate test files (currently only RSpec supported)"
+      class_option :dir,   :type => :string,  :default => "organizers", :desc => "Path to write organizers to"
+      class_option :tests, :type => :boolean, :default => true,         :desc => "Generate test files (currently only RSpec supported)"
 
-      source_root File.expand_path('../templates', __FILE__)
+      source_root File.expand_path('templates', __dir__)
 
       desc <<~DESCRIPTION
         Description:
