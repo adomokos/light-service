@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'generator_spec'
 
 require_relative '../../../lib/generators/light_service/action_generator.rb'
 require_relative './full_generator_test_blobs'
@@ -13,6 +12,10 @@ describe LightService::Generators::ActionGenerator, type: :generator do
     before(:all) do
       prepare_destination
       run_generator
+    end
+
+    after(:all) do
+      FileUtils.rm_rf destination_root
     end
 
     arguments %w(my_action)
