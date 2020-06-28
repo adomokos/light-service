@@ -5,8 +5,8 @@ require_relative './full_generator_test_blobs'
 
 include FullGeneratorTestBlobs
 
-describe LightService::Generators::ActionGenerator, type: :generator do
-  destination File.expand_path("../tmp", __FILE__)
+describe LightService::Generators::ActionGenerator, :type => :generator do
+  destination File.expand_path('tmp', __dir__)
 
   context "when generating an advanced action" do
     before(:all) do
@@ -18,7 +18,7 @@ describe LightService::Generators::ActionGenerator, type: :generator do
       FileUtils.rm_rf destination_root
     end
 
-    arguments %w(my/fancy/action expects:foo,bar promises:baz,qux --no-roll-back --dir=services)
+    arguments %w[my/fancy/action expects:foo,bar promises:baz,qux --no-roll-back --dir=services]
 
     specify do
       expect(destination_root).to have_structure {

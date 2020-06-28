@@ -5,14 +5,14 @@ module LightService
     class ActionGenerator < Rails::Generators::Base
       include GeneratorUtils
 
-      argument :name, type: :string
-      argument :keys, type: :hash, default: { "expects"  => '', "promises" => '' }, banner: "expects:one,thing promises:something,else"
+      argument :name, :type => :string
+      argument :keys, :type => :hash, :default => { "expects" => '', "promises" => '' }, :banner => "expects:one,thing promises:something,else"
 
-      class_option :dir,       type: :string,  default: "actions", desc: "Path to write actions to"
-      class_option :tests,     type: :boolean, default: true,      desc: "Generate test files (currently only RSpec supported)"
-      class_option :roll_back, type: :boolean, default: true,      desc: "Add a roll back block"
+      class_option :dir,       :type => :string,  :default => "actions", :desc => "Path to write actions to"
+      class_option :tests,     :type => :boolean, :default => true,      :desc => "Generate test files (currently only RSpec supported)"
+      class_option :roll_back, :type => :boolean, :default => true,      :desc => "Add a roll back block"
 
-      source_root File.expand_path('../templates', __FILE__)
+      source_root File.expand_path('templates', __dir__)
 
       desc <<~DESCRIPTION
         Description:
