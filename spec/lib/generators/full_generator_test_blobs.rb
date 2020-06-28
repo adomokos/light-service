@@ -63,23 +63,29 @@ module FullGeneratorTestBlobs
   def advanced_action_spec_blob
     <<~BLOB
       # frozen_string_literal: true
-       require 'rails_helper'
-       RSpec.describe My::Fancy::Action, type: :action do
+
+      require 'rails_helper'
+
+      RSpec.describe My::Fancy::Action, type: :action do
         subject { described_class.execute(ctx) }
-         let(:ctx) do
+
+        let(:ctx) do
           {
             foo: nil,
             bar: nil,
           }
         end
-         context "when executed" do
+
+        context "when executed" do
           xit "is expected to be successful" do
             expect(subject).to be_a_success
           end
-           xit "is expected to promise 'baz'" do
+
+          xit "is expected to promise 'baz'" do
             expect(subject.baz).to eq SomeBazClass
           end
-           xit "is expected to promise 'qux'" do
+
+          xit "is expected to promise 'qux'" do
             expect(subject.qux).to eq SomeQuxClass
           end
         end
@@ -90,15 +96,18 @@ module FullGeneratorTestBlobs
   def simple_organizer_blob
     <<~BLOB
       # frozen_string_literal: true
-       class MyOrganizer
+
+      class MyOrganizer
         extend ::LightService::Organizer
-         def self.call(params)
+
+        def self.call(params)
           with(
             #foo: params[:foo],
             #bar: params[:bar]
           ).reduce(actions)
         end
-         def self.actions
+
+        def self.actions
           [
             #OneAction,
             #TwoAction,
@@ -111,16 +120,20 @@ module FullGeneratorTestBlobs
   def simple_organizer_spec_blob
     <<~BLOB
       # frozen_string_literal: true
-       require 'rails_helper'
-       RSpec.describe MyOrganizer, type: :organizer do
+
+      require 'rails_helper'
+
+      RSpec.describe MyOrganizer, type: :organizer do
         subject { described_class.call(ctx) }
-         let(:ctx) do
+
+        let(:ctx) do
           {
             #foo: 'something foo',
             #bar: { baz: qux },
           }
         end
-         context "when called" do
+
+        context "when called" do
           xit "is expected to be successful" do
             expect(subject).to be_a_success
           end
@@ -156,16 +169,20 @@ module FullGeneratorTestBlobs
   def advanced_organizer_spec_blob
     <<~BLOB
       # frozen_string_literal: true
-       require 'rails_helper'
-       RSpec.describe My::Fancy::Organizer, type: :organizer do
+
+      require 'rails_helper'
+
+      RSpec.describe My::Fancy::Organizer, type: :organizer do
         subject { described_class.call(ctx) }
-         let(:ctx) do
+
+        let(:ctx) do
           {
             #foo: 'something foo',
             #bar: { baz: qux },
           }
         end
-         context "when called" do
+
+        context "when called" do
           xit "is expected to be successful" do
             expect(subject).to be_a_success
           end
