@@ -19,7 +19,7 @@ describe LightService::Generators::OrganizerGenerator, :type => :generator do
     arguments %w[my_organizer]
 
     specify do
-      expect(destination_root).to have_structure {
+      expect(destination_root).to(have_structure do
         directory "app/organizers" do
           file "my_organizer.rb" do
             contains FullGeneratorTestBlobs.simple_organizer_blob
@@ -31,7 +31,7 @@ describe LightService::Generators::OrganizerGenerator, :type => :generator do
             contains FullGeneratorTestBlobs.simple_organizer_spec_blob
           end
         end
-      }
+      end)
     end
   end
 end
