@@ -6,11 +6,25 @@ module LightService
       include GeneratorUtils
 
       argument :name, :type => :string
-      argument :keys, :type => :hash, :default => { "expects" => '', "promises" => '' }, :banner => "expects:one,thing promises:something,else"
+      argument :keys,
+               :type => :hash,
+               :default => { "expects" => '', "promises" => '' },
+               :banner => "expects:one,thing promises:something,else"
 
-      class_option :dir,       :type => :string,  :default => "actions", :desc => "Path to write actions to"
-      class_option :tests,     :type => :boolean, :default => true,      :desc => "Generate test files (currently only RSpec supported)"
-      class_option :roll_back, :type => :boolean, :default => true,      :desc => "Add a roll back block"
+      class_option :dir,
+                   :type => :string,
+                   :default => "actions",
+                   :desc => "Path to write actions to"
+
+      class_option :tests,
+                   :type => :boolean,
+                   :default => true,
+                   :desc => "Generate tests (currently only RSpec supported)"
+
+      class_option :roll_back,
+                   :type => :boolean,
+                   :default => true,
+                   :desc => "Add a roll back block"
 
       source_root File.expand_path('templates', __dir__)
 
@@ -60,14 +74,14 @@ module LightService
         make_nested_dir(action_dir)
         template("action_template.erb", action_file)
 
-        if must_gen_tests?
-          spec_dir       = File.join('spec', root_dir, *file_path)
-          spec_file_name = gen_vals[:spec_file_name]
-          spec_file      = "#{spec_dir}/#{spec_file_name}"
+        return unless must_gen_tests?
 
-          make_nested_dir(spec_dir)
-          template("action_spec_template.erb", spec_file)
-        end
+        spec_dir       = File.join('spec', root_dir, *file_path)
+        spec_file_name = gen_vals[:spec_file_name]
+        spec_file      = "#{spec_dir}/#{spec_file_name}"
+
+        make_nested_dir(spec_dir)
+        template("action_spec_template.erb", spec_file)
       end
     end
   end

@@ -7,8 +7,15 @@ module LightService
 
       argument :name, :type => :string
 
-      class_option :dir,   :type => :string,  :default => "organizers", :desc => "Path to write organizers to"
-      class_option :tests, :type => :boolean, :default => true,         :desc => "Generate test files (currently only RSpec supported)"
+      class_option :dir,
+                   :type => :string,
+                   :default => "organizers",
+                   :desc => "Path to write organizers to"
+
+      class_option :tests,
+                   :type => :boolean,
+                   :default => true,
+                   :desc => "Generate tests (currently only RSpec supported)"
 
       source_root File.expand_path('templates', __dir__)
 
@@ -43,14 +50,14 @@ module LightService
         make_nested_dir(organizer_dir)
         template("organizer_template.erb", organizer_file)
 
-        if must_gen_tests?
-          spec_dir       = File.join('spec', root_dir, *file_path)
-          spec_file_name = gen_vals[:spec_file_name]
-          spec_file      = "#{spec_dir}/#{spec_file_name}"
+        return unless must_gen_tests?
 
-          make_nested_dir(spec_dir)
-          template("organizer_spec_template.erb", spec_file)
-        end
+        spec_dir       = File.join('spec', root_dir, *file_path)
+        spec_file_name = gen_vals[:spec_file_name]
+        spec_file      = "#{spec_dir}/#{spec_file_name}"
+
+        make_nested_dir(spec_dir)
+        template("organizer_spec_template.erb", spec_file)
       end
     end
   end

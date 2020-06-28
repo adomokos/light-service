@@ -18,7 +18,13 @@ describe LightService::Generators::ActionGenerator, :type => :generator do
       FileUtils.rm_rf destination_root
     end
 
-    arguments %w[my/fancy/action expects:foo,bar promises:baz,qux --no-roll-back --dir=services]
+    arguments %w[
+      my/fancy/action
+      expects:foo,bar
+      promises:baz,qux
+      --no-roll-back
+      --dir=services
+    ]
 
     specify do
       expect(destination_root).to have_structure {
