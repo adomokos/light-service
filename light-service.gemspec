@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("appraisal", "~> 2.3")
   gem.add_development_dependency("generator_spec", "~> 0.9.4")
   gem.add_development_dependency("test-unit", "~> 3.0") # Needed for generator specs.
+  gem.add_development_dependency("appraisal", "~> 2.3")
   gem.add_development_dependency("rspec", "~> 3.0")
   gem.add_development_dependency("simplecov", "~> 0.17")
   gem.add_development_dependency("codecov", "~> 0.1")
