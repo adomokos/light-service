@@ -900,7 +900,7 @@ You are able to optionally specify `expects` and/or `promises` keys during gener
 rails generate light_service:action CrankWidget expects:one_fish,two_fish promises:red_fish,blue_fish
 ```
 
-When specifying `expects`, convenience variables will be initialised in the `executed` block so that you don't have to call
+When specifying `expects`, convenience variables will be initialized in the `executed` block so that you don't have to call
 them through the context. A stub context will be created in the test file using these keys too.
 
 When specifying `promises`, specs will be created testing for their existence after executing the action.
