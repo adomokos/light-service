@@ -22,8 +22,8 @@ module LightService
       desc <<~DESCRIPTION
         Description:
           Will create the boilerplate for an organizer. Pass it an organizer name, e.g.
-            thing_maker, or ThingMaker   - will create ThingMaker in app/organizers/thing_doer.rb
-            thing/maker, or Thing::Maker - will create Thing::Maker in app/organizers/thing/doer.rb
+            thing_maker, or ThingMaker   - will create ThingMaker in app/organizers/thing_maker.rb
+            thing/maker, or Thing::Maker - will create Thing::Maker in app/organizers/thing/maker.rb
 
         Options:
           Skip rspec test creation with --no-tests
