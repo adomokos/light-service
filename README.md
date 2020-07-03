@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 [![Download Count](https://ruby-gem-downloads-badge.herokuapp.com/light-service?type=total)](https://rubygems.org/gems/light-service)
 
-<br><br>
+<br>
 
 ![Orchestrators-Deprecated](resources/orchestrators_deprecated.svg)
 <br>Version 0.9.0 deprecates Orchestrators and moves all their functionalities into Organizers. Please check out [this PR](https://github.com/adomokos/light-service/pull/132) to see the changes.
@@ -16,6 +16,10 @@
 
 ## Table of Content
 * [Why LightService?](#why-lightservice)
+* [Getting Started](#getting-started)
+    * [Installation](#installation)
+    * [Your first action](#your-first-action)
+    * [Your first organizer](#your-first-organizer)
 * [Stopping the Series of Actions](#stopping-the-series-of-actions)
     * [Failing the Context](#failing-the-context)
     * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
@@ -176,7 +180,113 @@ end
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
+## Getting started
 
+### Installation
+
+In your Gemfile:
+
+```ruby
+gem 'light-service'
+```
+
+And then
+
+```shell
+bundle install
+```
+
+### Your first action
+
+LightService's building blocks are actions that should normally be composed, but can be run independently. Let's make a simple
+greeter action. Each action can take an optional list of expected inputs and promised outputs. If these are specified
+and missing at action start and stop respectively, an exception will be thrown.
+
+```ruby
+class GreetsPerson
+  extend ::LightService::Action
+
+  expects :name
+  promises :greeting
+
+  executed do |context|
+    context.greeting = "Hey there, #{name}. You enjoying LightService so far?"
+  end
+end
+```
+
+When an action is run, you have access to its returned context, and the status of the action. You can invoke an
+action by calling `.execute` on its class with `key: value` arguments, and inspect its status and context like so:
+
+```ruby
+outcome = GreetsPerson.execute(name: "Han")
+
+if outcome.success?
+  puts outcome.greeting # which was a promised context value
+else # outcome.failure? would == true
+  puts "Rats... I can't say hello to you"
+end
+```
+
+### Your first organizer
+
+LightService provides a facility to compose actions. There are advanced ways to sequence actions below, but
+we'll keep this simple for now.
+
+Let's add second action that we can sequence to run after the `GreetsPerson` action from above:
+
+```ruby
+class RandomlyAwardsPrize
+  extend ::LightService::Action
+
+  expects :name, :greeting
+  promises :did_i_win
+
+  executed do |context|
+    prize_num = "#{context.name}__#{context.greeting}".length
+    did_i_win = (1..prize_num) % 7 == 0
+    prizes = ["jelly beans", "ice cream", "pie"]
+
+    #  # you can specify 'optional' context items by treating context like a hash.
+    context[:prize] = "lifetime supply of #{prizes.sample}" if did_i_win
+    context.did_i_win = did_i_win
+  end
+end
+```
+
+And here's the organizer that ties the two together. You implement a `.call` method that takes some arguments and
+from there sends them to `with` in `key: value` format. From there, chain `reduce` to `with` and send it a list of
+class names in sequence. The organizer will call each action one after the other, and build up the context as it goes along.
+
+```ruby
+class WelcomeAPotentiallyLuckyPerson
+  extend LightService::Organizer
+
+  def self.call(name)
+    with(:name => name).reduce(GreetsPerson, RandomlyAwardsPrize)
+  end
+end
+```
+
+When an organizer is run, you have access to the context as it passed through all actions, and the overall status
+of the organized execution. You can invoke an organizer by calling `.call` on it with the expected arguments,
+and inspect its status and context just like you would an action:
+
+```ruby
+outcome = WelcomeAPotentiallyLuckyPerson.call("Han")
+
+if outcome.success?
+  puts outcome.greeting # which was a promised context value
+
+  if outcome.did_i_win
+    puts "And you've won a prize! Lucky you. Please see the front desk for your #{outcome.prize}."
+  end
+else # outcome.failure? would == true
+  puts "Rats... I can't say hello to you"
+end
+```
+
+Read on for more advanced usage.
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
