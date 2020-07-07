@@ -198,7 +198,7 @@ bundle install
 
 ### Your first action
 
-LightService's building blocks are actions that are normally be composed within an organizer, but can be run independently.
+LightService's building blocks are actions that are normally composed within an organizer, but can be run independently.
 Let's make a simple greeter action. Each action can take an optional list of expected inputs and promised outputs. If
 these are specified and missing at action start and stop respectively, an exception will be thrown.
 
@@ -233,13 +233,13 @@ very clear inputs and outputs. Ideally, they should do exactly one thing. This m
 
 ### Your first organizer
 
-LightService provides a facility to compose actions. This is great when you have a business process
+LightService provides a facility to compose actions using organizers. This is great when you have a business process
 to execute that has multiple steps. By composing actions that do exactly one thing, you can sequence simple
-actions together to perform complex multi-step business processes in a simple manner that is very easy
+actions together to perform complex multi-step business processes in a clear manner that is very easy
 to reason about.
 
-There are advanced ways to sequence actions below, but we'll keep this simple for now. First, let's add a second
-action that we can sequence to run after the `GreetsPerson` action from above:
+There are advanced ways to sequence actions that can be found later in the README, but we'll keep this simple for now.
+First, let's add a second action that we can sequence to run after the `GreetsPerson` action from above:
 
 ```ruby
 class RandomlyAwardsPrize
@@ -251,14 +251,16 @@ class RandomlyAwardsPrize
   executed do |context|
     prize_num  = "#{context.name}__#{context.greeting}".length
     prizes     = ["jelly beans", "ice cream", "pie"]
-    did_i_win  = (1..prize_num) % 7 == 0
-    did_i_lose = (1..prize_num) % 13 == 0
+    did_i_win  = rand((1..prize_num)) % 7 == 0
+    did_i_lose = rand((1..prize_num)) % 13 == 0
 
     if did_i_lose
       # When failing, send a message as an argument, readable from the return context
       context.fail!("you are exceptionally unlucky")
     else
       # You can specify 'optional' context items by treating context like a hash.
+      # Useful for when you may or may not be returning extra data. Ideally, selecting
+      # a prize should be a separate action that is only run if you win.
       context[:prize]   = "lifetime supply of #{prizes.sample}" if did_i_win
       context.did_i_win = did_i_win
     end
@@ -268,8 +270,8 @@ end
 
 And here's the organizer that ties the two together. You implement a `call` class method that takes some arguments and
 from there sends them to `with` in `key: value` format which forms the initial state of the context. From there, chain
-`reduce` to `with` and send it a list of class names in sequence. The organizer will call each action, one after the
-other, and build up the context as it goes along.
+`reduce` to `with` and send it a list of action class names in sequence. The organizer will call each action, one
+after the other, and build up the context as it goes along.
 
 ```ruby
 class WelcomeAPotentiallyLuckyPerson
