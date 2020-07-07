@@ -198,9 +198,9 @@ bundle install
 
 ### Your first action
 
-LightService's building blocks are actions that should normally be composed, but can be run independently. Let's make a simple
-greeter action. Each action can take an optional list of expected inputs and promised outputs. If these are specified
-and missing at action start and stop respectively, an exception will be thrown.
+LightService's building blocks are actions that are normally be composed within an organizer, but can be run independently.
+Let's make a simple greeter action. Each action can take an optional list of expected inputs and promised outputs. If
+these are specified and missing at action start and stop respectively, an exception will be thrown.
 
 ```ruby
 class GreetsPerson
@@ -228,12 +228,18 @@ else # outcome.failure? would == true
 end
 ```
 
+You will notice that actions are set up to promote simplicity, i.e. they either succeed or fail, and they have
+very clear inputs and outputs. Ideally, they should do exactly one thing. This makes them as easy to test as unit tests.
+
 ### Your first organizer
 
-LightService provides a facility to compose actions. There are advanced ways to sequence actions below, but
-we'll keep this simple for now.
+LightService provides a facility to compose actions. This is great when you have a business process
+to execute that has multiple steps. By composing actions that do exactly one thing, you can sequence simple
+actions together to perform complex multi-step business processes in a simple manner that is very easy
+to reason about.
 
-Let's add second action that we can sequence to run after the `GreetsPerson` action from above:
+There are advanced ways to sequence actions below, but we'll keep this simple for now. First, let's add a second
+action that we can sequence to run after the `GreetsPerson` action from above:
 
 ```ruby
 class RandomlyAwardsPrize
@@ -243,20 +249,27 @@ class RandomlyAwardsPrize
   promises :did_i_win
 
   executed do |context|
-    prize_num = "#{context.name}__#{context.greeting}".length
-    did_i_win = (1..prize_num) % 7 == 0
-    prizes = ["jelly beans", "ice cream", "pie"]
+    prize_num  = "#{context.name}__#{context.greeting}".length
+    prizes     = ["jelly beans", "ice cream", "pie"]
+    did_i_win  = (1..prize_num) % 7 == 0
+    did_i_lose = (1..prize_num) % 13 == 0
 
-    #  # you can specify 'optional' context items by treating context like a hash.
-    context[:prize] = "lifetime supply of #{prizes.sample}" if did_i_win
-    context.did_i_win = did_i_win
+    if did_i_lose
+      # When failing, send a message as an argument, readable from the return context
+      context.fail!("you are exceptionally unlucky")
+    else
+      # You can specify 'optional' context items by treating context like a hash.
+      context[:prize]   = "lifetime supply of #{prizes.sample}" if did_i_win
+      context.did_i_win = did_i_win
+    end
   end
 end
 ```
 
-And here's the organizer that ties the two together. You implement a `.call` method that takes some arguments and
-from there sends them to `with` in `key: value` format. From there, chain `reduce` to `with` and send it a list of
-class names in sequence. The organizer will call each action one after the other, and build up the context as it goes along.
+And here's the organizer that ties the two together. You implement a `call` class method that takes some arguments and
+from there sends them to `with` in `key: value` format which forms the initial state of the context. From there, chain
+`reduce` to `with` and send it a list of class names in sequence. The organizer will call each action, one after the
+other, and build up the context as it goes along.
 
 ```ruby
 class WelcomeAPotentiallyLuckyPerson
@@ -269,7 +282,7 @@ end
 ```
 
 When an organizer is run, you have access to the context as it passed through all actions, and the overall status
-of the organized execution. You can invoke an organizer by calling `.call` on it with the expected arguments,
+of the organized execution. You can invoke an organizer by calling `.call` on the class with the expected arguments,
 and inspect its status and context just like you would an action:
 
 ```ruby
@@ -281,12 +294,13 @@ if outcome.success?
   if outcome.did_i_win
     puts "And you've won a prize! Lucky you. Please see the front desk for your #{outcome.prize}."
   end
-else # outcome.failure? would == true
-  puts "Rats... I can't say hello to you"
+else # outcome.failure? is true, and we can pull the failure message out of the context for feedback to the user.
+  puts "Rats... I can't say hello to you, because #{outcome.message}."
 end
 ```
 
-Read on for more advanced usage.
+Because organizers generally run through complex business logic, and every action has the potential to cause a failure,
+testing an organizer is functionally equivalent to an integration test. Read on for more advanced usage.
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
