@@ -17,6 +17,7 @@
 ## Table of Content
 * [Why LightService?](#why-lightservice)
 * [Getting Started](#getting-started)
+    * [Requirements](#requirements)
     * [Installation](#installation)
     * [Your first action](#your-first-action)
     * [Your first organizer](#your-first-organizer)
@@ -182,6 +183,11 @@ simple and elegant Rails code where I told the story of how LightService was ext
 
 ## Getting started
 
+### Requirements
+
+This gem requires ruby 2.x. Use of [generators](#rails-support) requires Rails 5+ (tested on Rails 5.x & 6.x only. Will probably work on
+Rails versions as old as 3.2)
+
 ### Installation
 
 In your Gemfile:
@@ -194,6 +200,12 @@ And then
 
 ```shell
 bundle install
+```
+
+Or install it yourself as:
+
+```shell
+gem install light-service
 ```
 
 ### Your first action
@@ -302,7 +314,10 @@ end
 ```
 
 Because organizers generally run through complex business logic, and every action has the potential to cause a failure,
-testing an organizer is functionally equivalent to an integration test. Read on for more advanced usage.
+testing an organizer is functionally equivalent to an integration test.
+
+For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki) and review
+the ["Why LightService" section](#why-lightservice) above.
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
@@ -1030,30 +1045,6 @@ When specifying `expects`, convenience variables will be initialized in the `exe
 them through the context. A stub context will be created in the test file using these keys too.
 
 When specifying `promises`, specs will be created testing for their existence after executing the action.
-
-## Requirements
-
-This gem requires ruby 2.x. Use of generators requires Rails 5+ (tested on Rails 5.x & 6.x only. Will probably work on
-Rails versions as old as 3.2)
-
-## Installation
-Add this line to your application's Gemfile:
-
-    gem 'light-service'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install light-service
-
-## Usage
-Based on the refactoring example above, just create an organizer object that calls the
-actions in order and write code for the actions. That's it.
-
-For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki).
 
 ## Contributing
 1. Fork it
