@@ -241,7 +241,7 @@ end
 ```
 
 You will notice that actions are set up to promote simplicity, i.e. they either succeed or fail, and they have
-very clear inputs and outputs. Ideally, they should do exactly one thing. This makes them as easy to test as unit tests.
+very clear inputs and outputs. Ideally, they should do [exactly one thing](https://en.wikipedia.org/wiki/Single-responsibility_principle). This makes them as easy to test as unit tests.
 
 ### Your first organizer
 
