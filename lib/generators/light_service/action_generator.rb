@@ -31,8 +31,8 @@ module LightService
       desc <<~DESCRIPTION
         Description:
           Will create the boilerplate for an action. Pass it an action name, e.g.
-            thing_doer, or ThingDoer   - will create ThingDoer in app/actions/thing_doer.rb
-            thing/doer, or Thing::Doer - will create Thing::Doer in app/actions/thing/doer.rb
+            foo_bar, or FooBar   - will create FooBar in app/actions/foo_bar.rb
+            foo/bar, or Foo::Bar - will create Foo::Bar in app/actions/foo/bar.rb
 
         Expects & Promises:
           Specify a list of expected context keys by passing expects and a comma separated
