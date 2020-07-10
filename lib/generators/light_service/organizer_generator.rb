@@ -34,7 +34,7 @@ module LightService
       DESCRIPTION
 
       # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
-      def create_organzier
+      def create_organizer
         gen_vals = create_required_gen_vals_from(name)
 
         @module_path     = gen_vals[:module_path]
