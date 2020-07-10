@@ -235,7 +235,7 @@ outcome = GreetsPerson.execute(name: "Han")
 
 if outcome.success?
   puts outcome.greeting # which was a promised context value
-else # outcome.failure? would == true
+elsif outcome.failure?
   puts "Rats... I can't say hello to you"
 end
 ```
