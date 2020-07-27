@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 [![Download Count](https://ruby-gem-downloads-badge.herokuapp.com/light-service?type=total)](https://rubygems.org/gems/light-service)
 
-<br><br>
+<br>
 
 ![Orchestrators-Deprecated](resources/orchestrators_deprecated.svg)
 <br>Version 0.9.0 deprecates Orchestrators and moves all their functionalities into Organizers. Please check out [this PR](https://github.com/adomokos/light-service/pull/132) to see the changes.
@@ -16,6 +16,11 @@
 
 ## Table of Content
 * [Why LightService?](#why-lightservice)
+* [Getting Started](#getting-started)
+    * [Requirements](#requirements)
+    * [Installation](#installation)
+    * [Your first action](#your-first-action)
+    * [Your first organizer](#your-first-organizer)
 * [Stopping the Series of Actions](#stopping-the-series-of-actions)
     * [Failing the Context](#failing-the-context)
     * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
@@ -28,7 +33,7 @@
 * [Localizing Messages](#localizing-messages)
 * [Orchestrator Logic in Organizers](#orchestrator-logic-in-organizers)
 * [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
-
+* [Rails support](#rails-support)
 
 ## Why LightService?
 
@@ -176,7 +181,143 @@ end
 I gave a [talk at RailsConf 2013](http://www.adomokos.com/2013/06/simple-and-elegant-rails-code-with.html) on
 simple and elegant Rails code where I told the story of how LightService was extracted from the projects I had worked on.
 
+## Getting started
 
+### Requirements
+
+This gem requires ruby 2.x. Use of [generators](#rails-support) requires Rails 5+ (tested on Rails 5.x & 6.x only. Will probably work on
+Rails versions as old as 3.2)
+
+### Installation
+
+In your Gemfile:
+
+```ruby
+gem 'light-service'
+```
+
+And then
+
+```shell
+bundle install
+```
+
+Or install it yourself as:
+
+```shell
+gem install light-service
+```
+
+### Your first action
+
+LightService's building blocks are actions that are normally composed within an organizer, but can be run independently.
+Let's make a simple greeter action. Each action can take an optional list of expected inputs and promised outputs. If
+these are specified and missing at action start and stop respectively, an exception will be thrown.
+
+```ruby
+class GreetsPerson
+  extend ::LightService::Action
+
+  expects :name
+  promises :greeting
+
+  executed do |context|
+    context.greeting = "Hey there, #{name}. You enjoying LightService so far?"
+  end
+end
+```
+
+When an action is run, you have access to its returned context, and the status of the action. You can invoke an
+action by calling `.execute` on its class with `key: value` arguments, and inspect its status and context like so:
+
+```ruby
+outcome = GreetsPerson.execute(name: "Han")
+
+if outcome.success?
+  puts outcome.greeting # which was a promised context value
+elsif outcome.failure?
+  puts "Rats... I can't say hello to you"
+end
+```
+
+You will notice that actions are set up to promote simplicity, i.e. they either succeed or fail, and they have
+very clear inputs and outputs. Ideally, they should do [exactly one thing](https://en.wikipedia.org/wiki/Single-responsibility_principle). This makes them as easy to test as unit tests.
+
+### Your first organizer
+
+LightService provides a facility to compose actions using organizers. This is great when you have a business process
+to execute that has multiple steps. By composing actions that do exactly one thing, you can sequence simple
+actions together to perform complex multi-step business processes in a clear manner that is very easy
+to reason about.
+
+There are advanced ways to sequence actions that can be found later in the README, but we'll keep this simple for now.
+First, let's add a second action that we can sequence to run after the `GreetsPerson` action from above:
+
+```ruby
+class RandomlyAwardsPrize
+  extend ::LightService::Action
+
+  expects :name, :greeting
+  promises :did_i_win
+
+  executed do |context|
+    prize_num  = "#{context.name}__#{context.greeting}".length
+    prizes     = ["jelly beans", "ice cream", "pie"]
+    did_i_win  = rand((1..prize_num)) % 7 == 0
+    did_i_lose = rand((1..prize_num)) % 13 == 0
+
+    if did_i_lose
+      # When failing, send a message as an argument, readable from the return context
+      context.fail!("you are exceptionally unlucky")
+    else
+      # You can specify 'optional' context items by treating context like a hash.
+      # Useful for when you may or may not be returning extra data. Ideally, selecting
+      # a prize should be a separate action that is only run if you win.
+      context[:prize]   = "lifetime supply of #{prizes.sample}" if did_i_win
+      context.did_i_win = did_i_win
+    end
+  end
+end
+```
+
+And here's the organizer that ties the two together. You implement a `call` class method that takes some arguments and
+from there sends them to `with` in `key: value` format which forms the initial state of the context. From there, chain
+`reduce` to `with` and send it a list of action class names in sequence. The organizer will call each action, one
+after the other, and build up the context as it goes along.
+
+```ruby
+class WelcomeAPotentiallyLuckyPerson
+  extend LightService::Organizer
+
+  def self.call(name)
+    with(:name => name).reduce(GreetsPerson, RandomlyAwardsPrize)
+  end
+end
+```
+
+When an organizer is run, you have access to the context as it passed through all actions, and the overall status
+of the organized execution. You can invoke an organizer by calling `.call` on the class with the expected arguments,
+and inspect its status and context just like you would an action:
+
+```ruby
+outcome = WelcomeAPotentiallyLuckyPerson.call("Han")
+
+if outcome.success?
+  puts outcome.greeting # which was a promised context value
+
+  if outcome.did_i_win
+    puts "And you've won a prize! Lucky you. Please see the front desk for your #{outcome.prize}."
+  end
+else # outcome.failure? is true, and we can pull the failure message out of the context for feedback to the user.
+  puts "Rats... I can't say hello to you, because #{outcome.message}."
+end
+```
+
+Because organizers generally run through complex business logic, and every action has the potential to cause a failure,
+testing an organizer is functionally equivalent to an integration test.
+
+For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki) and review
+the ["Why LightService" section](#why-lightservice) above.
 
 ## Stopping the Series of Actions
 When nothing unexpected happens during the organizer's call, the returned `context` will be successful. Here is how you can check for this:
@@ -858,28 +999,52 @@ This context then can be passed to the action under test, freeing you up from th
 
 In case your organizer has more logic in its `call` method, you could create your own test organizer in your specs like you can see it in this [acceptance test](spec/acceptance/testing/context_factory_spec.rb#L4-L11). This is reusable in all your action tests.
 
-## Requirements
+## Rails support
 
-This gem requires ruby 2.x
+LightService includes Rails generators for creating both Organizers and Actions along with corresponding tests. Currently only RSpec is
+supported ([PR's for supporting MiniTest are welcome](https://github.com/adomokos/light-service/pulls))
 
-## Installation
-Add this line to your application's Gemfile:
+Note: Generators are namespaced to `light_service` not `light-service` due to Rake name constraints.
 
-    gem 'light-service'
+### Organizer generation
 
-And then execute:
+```shell
+rails generate light_service:organizer My::SuperFancy::Organizer
+# -- or
+rails generate light_service:organizer my/super_fancy/organizer
+```
 
-    $ bundle
+Options for this generator are:
 
-Or install it yourself as:
+* `--dir=<SOME_DIR>`. `<SOME_DIR>` defaults to `organizers`. Will write organizers to `/app/organizers`, and specs to `/spec/organizers`
+* `--no-tests`. Default is `--tests`. Will generate a test file matching the namespace you've supplied.
 
-    $ gem install light-service
+### Action generation
 
-## Usage
-Based on the refactoring example above, just create an organizer object that calls the
-actions in order and write code for the actions. That's it.
+```shell
+rails generate light_service:action My::SuperFancy::Action
+# -- or
+rails generate light_service:action my/super_fancy/action
+```
 
-For further examples, please visit the project's [Wiki](https://github.com/adomokos/light-service/wiki).
+Options for this generator are:
+
+* `--dir=<SOME_DIR>`. `<SOME_DIR>` defaults to `actions`. Will write actions to `/app/actions`, and specs to `/spec/actions`
+* `--no-tests`. Defaults is `--tests`. Will generate a test file matching the namespace you've supplied.
+* `--no-roll-back`. Default is `--roll-back`. Will generate a `rolled_back` block for you to implement with [roll back functionality](#action-rollback).
+
+### Advanced action generation
+
+You are able to optionally specify `expects` and/or `promises` keys during generation
+
+```shell
+rails generate light_service:action CrankWidget expects:one_fish,two_fish promises:red_fish,blue_fish
+```
+
+When specifying `expects`, convenience variables will be initialized in the `executed` block so that you don't have to call
+them through the context. A stub context will be created in the test file using these keys too.
+
+When specifying `promises`, specs will be created testing for their existence after executing the action.
 
 ## Contributing
 1. Fork it

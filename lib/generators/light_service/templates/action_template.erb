@@ -1,0 +1,30 @@
+<%- indent = !@module_path.empty? ? '  ' : '' -%>
+# frozen_string_literal: true
+
+<%= "module #{@module_path}\n" unless @module_path.empty? -%>
+<%= "#{indent}class #{@class_name}" %>
+  <%= indent %>extend ::LightService::Action
+
+  <%- if @expects.any? -%>
+  <%= indent %>expects  <%= @expects.map { |k| ":#{k}" }.join(', ') %>
+  <%- end -%>
+  <%- if @promises.any? -%>
+  <%= indent %>promises <%= @promises.map { |k| ":#{k}" }.join(', ') %>
+  <%- end -%>
+  <%- if (@expects + @promises).any? -%>
+
+  <%- end -%>
+  <%= indent %>executed do |ctx|
+    <%- if @expects.any? -%>
+    <%- @expects.each do |key| -%>
+    <%= indent %><%= key %> = ctx.<%= key %>
+    <%- end -%>
+    <%- end -%>
+  <%= indent %>end
+  <%- if options.roll_back -%>
+
+  <%= indent %>rolled_back do |ctx|
+  <%= indent %>end
+  <%- end -%>
+<%= indent %>end
+<%= 'end' unless @module_path.empty? -%>
