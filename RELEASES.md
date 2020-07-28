@@ -1,5 +1,11 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.2.0
+* [Add Rails Generators](https://github.com/adomokos/light-service/pull/194) - LightService actions and organizers can be generated with generators
+* [Add CodeCov](https://github.com/adomokos/light-service/pull/195) - Upload code coverage report to codecov.io
+* [Remove ActiveSupport 3 checks](https://github.com/adomokos/light-service/pull/197) - They are unsupported, no need to tests them any more.
+
+
 ### 0.14.0
 * [Add 'organized_by' to context](https://github.com/adomokos/light-service/pull/192) - Context now have an #organized_by attribute
 
