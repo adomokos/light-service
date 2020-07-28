@@ -1,6 +1,6 @@
 A brief list of new features and changes introduced with the specified version.
 
-### 0.2.0
+### 0.15.0
 * [Add Rails Generators](https://github.com/adomokos/light-service/pull/194) - LightService actions and organizers can be generated with generators
 * [Add CodeCov](https://github.com/adomokos/light-service/pull/195) - Upload code coverage report to codecov.io
 * [Remove ActiveSupport 3 checks](https://github.com/adomokos/light-service/pull/197) - They are unsupported, no need to tests them any more.
