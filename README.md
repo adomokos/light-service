@@ -14,6 +14,10 @@
 
 <br>
 
+You can find the Python sibling project called `pyservice` [here](https://github.com/adomokos/pyservice).
+
+<br>
+
 ## Table of Content
 * [Why LightService?](#why-lightservice)
 * [Getting Started](#getting-started)
