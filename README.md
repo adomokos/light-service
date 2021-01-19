@@ -38,6 +38,7 @@ You can find the Python sibling project called `pyservice` [here](https://github
 * [Orchestrator Logic in Organizers](#orchestrator-logic-in-organizers)
 * [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
 * [Rails support](#rails-support)
+* [Contributing](#contributing)
 
 ## Why LightService?
 
