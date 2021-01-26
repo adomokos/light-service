@@ -14,11 +14,7 @@
 
 <br>
 
-You can find the Python sibling project called `pyservice` [here](https://github.com/adomokos/pyservice).
-
-<br>
-
-## Table of Content
+## Table of Contents
 * [Why LightService?](#why-lightservice)
 * [Getting Started](#getting-started)
     * [Requirements](#requirements)
@@ -38,6 +34,7 @@ You can find the Python sibling project called `pyservice` [here](https://github
 * [Orchestrator Logic in Organizers](#orchestrator-logic-in-organizers)
 * [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
 * [Rails support](#rails-support)
+* [Implementations in other languages](#other-implementations)
 * [Contributing](#contributing)
 
 ## Why LightService?
@@ -1050,6 +1047,13 @@ When specifying `expects`, convenience variables will be initialized in the `exe
 them through the context. A stub context will be created in the test file using these keys too.
 
 When specifying `promises`, specs will be created testing for their existence after executing the action.
+
+## Other implementations
+
+| Language | Repo                                                              | Author                                                 |
+| :------- |:------------------------------------------------------------------| :------------------------------------------------------|
+| Python   | [pyservice](https://github.com/adomokos/pyservice)                | [@adomokos](https://github.com/adomokos)               |
+| PHP      | [light-service](https://github.com/douglasgreyling/light-service) | [@douglasgreyling](https://github.com/douglasgreyling) |
 
 ## Contributing
 1. Fork it
