@@ -36,7 +36,11 @@ module LightService
           begin
             invoke_action(current_context, action)
           rescue FailWithRollbackError
-            reduce_rollback(actions)
+            if @organizer.is_a? LightService::Organizer::Iterator
+              @organizer.rollback(context)
+            else
+              reduce_rollback(actions)
+            end
           ensure
             # For logging
             yield(current_context, action) if block_given?
