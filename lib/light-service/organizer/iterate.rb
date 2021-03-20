@@ -3,6 +3,7 @@ module LightService
     class Iterate
       extend ScopedReducable
 
+      # rubocop:disable Metrics/MethodLength
       def self.run(organizer, collection_key, steps)
         lambda do |ctx|
           return ctx if ctx.stop_processing?
@@ -13,19 +14,27 @@ module LightService
             ctx[item_key] = item
 
             ctx = scoped_reduce(organizer, ctx, steps)
-            if (ctx.key?(:_rollback))
-              reversed_processed_collection = collection.take_while { |i| i != item }.reverse
-              rollback_items(organizer, ctx, reversed_processed_collection, steps)
-              break
-            end
+
+            # Handle Rollback
+            next unless ctx.key?(:_rollback)
+
+            reversed_processed_collection = \
+              collection.take_while { |i| i != item }.reverse
+            rollback_items(
+              organizer,
+              ctx,
+              reversed_processed_collection,
+              steps
+            )
           end
 
           ctx
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def self.rollback_items(organizer, ctx, collection, steps)
-        collection.each do |item|
+        collection.each do
           ctx = scoped_reduce_rollback(organizer, ctx, steps)
         end
       end

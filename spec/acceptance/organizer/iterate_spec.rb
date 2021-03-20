@@ -81,7 +81,7 @@ RSpec.describe LightService::Organizer do
 
   it 'accepts a single action or organizer' do
     result = IterateSpec::TestIterate.call_single(:number => 1,
-                                     :counters => [1, 2, 3, 4])
+                                                  :counters => [1, 2, 3, 4])
 
     expect(result).to be_success
     expect(result.number).to eq(5)
@@ -89,7 +89,7 @@ RSpec.describe LightService::Organizer do
 
   it "knows that it's being iterated from within an organizer" do
     result = IterateSpec::TestIterate.call(:number => 1,
-                              :counters => [1, 2, 3])
+                                           :counters => [1, 2, 3])
 
     expect(result.organized_by).to eq IterateSpec::TestIterate
   end
