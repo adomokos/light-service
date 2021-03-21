@@ -15,15 +15,14 @@ module LightService
 
             ctx = scoped_reduce(organizer, ctx, steps)
 
-            # Handle Rollback
             next unless ctx.key?(:_rollback)
 
-            reversed_processed_collection = \
-              collection.take_while { |i| i != item }.reverse
+            # Handle Rollback
             rollback_items(
+              item,
               organizer,
               ctx,
-              reversed_processed_collection,
+              collection,
               steps
             )
           end
@@ -33,9 +32,16 @@ module LightService
       end
       # rubocop:enable Metrics/MethodLength
 
-      def self.rollback_items(organizer, ctx, collection, steps)
-        collection.each do
-          ctx = scoped_reduce_rollback(organizer, ctx, steps)
+      def self.rollback_items(item, organizer, ctx, collection, steps)
+        reversed_processed_collection = \
+          collection.take_while { |i| i != item }.reverse
+
+        reversed_processed_collection.each do
+          ctx = scoped_reduce_rollback(
+            organizer,
+            ctx,
+            steps
+          )
         end
       end
     end
