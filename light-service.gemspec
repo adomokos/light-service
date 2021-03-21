@@ -15,6 +15,7 @@ Gem::Specification.new do |gem|
   gem.name          = "light-service"
   gem.require_paths = ["lib"]
   gem.version       = LightService::VERSION
+  gem.required_ruby_version = '>= 2.5.0'
 
   gem.add_runtime_dependency("activesupport", ">= 4.0.0")
 

@@ -4,10 +4,9 @@ env:
   - RUN_COVERAGE_REPORT=true
 
 rvm:
-  - 2.4.2
   - 2.5.3
-  - 2.6.0
-  - 2.7.0
+  - 2.6.6
+  - 2.7.2
 
 before_install:
   - 'echo ''gem: --no-ri --no-rdoc'' > ~/.gemrc'
@@ -26,9 +25,5 @@ gemfile:
 
 matrix:
   exclude:
-  - rvm: 2.4.2
-    gemfile: gemfiles/activesupport_6.gemfile
-  - rvm: 2.7.0
-    gemfile: gemfiles/activesupport_3.gemfile
-  - rvm: 2.7.0
+  - rvm: 2.7.2
     gemfile: gemfiles/activesupport_4.gemfile
