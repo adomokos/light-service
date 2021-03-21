@@ -11,7 +11,6 @@ module IterateSpec
     end
 
     rolled_back do |context|
-      # puts "rolled_back AddsOne"
       context.number -= 1
     end
   end
@@ -26,7 +25,6 @@ module IterateSpec
     end
 
     rolled_back do |context|
-      # puts "rolled_back AddsTwo"
       context.number -= 2
     end
   end
