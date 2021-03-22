@@ -36,7 +36,8 @@ module LightService
         reversed_processed_collection = \
           collection.take_while { |i| i != item }.reverse
 
-        reversed_processed_collection.each do
+        reversed_processed_collection.each do |i|
+          puts "Reversing item #{i}"
           ctx = scoped_reduce_rollback(
             organizer,
             ctx,

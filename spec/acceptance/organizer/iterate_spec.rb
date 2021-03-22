@@ -7,10 +7,12 @@ module IterateSpec
     promises :number
 
     executed do |context|
+      puts "#{context.number} + 1"
       context.number += 1
     end
 
     rolled_back do |context|
+      puts "#{context.number} - 1"
       context.number -= 1
     end
   end
@@ -21,10 +23,12 @@ module IterateSpec
     promises :number
 
     executed do |context|
+      puts "#{context.number} + 2"
       context.number += 2
     end
 
     rolled_back do |context|
+      puts "#{context.number} - 2"
       context.number -= 2
     end
   end
@@ -34,7 +38,7 @@ module IterateSpec
     expects :number
 
     executed do |context|
-      context.fail_with_rollback!("10 was reached, failing with rollback") \
+      context.fail_with_rollback!("12 was reached, failing with rollback") \
         if context.number >= 12
     end
   end
@@ -47,7 +51,8 @@ module IterateSpec
         .reduce([iterate(:counters,
                          [AddsOneWithRollbackAction,
                           AddsTwoWithRollbackAction,
-                          FailsWithRollbackWhenReachesTwelve])])
+                          FailsWithRollbackWhenReachesTwelve,
+                          AddsOneWithRollbackAction])])
     end
 
     def self.call_single(context)
@@ -69,7 +74,7 @@ RSpec.describe LightService::Organizer do
     expect(result.number).to eq(7)
   end
 
-  it 'rolls back the actions when it reaches 10' do
+  it 'rolls back the actions when it reaches 12' do
     result = IterateSpec::TestIterate.call(:number => 1,
                                            :counters => [1, 2, 3, 4])
 
