@@ -65,6 +65,23 @@ RSpec.describe 'Action after_actions' do
     end
   end
 
+  context 'with callbacks' do
+    it 'ensures the correct :current_action is set' do
+      TestDoubles::TestWithCallback.after_actions = [
+        lambda do |ctx|
+          if ctx.current_action == TestDoubles::IterateCollectionAction
+            ctx.total -= 1000
+          end
+        end
+      ]
+
+      result = TestDoubles::TestWithCallback.call
+
+      expect(result.counter).to eq(3)
+      expect(result.total).to eq(-994)
+    end
+  end
+
   describe 'after_actions can be appended' do
     it 'adds to the :_after_actions collection' do
       TestDoubles::AdditionOrganizer.append_after_actions(
