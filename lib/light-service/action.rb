@@ -44,6 +44,7 @@ module LightService
             catch(:jump_when_failed) do
               call_before_action(action_context)
               yield(action_context)
+              action_context.current_action = self
               call_after_action(action_context)
             end
           end
