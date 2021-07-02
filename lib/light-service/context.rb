@@ -115,9 +115,9 @@ module LightService
     end
 
     def define_accessor_methods_for_keys(keys)
-      return if keys.nil?
+      return if keys.blank?
 
-      keys.each do |key|
+      Array(keys).each do |key|
         next if respond_to?(key.to_sym)
 
         define_singleton_method(key.to_s) { fetch(key) }
