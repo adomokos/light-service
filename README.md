@@ -7,12 +7,6 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 [![Download Count](https://ruby-gem-downloads-badge.herokuapp.com/light-service?type=total)](https://rubygems.org/gems/light-service)
 
-<br>
-
-![Orchestrators-Deprecated](resources/orchestrators_deprecated.svg)
-<br>Version 0.9.0 deprecates Orchestrators and moves all their functionalities into Organizers. Please check out [this PR](https://github.com/adomokos/light-service/pull/132) to see the changes.
-
-<br>
 
 ## Table of Contents
 * [Why LightService?](#why-lightservice)
@@ -31,7 +25,7 @@
 * [Error Codes](#error-codes)
 * [Action Rollback](#action-rollback)
 * [Localizing Messages](#localizing-messages)
-* [Orchestrator Logic in Organizers](#orchestrator-logic-in-organizers)
+* [Orchestrating Logic in Organizers](#orchestrating-logic-in-organizers)
 * [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
 * [Rails support](#rails-support)
 * [Implementations in other languages](#other-implementations)
@@ -868,9 +862,13 @@ end
 
 To get the value of a `fail!` or `succeed!` message, simply call `#message` on the returned context.
 
-## Orchestrator Logic in Organizers
+## Orchestrating Logic in Organizers
 
-The Organizer - Action combination works really well for simple use cases. However, as business logic gets more complex, or when LightService is used in an ETL workflow, the code that routes the different organizers becomes very complex and imperative. Let's look at a piece of code that does basic data transformations:
+The Organizer - Action combination works really well for simple use cases. However, as business logic gets more complex, or when LightService is used in an ETL workflow, the code that routes the different organizers becomes very complex and imperative.
+
+In the past, this was solved using Orchestrators. As of [Version 0.9.0 Orchestrators have been deprecated](https://github.com/adomokos/light-service/pull/132). All their functionality is now usable directly within Organizers. Read on to understand how to orchestrate workflows from within a single Organizer.
+
+Let's look at a piece of code that does basic data transformations:
 
 ```ruby
 class ExtractsTransformsLoadsData
