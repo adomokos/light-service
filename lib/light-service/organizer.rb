@@ -65,9 +65,16 @@ module LightService
         @logger
       end
 
+      # Set the value as a key on the context hash
+      # and also create convenience accessors for the keys
       def add_to_context(**args)
         args.map do |key, value|
-          execute(->(ctx) { ctx[key.to_sym] = value })
+          context_key = lambda do |ctx|
+            ctx[key.to_sym] = value
+            ctx.define_accessor_methods_for_keys(key)
+          end
+
+          execute(context_key)
         end
       end
 
