@@ -944,7 +944,7 @@ To take advantage of another organizer or action, you might need to tweak the co
 
 Use `with_callback` when you want to execute actions with a deferred and controlled callback. It works similar to a Sax parser, I've used it for processing large files. The advantage of it is not having to keep large amount of data in memory. See [this acceptance test](spec/acceptance/organizer/with_callback_spec.rb) as a working example.
 
-`add_to_context` can add key-value pairs on the fly to the context. This functionality is useful when you need a value injected into the context under a specific key right before the subsequent actions are executed. [This test](spec/acceptance/organizer/add_to_context_spec.rb) describes its functionality.
+`add_to_context` can add key-value pairs on the fly to the context. This functionality is useful when you need a value injected into the context under a specific key right before the subsequent actions are executed. Keys are also made available as accessors on the context object and can be used just like methods exposed via `expects` and `promises`. [This test](spec/acceptance/organizer/add_to_context_spec.rb) describes its functionality.
 
 Your action needs a certain key in the context but it's under a different one? Use the function `add_aliases` to alias an existing key in the context under the desired key. Take a look at [this test](spec/acceptance/organizer/add_aliases_spec.rb) to see an example.
 
