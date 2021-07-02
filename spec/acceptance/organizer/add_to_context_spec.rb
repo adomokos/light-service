@@ -27,4 +27,11 @@ RSpec.describe LightService::Organizer do
     expect(result.number).to eq(1)
     expect(result[:something]).to eq('hello')
   end
+
+  it 'adds items to the context as accessors' do
+    result = TestAddToContext.call
+
+    expect(result).to be_success
+    expect(result.something).to eq('hello')
+  end
 end
