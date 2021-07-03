@@ -1,4 +1,4 @@
-name: Matrix Testing
+name: CI Tests
 
 on:
   push:
