@@ -114,5 +114,22 @@ module LightService
         %i[message error_code current_action organized_by].freeze
       end
     end
+
+    class ReservedKeysViaOrganizerVerifier < ReservedKeysVerifier
+      def initialize(context_data)
+        @context = LightService::Context.make(context_data)
+      end
+
+      def violated_keys
+        context.keys.map(&:to_sym) & reserved_keys
+      end
+
+      def error_message
+        <<~ERR
+          reserved keys cannot be added to the context
+          reserved key: [#{format_keys(violated_keys)}]
+        ERR
+      end
+    end
   end
 end
