@@ -67,10 +67,10 @@ module LightService
 
       # Set the value as a key on the context hash
       # and also create convenience accessors for the keys
-      def add_to_context(**args)
+      def add_to_context(args)
         Context::ReservedKeysViaOrganizerVerifier.new(args).verify
 
-        args.map do |key, value|
+        Hash(args).map do |key, value|
           context_key = lambda do |ctx|
             ctx[key.to_sym] = value
             ctx.define_accessor_methods_for_keys(key)
