@@ -111,7 +111,7 @@ module LightService
       end
 
       def reserved_keys
-        %i[message error_code current_action].freeze
+        %i[message error_code current_action organized_by].freeze
       end
     end
   end
