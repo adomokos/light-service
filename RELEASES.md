@@ -1,5 +1,11 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.16.0
+* [Drop Ruby 2.4 support](https://github.com/adomokos/light-service/pull/207)
+* [Fix callback current action](https://github.com/adomokos/light-service/pull/209)
+* [Add Context accessors](https://github.com/adomokos/light-service/pull/211)
+* [Switched to GH Actions from Travis CI](https://github.com/adomokos/light-service/pull/212)
+
 ### 0.15.0
 * [Add Rails Generators](https://github.com/adomokos/light-service/pull/194) - LightService actions and organizers can be generated with generators
 * [Add CodeCov](https://github.com/adomokos/light-service/pull/195) - Upload code coverage report to codecov.io
