@@ -8,6 +8,10 @@ module LightService
 
         ctx
       end
+
+      def scoped_reduce_rollback(organizer, ctx, steps)
+        organizer.with(ctx).reduce_rollback(steps)
+      end
     end
   end
 end

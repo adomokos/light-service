@@ -36,6 +36,7 @@ module LightService
           begin
             invoke_action(current_context, action)
           rescue FailWithRollbackError
+            context[:_rollback] = true
             reduce_rollback(actions)
           ensure
             # For logging

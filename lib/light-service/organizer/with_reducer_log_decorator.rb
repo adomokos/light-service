@@ -50,6 +50,11 @@ module LightService
         end
       end
 
+      def reduce_rollback(actions)
+        # TODO: Add logging
+        decorated.reduce_rollback(actions)
+      end
+
       private
 
       def write_log(action, context)
