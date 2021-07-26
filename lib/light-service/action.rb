@@ -41,6 +41,7 @@ module LightService
           Context::KeyVerifier.verify_keys(action_context, self) do
             action_context.define_accessor_methods_for_keys(all_keys)
 
+            ActiveSupport::Notifications.instrument('action_started', extra: action_context)
             catch(:jump_when_failed) do
               call_before_action(action_context)
               yield(action_context)
@@ -49,6 +50,7 @@ module LightService
               action_context.current_action = self
               call_after_action(action_context)
             end
+            ActiveSupport::Notifications.instrument('action_finished', extra: action_context)
           end
         end
       end
