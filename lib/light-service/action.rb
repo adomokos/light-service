@@ -14,12 +14,20 @@ module LightService
     end
 
     module Macros
+      def allows(args)
+        allowed_keys.merge!(args)
+      end
+
       def expects(*args)
         expected_keys.concat(args)
       end
 
       def promises(*args)
         promised_keys.concat(args)
+      end
+
+      def allowed_keys
+        @allowed_keys ||= {}
       end
 
       def expected_keys
@@ -32,6 +40,9 @@ module LightService
 
       def executed
         define_singleton_method :execute do |context = {}|
+          allowed_keys.each do |key, default_value|
+            context[key] ||= default_value
+          end
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
 
@@ -73,7 +84,7 @@ module LightService
       end
 
       def all_keys
-        expected_keys + promised_keys
+        expected_keys + promised_keys + allowed_keys.keys
       end
 
       def call_before_action(context)

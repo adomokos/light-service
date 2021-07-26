@@ -590,4 +590,15 @@ module TestDoubles
       [add_aliases(:foo => :baz)]
     end
   end
+
+  class AddsArgumentOrTwo
+    extend LightService::Action
+    allows increment: 2
+    expects :counter
+    promises :result
+
+    executed do |context|
+      context.result = context.counter + context.increment
+    end
+  end
 end
