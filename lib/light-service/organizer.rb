@@ -41,6 +41,10 @@ module LightService
         ReduceIf.run(self, condition_block, steps)
       end
 
+      def reduce_if_else(condition_block, if_steps, else_steps)
+        ReduceIfElse.run(self, condition_block, if_steps, else_steps)
+      end
+
       def reduce_until(condition_block, steps)
         ReduceUntil.run(self, condition_block, steps)
       end
