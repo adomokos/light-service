@@ -927,15 +927,18 @@ The 7 different orchestrator constructs an organizer can have:
 
 1. `reduce_until`
 2. `reduce_if`
-3. `iterate`
-4. `execute`
-5. `with_callback`
-6. `add_to_context`
-7. `add_aliases`
+3. `reduce_if_else`
+4. `iterate`
+5. `execute`
+6. `with_callback`
+7. `add_to_context`
+8. `add_aliases`
 
 `reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/organizer/reduce_until_spec.rb) to see how it's used.
 
 `reduce_if` will reduce the included organizers and/or actions if the predicate in the lambda evaluates to true. [This acceptance test](spec/acceptance/organizer/reduce_if_spec.rb) describes this functionality.
+
+`reduce_if_else` takes three arguments, a condition lambda, a first set of "if true" steps, and a second set of "if false" steps. If the lambda evaluates to true, the "if true" steps are executed, otherwise the "else steps" are executed. [This acceptance test](spec/acceptance/organizer/reduce_if_else_spec.rb) describes this functionality.
 
 `iterate` gives your iteration logic, the symbol you define there has to be in the context as a key. For example, to iterate over items you will use `iterate(:items)` in your steps, the context needs to have `items` as a key, otherwise it will fail. The organizer will singularize the collection name and will put the actual item into the context under that name. Remaining with the example above, each element will be accessible by the name `item` for the actions in the `iterate` steps. [This acceptance test](spec/acceptance/organizer/iterate_spec.rb) should provide you with an example.
 
