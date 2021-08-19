@@ -41,23 +41,21 @@ module LightService
           Context::KeyVerifier.verify_keys(action_context, self) do
             action_context.define_accessor_methods_for_keys(all_keys)
 
-            ActiveSupport::Notifications.instrument('action.exec', name: name) do
-              catch(:jump_when_failed) do
-                call_before_action(action_context)
+            catch(:jump_when_failed) do
+              call_before_action(action_context)
 
-                if context[:_around_actions]&.respond_to?(:call)
-                  context[:_around_actions].call(action_context) do
-                    yield(action_context)
-                    action_context
-                  end
-                else
+              if context[:_around_actions]&.respond_to?(:call)
+                context[:_around_actions].call(action_context) do
                   yield(action_context)
+                  action_context
                 end
-
-                # Reset the stored action in case it was changed downstream
-                action_context.current_action = self
-                call_after_action(action_context)
+              else
+                yield(action_context)
               end
+
+              # Reset the stored action in case it was changed downstream
+              action_context.current_action = self
+              call_after_action(action_context)
             end
           end
         end
