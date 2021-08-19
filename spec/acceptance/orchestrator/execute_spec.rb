@@ -23,8 +23,6 @@ describe LightService::Orchestrator do
 
   let(:empty_context) { LightService::Context.make }
 
-  before { record_events }
-
   it 'calls the lambda in the execute block using the context' do
     result = OrchestratorTestExecute.run(:number => 0)
 
@@ -46,23 +44,5 @@ describe LightService::Orchestrator do
 
     result = OrchestratorTestExecute.run(empty_context)
     expect(result).to be_success
-  end
-
-  it 'emits event' do
-    OrchestratorTestExecute.run(:number => 0)
-    expect(events.count).to eq(2)
-    expect(events[0].payload[:name]).to eq('TestDoubles::AddsOneAction')
-    expect(events[1].payload[:name]).to eq('TestDoubles::AddsOneAction')
-  end
-
-  private
-
-  attr_reader :events
-
-  def record_events
-    @events = []
-    ActiveSupport::Notifications.subscribe('action.exec') do |*args|
-      @events << ActiveSupport::Notifications::Event.new(*args)
-    end
   end
 end
