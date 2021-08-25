@@ -2,11 +2,13 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe LightService::Organizer do
-  let(:ctx) { LightService::Context.make(:user => user) }
+  let(:ctx) { LightService::Context.make(:user => user, :_around_actions => around_actions_stub) }
   let(:user) { double(:user) }
+  let(:around_actions_stub) { double(:class) }
 
   context "when #with is called with hash" do
     before do
+      allow(Class).to receive(:new).and_return(around_actions_stub)
       expect(TestDoubles::AnAction).to receive(:execute)
         .with(ctx)
         .and_return(ctx)
