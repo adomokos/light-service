@@ -59,9 +59,9 @@ describe "Logs from organizer" do
       expect(log_message).to include(organizer_log_message)
     end
 
-    it "lists the keys in contect after the actions are executed" do
+    it "lists the keys in context after the actions are executed" do
       organizer_log_message = "[LightService] -     keys in context: " \
-                              ":tea, :milk, :coffee, :milk_tea, :latte"
+                              ":tea, :milk, :coffee, :_around_actions, :milk_tea, :latte"
       expect(log_message).to include(organizer_log_message)
     end
   end

@@ -43,7 +43,15 @@ module LightService
 
             catch(:jump_when_failed) do
               call_before_action(action_context)
-              yield(action_context)
+
+              if context[:_around_actions]&.respond_to?(:call)
+                context[:_around_actions].call(action_context) do
+                  yield(action_context)
+                  action_context
+                end
+              else
+                yield(action_context)
+              end
 
               # Reset the stored action in case it was changed downstream
               action_context.current_action = self
