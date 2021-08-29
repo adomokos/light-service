@@ -534,39 +534,6 @@ action is reduced. If either of them are violated, a `LightService::ExpectedKeys
 `LightService::PromisedKeysNotInContextError` exception respectively will be thrown.
 
 This is how it's used:
-```ruby
-class FooAction
-  extend LightService::Action
-  expects :baz
-  promises :bar
-
-  executed do |context|
-    baz = context.fetch :baz
-
-    bar = baz + 2
-    context[:bar] = bar
-  end
-end
-```
-
-The `expects` macro does a bit more for you: it pulls the value with the expected key from the context, and
-makes it available to you through a reader. You can refactor the action like this:
-
-```ruby
-class FooAction
-  extend LightService::Action
-  expects :baz
-  promises :bar
-
-  executed do |context|
-    bar = context.baz + 2
-    context[:bar] = bar
-  end
-end
-```
-
-The `promises` macro will not only check if the context has the promised keys, it also sets it for you in the context if
-you use the accessor with the same name. The code above can be further simplified:
 
 ```ruby
 class FooAction
@@ -580,7 +547,14 @@ class FooAction
 end
 ```
 
-Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
+The `expects` macro will pull the value with the expected key from the context, and
+makes it available to you through a reader.
+
+The `promises` macro will not only check if the context has the promised keys, it also sets it for you in the context if
+you use the accessor with the same name in the same way as the expects macro.
+
+The context object is essentially a smarter than normal Hash. Take a look at [this spec](spec/action_expects_and_promises_spec.rb)
+to see expects and promises used with and without accessors.
 
 ## Key Aliases
 The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.
