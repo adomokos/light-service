@@ -21,6 +21,7 @@ LightService is a powerful and flexible service skeleton framework with an empha
     * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
 * [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
 * [Before and After Action Hooks](#before-and-after-action-hooks)
+* [Expects and Promises](#expects-and-promises)
 * [Key Aliases](#key-aliases)
 * [Logging](#logging)
 * [Error Codes](#error-codes)
