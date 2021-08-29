@@ -15,6 +15,13 @@ module LightService
 
     module Macros
       def expects(*args)
+        if expect_key_having_default?(args)
+          available_defaults[args.first] = args.last[:default] \
+            if args.last.key?(:default)
+
+          args = [args.first]
+        end
+
         expected_keys.concat(args)
       end
 
@@ -28,6 +35,14 @@ module LightService
 
       def promised_keys
         @promised_keys ||= []
+      end
+
+      def available_defaults
+        @available_defaults ||= {}
+      end
+
+      def expect_key_having_default?(key)
+        key.size == 2 && key.last.is_a?(Hash)
       end
 
       def executed
