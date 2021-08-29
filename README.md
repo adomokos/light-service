@@ -22,6 +22,7 @@ LightService is a powerful and flexible service skeleton framework with an empha
 * [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
 * [Before and After Action Hooks](#before-and-after-action-hooks)
 * [Expects and Promises](#expects-and-promises)
+    * [Default values for optional Expected keys](#default-values-for-optional-expected-keys)
 * [Key Aliases](#key-aliases)
 * [Logging](#logging)
 * [Error Codes](#error-codes)
@@ -555,6 +556,55 @@ you use the accessor with the same name in the same way as the expects macro.
 
 The context object is essentially a smarter than normal Hash. Take a look at [this spec](spec/action_expects_and_promises_spec.rb)
 to see expects and promises used with and without accessors.
+
+### Default values for optional Expected keys
+
+When you have an expected key, but it has a sensible default that should be used everywhere and
+overridden on an as-needed basis, you can specify a default value. An example use-case is a flag
+that will allow a failure from a service under most circumstances.
+
+LightService provides two mechanisms for specifying default values:
+
+1. A static value that is used as-is
+2. A callable that takes the current context as a param
+
+Using the above use case, consider an action that sends a text message:
+
+```ruby
+class SendSMS
+  extend LightService::Action
+  expects :message, :user
+  expects :allow_failure, default: true
+
+  executed do |context|
+    sms_status = SMSService.send(ctx.user.mobile_number, ctx.message)
+
+    ctx.fail!(sms_status.message) unless ctx.allow_failure
+  end
+end
+```
+
+Default values can also be processed dynamically by providing a callable. Any values already
+specified in the context are available to it via Hash key lookup syntax. e.g.
+
+```ruby
+class SendSMS
+  extend LightService::Action
+  expects :message, :user
+  expects :allow_failure, default: ->(ctx) { !ctx[:user].admin? } # Admins must always get SMS'
+
+  executed do |context|
+    sms_status = SMSService.send(ctx.user.mobile_number, ctx.message)
+
+    ctx.fail!(sms_status.message) unless ctx.allow_failure
+  end
+end
+```
+
+**Note** that default values must be specified one at a time on their own line.
+
+You can then call an action or organizer that uses an action with defaults without specifying
+the expected key that has a default.
 
 ## Key Aliases
 The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.
