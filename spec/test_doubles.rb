@@ -579,6 +579,20 @@ module TestDoubles
     end
   end
 
+  class OrganizerWithActionsUsingDefaults
+    extend LightService::Organizer
+    def self.call
+      with(:first_number => 1, :number => 1).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsNumbersWithOptionalDefaults,
+        AddToTotalAction
+      ]
+    end
+  end
+
   class AnOrganizerThatAddsToContext
     extend LightService::Organizer
     def self.call
