@@ -577,9 +577,12 @@ class SendSMS
   expects :allow_failure, default: true
 
   executed do |context|
-    sms_status = SMSService.send(ctx.user.mobile_number, ctx.message)
+    sms_api = SMSService.new(key: ENV["SMS_API_KEY"])
+    status  = sms_api.send(ctx.user.mobile_number, ctx.message)
 
-    ctx.fail!(sms_status.message) unless ctx.allow_failure
+    if !status.sent_ok?
+      ctx.fail!(status.err_msg) unless ctx.allow_failure
+    end
   end
 end
 ```
@@ -594,9 +597,12 @@ class SendSMS
   expects :allow_failure, default: ->(ctx) { !ctx[:user].admin? } # Admins must always get SMS'
 
   executed do |context|
-    sms_status = SMSService.send(ctx.user.mobile_number, ctx.message)
+    sms_api = SMSService.new(key: ENV["SMS_API_KEY"])
+    status  = sms_api.send(ctx.user.mobile_number, ctx.message)
 
-    ctx.fail!(sms_status.message) unless ctx.allow_failure
+    if !status.sent_ok?
+      ctx.fail!(status.err_msg) unless ctx.allow_failure
+    end
   end
 end
 ```
