@@ -530,7 +530,8 @@ These ideas are originally from Aspect Oriented Programming, read more about the
 ## Expects and Promises
 The `expects` and `promises` macros are rules for the inputs/outputs of an action.
 `expects` describes what keys it needs to execute, and `promises` makes sure the keys are in the context after the
-action is reduced. If either of them are violated, a custom exception is thrown.
+action is reduced. If either of them are violated, a `LightService::ExpectedKeysNotInContextError` or
+`LightService::PromisedKeysNotInContextError` exception respectively will be thrown.
 
 This is how it's used:
 ```ruby
