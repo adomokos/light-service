@@ -30,8 +30,9 @@ module LightService
         @promised_keys ||= []
       end
 
+      # rubocop:disable Metrics/MethodLength
       def executed
-        define_singleton_method :execute do |context = {}|
+        define_singleton_method :execute do |context = Context.make|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
 
@@ -43,7 +44,15 @@ module LightService
 
             catch(:jump_when_failed) do
               call_before_action(action_context)
-              yield(action_context)
+
+              if around_action_context?(context)
+                context.around_actions.call(action_context) do
+                  yield(action_context)
+                  action_context
+                end
+              else
+                yield(action_context)
+              end
 
               # Reset the stored action in case it was changed downstream
               action_context.current_action = self
@@ -52,6 +61,7 @@ module LightService
           end
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def rolled_back
         msg = "`rolled_back` macro can not be invoked again"
@@ -92,6 +102,11 @@ module LightService
         end
 
         context
+      end
+
+      def around_action_context?(context)
+        context.instance_of?(Context) &&
+          context.around_actions.respond_to?(:call)
       end
     end
   end

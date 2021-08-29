@@ -16,4 +16,19 @@ describe 'Executing arbitrary code around each action' do
       }]
     )
   end
+
+  it 'logs data with nested actions' do
+    context = { :number => 1, :logger => TestDoubles::TestLogger.new }
+
+    result = TestDoubles::AroundEachWithReduceIfOrganizer.call(context)
+
+    expect(result.fetch(:number)).to eq(7)
+    expect(result[:logger].logs).to eq(
+      [
+        { :action => TestDoubles::AddsOneAction, :before => 1, :after => 2 },
+        { :action => TestDoubles::AddsTwoAction, :before => 2, :after => 4 },
+        { :action => TestDoubles::AddsThreeAction, :before => 4, :after => 7 }
+      ]
+    )
+  end
 end
