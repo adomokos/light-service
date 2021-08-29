@@ -82,8 +82,6 @@ module LightService
       private
 
       def create_action_context(context)
-        return context if context.is_a? LightService::Context
-
         usable_defaults(context).each do |ctx_key, default|
           context[ctx_key] = extract_default(default, context)
         end

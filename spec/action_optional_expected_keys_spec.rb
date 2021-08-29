@@ -55,7 +55,7 @@ describe ":expects macro using defaults" do
     it "is expected to process required defaults" do
       outcome = TestDoubles::OrganizerWithActionsUsingDefaults.call
 
-      expect(outcome.total).to eq 1000
+      expect(outcome.total).to eq 20
     end
   end
 end
