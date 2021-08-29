@@ -2,7 +2,9 @@ require 'spec_helper'
 require 'test_doubles'
 
 describe LightService::Organizer do
-  let(:ctx) { LightService::Context.make(:user => user, :_around_actions => around_actions_stub) }
+  let(:ctx) do
+    LightService::Context.make(:user => user, :_around_actions => around_actions_stub)
+  end
   let(:user) { double(:user) }
   let(:around_actions_stub) { double(:class) }
 

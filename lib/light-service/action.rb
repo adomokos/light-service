@@ -30,6 +30,7 @@ module LightService
         @promised_keys ||= []
       end
 
+      # rubocop:disable Metrics/MethodLength
       def executed
         define_singleton_method :execute do |context = {}|
           action_context = create_action_context(context)
@@ -60,6 +61,7 @@ module LightService
           end
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def rolled_back
         msg = "`rolled_back` macro can not be invoked again"
