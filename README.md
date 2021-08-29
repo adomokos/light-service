@@ -551,24 +551,28 @@ end
 The `expects` macro will pull the value with the expected key from the context, and
 makes it available to you through a reader.
 
-The `promises` macro will not only check if the context has the promised keys, it also sets it for you in the context if
-you use the accessor with the same name in the same way as the expects macro.
+The `promises` macro will not only check if the context has the promised keys, it
+also sets them for you in the context if you use the accessor with the same name,
+much the same way as the expects macro works.
 
-The context object is essentially a smarter than normal Hash. Take a look at [this spec](spec/action_expects_and_promises_spec.rb)
+The context object is essentially a smarter-than-normal Hash. Take a look at [this spec](spec/action_expects_and_promises_spec.rb)
 to see expects and promises used with and without accessors.
 
 ### Default values for optional Expected keys
 
-When you have an expected key, but it has a sensible default that should be used everywhere and
-overridden on an as-needed basis, you can specify a default value. An example use-case is a flag
-that will allow a failure from a service under most circumstances.
+When you have an expected key that has a sensible default which should be used everywhere and
+only overridden on an as-needed basis, you can specify a default value. An example use-case
+is a flag that allows a failure from a service under most circumstances to avoid failing an
+entire workflow because of a non-critical action.
 
 LightService provides two mechanisms for specifying default values:
 
 1. A static value that is used as-is
 2. A callable that takes the current context as a param
 
-Using the above use case, consider an action that sends a text message:
+Using the above use case, consider an action that sends a text message. In most cases,
+if there is a problem sending the text message, it might be OK for it to fail. We will
+`expect` an `allow_failure` key, but set it with a default, like so:
 
 ```ruby
 class SendSMS
