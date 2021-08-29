@@ -104,9 +104,7 @@ module LightService
       end
 
       def extract_default(default, context)
-        is_callable = default.respond_to?(:call)
-
-        return default unless is_callable
+        return default unless default.respond_to?(:call)
 
         default.call(context)
       end
