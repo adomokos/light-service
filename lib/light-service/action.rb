@@ -45,7 +45,7 @@ module LightService
             catch(:jump_when_failed) do
               call_before_action(action_context)
 
-              if context.instance_of?(Context) and context.around_actions.respond_to?(:call)
+              if around_action_context?(context)
                 context.around_actions.call(action_context) do
                   yield(action_context)
                   action_context
@@ -102,6 +102,10 @@ module LightService
         end
 
         context
+      end
+
+      def around_action_context?(context)
+        context.instance_of?(Context) && context.around_actions.respond_to?(:call)
       end
     end
   end
