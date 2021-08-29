@@ -105,7 +105,8 @@ module LightService
       end
 
       def around_action_context?(context)
-        context.instance_of?(Context) && context.around_actions.respond_to?(:call)
+        context.instance_of?(Context) &&
+          context.around_actions.respond_to?(:call)
       end
     end
   end
