@@ -16,8 +16,7 @@ module LightService
     module Macros
       def expects(*args)
         if expect_key_having_default?(args)
-          available_defaults[args.first] = args.last[:default] \
-            if args.last.key?(:default)
+          available_defaults[args.first] = args.last[:default]
 
           args = [args.first]
         end
@@ -90,7 +89,16 @@ module LightService
       end
 
       def expect_key_having_default?(key)
-        key.size == 2 && key.last.is_a?(Hash)
+        return false unless key.size == 2 && key.last.is_a?(Hash)
+        return true if key.last.key?(:default)
+
+        err_msg = <<~ERR_MSG
+          Default values must be specified with a `default key`.
+          Expected: expects :#{key.first}, default: some_value
+          Got:      expects :#{key.first}, #{key.last.keys.first}: some_value
+        ERR_MSG
+
+        raise UnusableExpectKeyDefaultError, err_msg
       end
 
       def create_action_context(context)
