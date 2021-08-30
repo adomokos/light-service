@@ -15,6 +15,12 @@ module LightService
 
     module Macros
       def expects(*args)
+        if expect_key_having_default?(args)
+          available_defaults[args.first] = args.last[:default]
+
+          args = [args.first]
+        end
+
         expected_keys.concat(args)
       end
 
@@ -78,14 +84,45 @@ module LightService
         end
       end
 
+      def available_defaults
+        @available_defaults ||= {}
+      end
+
+      def expect_key_having_default?(key)
+        return false unless key.size == 2 && key.last.is_a?(Hash)
+        return true if key.last.key?(:default)
+
+        bad_key = key.last.keys.first
+        err_msg = "Specify defaults with a `default` key. You have #{bad_key}."
+        raise UnusableExpectKeyDefaultError, err_msg
+      end
+
       def create_action_context(context)
-        return context if context.is_a? LightService::Context
+        usable_defaults(context).each do |ctx_key, default|
+          context[ctx_key] = extract_default(default, context)
+        end
 
         LightService::Context.make(context)
       end
 
       def all_keys
         expected_keys + promised_keys
+      end
+
+      def missing_expected_keys(context)
+        expected_keys - context.keys
+      end
+
+      def usable_defaults(context)
+        available_defaults.slice(
+          *(missing_expected_keys(context) & available_defaults.keys)
+        )
+      end
+
+      def extract_default(default, context)
+        return default unless default.respond_to?(:call)
+
+        default.call(context)
       end
 
       def call_before_action(context)

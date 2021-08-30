@@ -21,6 +21,8 @@ LightService is a powerful and flexible service skeleton framework with an empha
     * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
 * [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
 * [Before and After Action Hooks](#before-and-after-action-hooks)
+* [Expects and Promises](#expects-and-promises)
+    * [Default values for optional Expected keys](#default-values-for-optional-expected-keys)
 * [Key Aliases](#key-aliases)
 * [Logging](#logging)
 * [Error Codes](#error-codes)
@@ -529,42 +531,10 @@ These ideas are originally from Aspect Oriented Programming, read more about the
 ## Expects and Promises
 The `expects` and `promises` macros are rules for the inputs/outputs of an action.
 `expects` describes what keys it needs to execute, and `promises` makes sure the keys are in the context after the
-action is reduced. If either of them are violated, a custom exception is thrown.
+action is reduced. If either of them are violated, a `LightService::ExpectedKeysNotInContextError` or
+`LightService::PromisedKeysNotInContextError` exception respectively will be thrown.
 
 This is how it's used:
-```ruby
-class FooAction
-  extend LightService::Action
-  expects :baz
-  promises :bar
-
-  executed do |context|
-    baz = context.fetch :baz
-
-    bar = baz + 2
-    context[:bar] = bar
-  end
-end
-```
-
-The `expects` macro does a bit more for you: it pulls the value with the expected key from the context, and
-makes it available to you through a reader. You can refactor the action like this:
-
-```ruby
-class FooAction
-  extend LightService::Action
-  expects :baz
-  promises :bar
-
-  executed do |context|
-    bar = context.baz + 2
-    context[:bar] = bar
-  end
-end
-```
-
-The `promises` macro will not only check if the context has the promised keys, it also sets it for you in the context if
-you use the accessor with the same name. The code above can be further simplified:
 
 ```ruby
 class FooAction
@@ -578,7 +548,73 @@ class FooAction
 end
 ```
 
-Take a look at [this spec](spec/action_expects_and_promises_spec.rb) to see the refactoring in action.
+The `expects` macro will pull the value with the expected key from the context, and
+makes it available to you through a reader.
+
+The `promises` macro will not only check if the context has the promised keys, it
+also sets them for you in the context if you use the accessor with the same name,
+much the same way as the expects macro works.
+
+The context object is essentially a smarter-than-normal Hash. Take a look at [this spec](spec/action_expects_and_promises_spec.rb)
+to see expects and promises used with and without accessors.
+
+### Default values for optional Expected keys
+
+When you have an expected key that has a sensible default which should be used everywhere and
+only overridden on an as-needed basis, you can specify a default value. An example use-case
+is a flag that allows a failure from a service under most circumstances to avoid failing an
+entire workflow because of a non-critical action.
+
+LightService provides two mechanisms for specifying default values:
+
+1. A static value that is used as-is
+2. A callable that takes the current context as a param
+
+Using the above use case, consider an action that sends a text message. In most cases,
+if there is a problem sending the text message, it might be OK for it to fail. We will
+`expect` an `allow_failure` key, but set it with a default, like so:
+
+```ruby
+class SendSMS
+  extend LightService::Action
+  expects :message, :user
+  expects :allow_failure, default: true
+
+  executed do |context|
+    sms_api = SMSService.new(key: ENV["SMS_API_KEY"])
+    status  = sms_api.send(ctx.user.mobile_number, ctx.message)
+
+    if !status.sent_ok?
+      ctx.fail!(status.err_msg) unless ctx.allow_failure
+    end
+  end
+end
+```
+
+Default values can also be processed dynamically by providing a callable. Any values already
+specified in the context are available to it via Hash key lookup syntax. e.g.
+
+```ruby
+class SendSMS
+  extend LightService::Action
+  expects :message, :user
+  expects :allow_failure, default: ->(ctx) { !ctx[:user].admin? } # Admins must always get SMS'
+
+  executed do |context|
+    sms_api = SMSService.new(key: ENV["SMS_API_KEY"])
+    status  = sms_api.send(ctx.user.mobile_number, ctx.message)
+
+    if !status.sent_ok?
+      ctx.fail!(status.err_msg) unless ctx.allow_failure
+    end
+  end
+end
+```
+
+**Note** that default values must be specified one at a time on their own line.
+
+You can then call an action or organizer that uses an action with defaults without specifying
+the expected key that has a default.
 
 ## Key Aliases
 The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.

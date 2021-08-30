@@ -576,6 +576,33 @@ module TestDoubles
     end
   end
 
+  class AddsNumbersWithOptionalDefaults
+    extend LightService::Action
+
+    expects  :first_number
+    expects  :second_number, :default => ->(ctx) { ctx[:first_number] + 7 }
+    expects  :third_number,  :default => 10
+    promises :total
+
+    executed do |ctx|
+      ctx.total = ctx.first_number + ctx.second_number + ctx.third_number
+    end
+  end
+
+  class OrganizerWithActionsUsingDefaults
+    extend LightService::Organizer
+    def self.call
+      with(:first_number => 1, :number => 1).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsNumbersWithOptionalDefaults,
+        AddToTotalAction
+      ]
+    end
+  end
+
   class AnOrganizerThatAddsToContext
     extend LightService::Organizer
     def self.call
