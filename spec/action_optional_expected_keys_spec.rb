@@ -61,8 +61,22 @@ describe ":expects macro using defaults" do
 
   context "when defaults are misconfigured" do
     it "is expected to raise an exception" do
-      expect { TestDoubles::AddsNumbersWithIncorrectDefaults.execute }.to \
-        raise_error(LightService::UnusableExpectKeyDefaultError)
+      expect do
+        # Needs to be specified in the block
+        # as error is raised at define time
+        class AddsNumbersWithIncorrectDefaults
+          extend LightService::Action
+
+          expects  :first,  :default => 10 # This one is fine. Other two arent
+          expects  :second, :defalut => ->(ctx) { ctx[:first] + 7 }
+          expects  :third,  :deafult => 10
+          promises :total
+
+          executed do |ctx|
+            ctx.total = ctx.first + ctx.second + ctx.third
+          end
+        end
+      end.to raise_error(LightService::UnusableExpectKeyDefaultError)
     end
   end
 end
