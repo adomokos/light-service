@@ -37,14 +37,6 @@ module LightService
         @promised_keys ||= []
       end
 
-      def available_defaults
-        @available_defaults ||= {}
-      end
-
-      def expect_key_having_default?(key)
-        key.size == 2 && key.last.is_a?(Hash)
-      end
-
       def executed(*_args, &block)
         define_singleton_method :execute do |context = Context.make|
           action_context = create_action_context(context)
@@ -91,6 +83,14 @@ module LightService
         else
           yield(context)
         end
+      end
+
+      def available_defaults
+        @available_defaults ||= {}
+      end
+
+      def expect_key_having_default?(key)
+        key.size == 2 && key.last.is_a?(Hash)
       end
 
       def create_action_context(context)
