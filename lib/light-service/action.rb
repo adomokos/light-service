@@ -92,12 +92,8 @@ module LightService
         return false unless key.size == 2 && key.last.is_a?(Hash)
         return true if key.last.key?(:default)
 
-        err_msg = <<~ERR_MSG
-          Default values must be specified with a `default key`.
-          Expected: expects :#{key.first}, default: some_value
-          Got:      expects :#{key.first}, #{key.last.keys.first}: some_value
-        ERR_MSG
-
+        bad_key = key.last.keys.first
+        err_msg = "Specify defaults with a `default` key. You have #{bad_key}."
         raise UnusableExpectKeyDefaultError, err_msg
       end
 
