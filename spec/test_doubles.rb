@@ -74,6 +74,16 @@ module TestDoubles
     end
   end
 
+  class AroundEachWithReduceIfOrganizer
+    extend LightService::Organizer
+
+    def self.call(action_arguments)
+      with(action_arguments)
+        .around_each(AroundEachLoggerHandler)
+        .reduce(ReduceIfOrganizer.actions)
+    end
+  end
+
   class AddsTwoActionWithFetch
     extend LightService::Action
 

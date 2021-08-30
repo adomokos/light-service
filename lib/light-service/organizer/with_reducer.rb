@@ -30,6 +30,7 @@ module LightService
       def reduce(*actions)
         raise "No action(s) were provided" if actions.empty?
 
+        @context.around_actions ||= around_each_handler
         actions.flatten!
 
         actions.each_with_object(context) do |action, current_context|
@@ -59,12 +60,10 @@ module LightService
       private
 
       def invoke_action(current_context, action)
-        around_each_handler.call(current_context) do
-          if action.respond_to?(:call)
-            action.call(current_context)
-          else
-            action.execute(current_context)
-          end
+        if action.respond_to?(:call)
+          action.call(current_context)
+        else
+          action.execute(current_context)
         end
       end
 

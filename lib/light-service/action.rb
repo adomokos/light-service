@@ -45,8 +45,8 @@ module LightService
         key.size == 2 && key.last.is_a?(Hash)
       end
 
-      def executed
-        define_singleton_method :execute do |context = {}|
+      def executed(*_args, &block)
+        define_singleton_method :execute do |context = Context.make|
           action_context = create_action_context(context)
           return action_context if action_context.stop_processing?
 
@@ -58,7 +58,8 @@ module LightService
 
             catch(:jump_when_failed) do
               call_before_action(action_context)
-              yield(action_context)
+
+              execute_action(action_context, &block)
 
               # Reset the stored action in case it was changed downstream
               action_context.current_action = self
@@ -80,6 +81,17 @@ module LightService
       end
 
       private
+
+      def execute_action(context)
+        if around_action_context?(context)
+          context.around_actions.call(context) do
+            yield(context)
+            context
+          end
+        else
+          yield(context)
+        end
+      end
 
       def create_action_context(context)
         usable_defaults(context).each do |ctx_key, default|
@@ -125,6 +137,11 @@ module LightService
         end
 
         context
+      end
+
+      def around_action_context?(context)
+        context.instance_of?(Context) &&
+          context.around_actions.respond_to?(:call)
       end
     end
   end
