@@ -58,4 +58,11 @@ describe ":expects macro using defaults" do
       expect(outcome.total).to eq 20
     end
   end
+
+  context "when defaults are misconfigured" do
+    it "is expected to raise an exception" do
+      expect { TestDoubles::AddsNumbersWithIncorrectDefaults.execute }.to \
+        raise_error(LightService::UnusableExpectKeyDefaultError)
+    end
+  end
 end

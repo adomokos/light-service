@@ -589,6 +589,18 @@ module TestDoubles
     end
   end
 
+  class AddsNumbersWithIncorrectDefaults
+    extend LightService::Action
+
+    expects  :first_number,  :defalut => ->(ctx) { ctx[:first_number] + 7 }
+    expects  :second_number, :deafult => 10
+    promises :total
+
+    executed do |ctx|
+      ctx.total = ctx.first_number + ctx.second_number
+    end
+  end
+
   class OrganizerWithActionsUsingDefaults
     extend LightService::Organizer
     def self.call
