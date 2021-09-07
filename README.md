@@ -1088,10 +1088,12 @@ When specifying `promises`, specs will be created testing for their existence af
 
 ## Other implementations
 
-| Language | Repo                                                              | Author                                                 |
-| :------- |:------------------------------------------------------------------| :------------------------------------------------------|
-| Python   | [pyservice](https://github.com/adomokos/pyservice)                | [@adomokos](https://github.com/adomokos)               |
-| PHP      | [light-service](https://github.com/douglasgreyling/light-service) | [@douglasgreyling](https://github.com/douglasgreyling) |
+| Language   | Repo                                                                    | Author                                                 |
+| :--------- |:------------------------------------------------------------------------| :------------------------------------------------------|
+| Python     | [pyservice](https://github.com/adomokos/pyservice)                      | [@adomokos](https://github.com/adomokos)               |
+| PHP        | [light-service](https://github.com/douglasgreyling/light-service)       | [@douglasgreyling](https://github.com/douglasgreyling) |
+| JavaScript | [light-service.js](https://github.com/douglasgreyling/light-service.js) | [@douglasgreyling](https://github.com/douglasgreyling) |
+
 
 ## Contributing
 1. Fork it
