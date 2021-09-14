@@ -1,5 +1,11 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.17.0
+* [Fix around_action hook for nested actions](https://github.com/adomokos/light-service/pull/217)
+* [Add ReduceIfElse macro](https://github.com/adomokos/light-service/pull/218)
+* [Implement support for default values for optional expected keys](https://github.com/adomokos/light-service/pull/219)
+* [Add light-service.js implementation to README](https://github.com/adomokos/light-service/pull/222)
+
 ### 0.16.0
 * [Drop Ruby 2.4 support](https://github.com/adomokos/light-service/pull/207)
 * [Fix callback current action](https://github.com/adomokos/light-service/pull/209)
