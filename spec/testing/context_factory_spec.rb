@@ -60,3 +60,18 @@ describe 'ContextFactory - used with AdditionOrganizer' do
     end
   end
 end
+
+describe 'ContextFactory - used with NamedArgumentOrganiser' do
+  let(:organizer) { TestDoubles::NamedArgumentOrganiser }
+
+  # it's relevant to test this as handling of named arguments changed between ruby 2.7 and 3.0
+  it 'pass named arguments to the organiser' do
+    ctx =
+      LightService::Testing::ContextFactory
+      .make_from(organizer)
+      .for(TestDoubles::AddsTwoAction)
+      .with(number: 2) # rubocop:disable Style/HashSyntax
+
+    expect(ctx[:number]).to eq(2)
+  end
+end
