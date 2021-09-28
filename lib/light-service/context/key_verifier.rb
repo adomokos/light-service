@@ -24,7 +24,7 @@ module LightService
 
       def error_message
         "#{type_name} #{format_keys(keys_not_found(keys))} " \
-        "to be in the context during #{action}"
+          "to be in the context during #{action}"
       end
 
       def throw_error_predicate(_keys)
@@ -95,7 +95,7 @@ module LightService
 
       def error_message
         "promised or expected keys cannot be a " \
-        "reserved key: [#{format_keys(violated_keys)}]"
+          "reserved key: [#{format_keys(violated_keys)}]"
       end
 
       def keys
@@ -116,9 +116,11 @@ module LightService
     end
 
     class ReservedKeysViaOrganizerVerifier < ReservedKeysVerifier
+      # rubocop:disable Lint/MissingSuper
       def initialize(context_data)
         @context = LightService::Context.make(context_data)
       end
+      # rubocop:enable Lint/MissingSuper
 
       def violated_keys
         context.keys.map(&:to_sym) & reserved_keys

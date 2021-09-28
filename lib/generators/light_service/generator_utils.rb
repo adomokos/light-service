@@ -25,7 +25,6 @@ module LightService
         options.tests? && test_framework_supported?
       end
 
-      # rubocop:disable Metrics/AbcSize
       def create_required_gen_vals_from(name)
         path_parts = name.underscore.split('/')
 
@@ -39,7 +38,6 @@ module LightService
           :full_class_name => name.classify
         }
       end
-      # rubocop:enable Metrics/AbcSize
     end
   end
 end

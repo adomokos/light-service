@@ -63,6 +63,7 @@ RSpec.describe LightService::Organizer do
         reduce(actions)
       end
 
+      # rubocop:disable Metrics/AbcSize
       def self.actions
         [
           reduce_if(
@@ -76,6 +77,7 @@ RSpec.describe LightService::Organizer do
           execute(->(c) { c[:last_outside] = true })
         ]
       end
+      # rubocop:enable Metrics/AbcSize
     end
 
     result = org.call

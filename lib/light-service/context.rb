@@ -6,11 +6,12 @@ module LightService
     FAILURE = 1
   end
 
-  # rubocop:disable ClassLength
+  # rubocop:disable Metrics/ClassLength
   class Context < Hash
     attr_accessor :message, :error_code, :current_action, :around_actions,
                   :organized_by
 
+    # rubocop:disable Metrics/ParameterLists, Lint/MissingSuper
     def initialize(context = {},
                    outcome = Outcomes::SUCCESS,
                    message = '',
@@ -22,6 +23,7 @@ module LightService
 
       context.to_hash.each { |k, v| self[k] = v }
     end
+    # rubocop:enable Metrics/ParameterLists, Lint/MissingSuper
 
     def self.make(context = {})
       unless context.is_a?(Hash) || context.is_a?(LightService::Context)
@@ -152,13 +154,8 @@ module LightService
     end
 
     def inspect
-      "#{self.class}(#{self}, " \
-      + "success: #{success?}, " \
-      + "message: #{check_nil(message)}, " \
-      + "error_code: #{check_nil(error_code)}, " \
-      + "skip_remaining: #{@skip_remaining}, " \
-      + "aliases: #{@aliases}" \
-      + ")"
+      "#{self.class}(#{self}, success: #{success?}, message: #{check_nil(message)}, error_code: " \
+        "#{check_nil(error_code)}, skip_remaining: #{@skip_remaining}, aliases: #{@aliases})"
     end
 
     private
@@ -169,5 +166,5 @@ module LightService
       "'#{value}'"
     end
   end
-  # rubocop:enable ClassLength
+  # rubocop:enable Metrics/ClassLength
 end

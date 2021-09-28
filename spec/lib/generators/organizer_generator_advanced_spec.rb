@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative '../../../lib/generators/light_service/organizer_generator.rb'
+require_relative '../../../lib/generators/light_service/organizer_generator'
 require_relative './full_generator_test_blobs'
 
 describe LightService::Generators::OrganizerGenerator, :type => :generator do

@@ -34,14 +34,10 @@ RSpec.describe 'Action after_actions' do
       class AdditionOrganizer
         extend LightService::Organizer
         after_actions (lambda do |ctx|
-                         if ctx.current_action == TestDoubles::AddsOneAction
-                           ctx.number -= 2
-                         end
+                         ctx.number -= 2 if ctx.current_action == TestDoubles::AddsOneAction
                        end),
                       (lambda do |ctx|
-                         if ctx.current_action == TestDoubles::AddsThreeAction
-                           ctx.number -= 3
-                         end
+                         ctx.number -= 3 if ctx.current_action == TestDoubles::AddsThreeAction
                        end)
 
         def self.call(number)
@@ -69,9 +65,7 @@ RSpec.describe 'Action after_actions' do
     it 'ensures the correct :current_action is set' do
       TestDoubles::TestWithCallback.after_actions = [
         lambda do |ctx|
-          if ctx.current_action == TestDoubles::IterateCollectionAction
-            ctx.total -= 1000
-          end
+          ctx.total -= 1000 if ctx.current_action == TestDoubles::IterateCollectionAction
         end
       ]
 
