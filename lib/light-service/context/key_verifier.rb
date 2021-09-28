@@ -116,10 +116,11 @@ module LightService
     end
 
     class ReservedKeysViaOrganizerVerifier < ReservedKeysVerifier
+      # rubocop:disable Lint/MissingSuper
       def initialize(context_data)
-        super
         @context = LightService::Context.make(context_data)
       end
+      # rubocop:enable Lint/MissingSuper
 
       def violated_keys
         context.keys.map(&:to_sym) & reserved_keys
