@@ -45,6 +45,7 @@ module TestDoubles
 
   class TestLogger
     attr_accessor :logs
+
     def initialize
       @logs = []
     end
@@ -93,8 +94,13 @@ module TestDoubles
     end
   end
 
-  class AnAction; end
-  class AnotherAction; end
+  class AnAction
+    extend LightService::Action
+  end
+
+  class AnotherAction
+    extend LightService::Action
+  end
 
   class AnOrganizer
     extend LightService::Organizer
@@ -176,9 +182,7 @@ module TestDoubles
     promises :latte
 
     executed do |context|
-      if context.milk == :very_hot
-        context.fail!("Can't make a latte from a milk that's very hot!")
-      end
+      context.fail!("Can't make a latte from a milk that's very hot!") if context.milk == :very_hot
 
       if context.milk == :super_hot
         error_message = "Can't make a latte from a milk that's super hot!"
@@ -488,7 +492,9 @@ module TestDoubles
   class NullAction
     extend LightService::Action
 
+    # rubocop:disable Lint/EmptyBlock
     executed { |_ctx| }
+    # rubocop:enable Lint/EmptyBlock
   end
 
   class TestIterate

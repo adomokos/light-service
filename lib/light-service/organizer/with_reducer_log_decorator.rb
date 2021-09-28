@@ -5,7 +5,7 @@ module LightService
 
       alias logged? logged
 
-      def initialize(organizer, decorated: WithReducer.new, logger:)
+      def initialize(organizer, logger:, decorated: WithReducer.new)
         @decorated = decorated
         @organizer = organizer
 
@@ -22,7 +22,7 @@ module LightService
 
         logger.info do
           "[LightService] -     keys in context: " \
-          "#{extract_keys(decorated.context.keys)}"
+            "#{extract_keys(decorated.context.keys)}"
         end
         self
       end

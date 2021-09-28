@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require_relative '../../../lib/generators/light_service/action_generator.rb'
+require_relative '../../../lib/generators/light_service/action_generator'
 require_relative './full_generator_test_blobs'
 
 describe LightService::Generators::ActionGenerator, :type => :generator do

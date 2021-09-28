@@ -34,14 +34,10 @@ RSpec.describe 'Action before_actions' do
       class AdditionOrganizer
         extend LightService::Organizer
         before_actions (lambda do |ctx|
-                          if ctx.current_action == TestDoubles::AddsOneAction
-                            ctx.number -= 2
-                          end
+                          ctx.number -= 2 if ctx.current_action == TestDoubles::AddsOneAction
                         end),
                        (lambda do |ctx|
-                          if ctx.current_action == TestDoubles::AddsThreeAction
-                            ctx.number -= 3
-                          end
+                          ctx.number -= 3 if ctx.current_action == TestDoubles::AddsThreeAction
                         end)
 
         def self.call(number)
@@ -69,9 +65,7 @@ RSpec.describe 'Action before_actions' do
     it 'can interact with actions from the outside' do
       TestDoubles::TestWithCallback.before_actions = [
         lambda do |ctx|
-          if ctx.current_action == TestDoubles::AddToTotalAction
-            ctx.total -= 1000
-          end
+          ctx.total -= 1000 if ctx.current_action == TestDoubles::AddToTotalAction
         end
       ]
       result = TestDoubles::TestWithCallback.call

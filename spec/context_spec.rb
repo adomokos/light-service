@@ -167,7 +167,7 @@ RSpec.describe LightService::Context do
   end
 
   it "allows a default block value for #fetch" do
-    expect(context.fetch(:madeup) { :default }).to eq(:default)
+    expect(context.fetch(:madeup, :default)).to eq(:default)
   end
 
   context "when aliases are included via .make" do

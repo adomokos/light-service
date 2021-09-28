@@ -26,9 +26,9 @@ module LightService
 
       # More than one arguments can be passed to the
       # Organizer's #call method
-      def with(*args, &block)
+      def with(...)
         catch(:return_ctx_from_execution) do
-          @organizer.call(*args, &block)
+          @organizer.call(...)
         end
       end
 
