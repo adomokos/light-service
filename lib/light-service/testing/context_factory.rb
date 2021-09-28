@@ -26,11 +26,13 @@ module LightService
 
       # More than one arguments can be passed to the
       # Organizer's #call method
-      def with(...)
+      # rubocop:disable Style/ArgumentsForwarding
+      def with(*args, &block)
         catch(:return_ctx_from_execution) do
-          @organizer.call(...)
+          @organizer.call(*args, &block)
         end
       end
+      # rubocop:enable Style/ArgumentsForwarding
 
       def initialize(organizer)
         @organizer = organizer
