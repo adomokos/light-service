@@ -53,6 +53,15 @@ Layout/TrailingEmptyLines:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Lint/EmptyClass:
+  Exclude:
+    - 'spec/**/*.rb'
+
+# Defaults after the Rubocop upgrade
 Gemspec/DateAssignment: # new in 1.10
   Enabled: true
 Layout/LineEndStringConcatenationIndentation: # new in 1.18
