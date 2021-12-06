@@ -595,12 +595,37 @@ module TestDoubles
     end
   end
 
-  class AddsNumbersWithValidations
+  class AddsNumbersWithPresenceValidations
     extend LightService::Action
 
     expects :first_number, :validates => { :presence => true }
-    expects :second_number, :validates => { :presence => true }
+    expects :second_number
 
+    promises :total
+
+    executed do |c|
+      c.total = c.first_number + c.second_number
+    end
+  end
+
+  class AddsNumbersWithClassNameValidations
+    extend LightService::Action
+
+    expects :first_number, :validates => { :class_name => Integer }
+    expects :second_number
+
+    promises :total
+
+    executed do |c|
+      c.total = c.first_number + c.second_number
+    end
+  end
+
+  class AddsNumbersWithClassValidations
+    extend LightService::Action
+
+    expects :first_number, :validates => { :class => Numeric }
+    expects :second_number
     promises :total
 
     executed do |c|

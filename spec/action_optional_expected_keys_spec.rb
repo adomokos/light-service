@@ -76,7 +76,7 @@ describe ":expects macro using defaults" do
             ctx.total = ctx.first + ctx.second + ctx.third
           end
         end
-      end.to raise_error(LightService::UnusableExpectKeyDefaultError)
+      end.to raise_error(LightService::InvalidExpectOptionError)
     end
   end
 end
