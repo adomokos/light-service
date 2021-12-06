@@ -1,4 +1,5 @@
 require 'active_support/deprecation'
+require 'active_model'
 
 module LightService
   module Outcomes
@@ -8,6 +9,8 @@ module LightService
 
   # rubocop:disable Metrics/ClassLength
   class Context < Hash
+    include ActiveModel::Validations
+
     attr_accessor :message, :error_code, :current_action, :around_actions,
                   :organized_by
 

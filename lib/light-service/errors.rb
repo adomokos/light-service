@@ -8,4 +8,8 @@ module LightService
   class ReservedKeysInContextError < StandardError; end
 
   class UnusableExpectKeyDefaultError < StandardError; end
+
+  class InvalidKeysError < StandardError; end
+
+  class InvalidExpectOptionError < StandardError; end
 end

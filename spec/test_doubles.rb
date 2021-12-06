@@ -595,6 +595,19 @@ module TestDoubles
     end
   end
 
+  class AddsNumbersWithValidations
+    extend LightService::Action
+
+    expects :first_number, :validates => { :presence => true }
+    expects :second_number, :validates => { :presence => true }
+
+    promises :total
+
+    executed do |c|
+      c.total = c.first_number + c.second_number
+    end
+  end
+
   class OrganizerWithActionsUsingDefaults
     extend LightService::Organizer
     def self.call

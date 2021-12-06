@@ -1,3 +1,5 @@
+require_relative 'validator'
+
 module LightService
   class Context
     class KeyVerifier
@@ -45,6 +47,7 @@ module LightService
       def self.verify_keys(context, action, &block)
         ReservedKeysVerifier.new(context, action).verify
         ExpectedKeyVerifier.new(context, action).verify
+        ValidatedKeysVerifier.new(context, action).verify
 
         block.call
 
@@ -131,6 +134,35 @@ module LightService
           reserved keys cannot be added to the context
           reserved key: [#{format_keys(violated_keys)}]
         ERR
+      end
+    end
+
+    class ValidatedKeysVerifier < KeyVerifier
+      def type_name
+        "expected"
+      end
+
+      def keys
+        action.options.filter { |_k, v| v[:validates] }.keys
+      end
+
+      def error_to_throw
+        InvalidKeysError
+      end
+
+      def error_message
+        <<~ERR
+          #{action.name}:
+          #{@errors.map { |e| "#{e.attribute}: #{e.message}" }.join("\n").indent(2)}
+        ERR
+      end
+
+      def throw_error_predicate(keys)
+        return false if keys.nil? || keys == []
+
+        @errors = Validator.new(keys, action, context).tap(&:validate).errors
+
+        return @errors.any?
       end
     end
   end

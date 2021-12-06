@@ -14,7 +14,7 @@ module LightService
     end
 
     module Macros
-      VALID_EXPECTS_OPTION_KEYS = %i[default].freeze
+      VALID_EXPECTS_OPTION_KEYS = %i[default validates].freeze
 
       def expects(*keys, **opts)
         validate_opts(opts)
@@ -73,6 +73,10 @@ module LightService
         end
       end
 
+      def options
+        @options ||= Hash.new({})
+      end
+
       private
 
       def execute_action(context)
@@ -84,10 +88,6 @@ module LightService
         else
           yield(context)
         end
-      end
-
-      def options
-        @options ||= Hash.new({})
       end
 
       def create_action_context(context)
@@ -142,10 +142,11 @@ module LightService
       end
 
       def validate_opts(opts)
-        if (invalid_opts = opts.keys - VALID_EXPECTS_OPTION_KEYS).any?
-          err_msg = "Invalid options '#{invalid_opts.join(', ')}' passed to expects, valid keys are #{VALID_EXPECTS_OPTION_KEYS.join(', ')}."
-          raise UnusableExpectKeyDefaultError, err_msg
-        end
+        return unless (invalid_opts = opts.keys - VALID_EXPECTS_OPTION_KEYS).any?
+
+        err_msg = "Invalid options '#{invalid_opts.join(', ')}' passed to expects, valid keys are #{VALID_EXPECTS_OPTION_KEYS.join(', ')}."
+
+        raise InvalidExpectOptionError, err_msg
       end
     end
   end
