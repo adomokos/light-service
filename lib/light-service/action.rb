@@ -13,6 +13,7 @@ module LightService
       base_class.extend Macros
     end
 
+    # rubocop:disable Metrics/ModuleLength
     module Macros
       VALID_EXPECTS_OPTION_KEYS = %i[default validates].freeze
       VALID_VALIDATES_OPTION_KEYS = %i[class class_name exclusion format inclusion length numericality presence
@@ -20,16 +21,18 @@ module LightService
 
       def expects(*keys, **opts)
         validate_opts(opts)
-
         keys.each do |key|
-          options[key] = options[key].merge(opts)
+          options[key] = options[key].merge({ :expects => opts })
         end
-
         expected_keys.concat(keys)
       end
 
-      def promises(*args)
-        promised_keys.concat(args)
+      def promises(*keys, **opts)
+        validate_opts(opts)
+        keys.each do |key|
+          options[key] = options[key].merge({ :promises => opts })
+        end
+        promised_keys.concat(keys)
       end
 
       def expected_keys
@@ -94,7 +97,7 @@ module LightService
 
       def create_action_context(context)
         usable_defaults(context).each do |ctx_key, options|
-          context[ctx_key] = extract_default(options[:default], context)
+          context[ctx_key] = extract_default(options.dig(:expects, :default), context)
         end
 
         LightService::Context.make(context)
@@ -109,7 +112,7 @@ module LightService
       end
 
       def usable_defaults(context)
-        options.filter { |_k, v| v[:default] }.slice(
+        options.filter { |_k, v| v.dig(:expects, :default) }.slice(
           *missing_expected_keys(context)
         )
       end
@@ -145,12 +148,15 @@ module LightService
 
       def validate_opts(opts)
         if (invalid_opts = opts.keys - VALID_EXPECTS_OPTION_KEYS).any?
-          err_msg = "Invalid options '#{invalid_opts.to_sentence}' passed to expects, valid keys are #{VALID_EXPECTS_OPTION_KEYS.to_sentence}."
+          err_msg = "Invalid options '#{invalid_opts.to_sentence}' passed to expects, "\
+                    "valid keys are #{VALID_EXPECTS_OPTION_KEYS.to_sentence}."
         elsif (invalid_validates_opts = (opts[:validates]&.keys || []) - VALID_VALIDATES_OPTION_KEYS).any?
-          err_msg = "Invalid validates options: '#{invalid_validates_opts.to_sentence}' passed to validates, valid keys are #{VALID_EXPECTS_OPTION_KEYS.to_sentence}"
+          err_msg = "Invalid validates options: '#{invalid_validates_opts.to_sentence}' "\
+                    "passed to validates, valid keys are #{VALID_VALIDATES_OPTION_KEYS.to_sentence}"
         end
         raise InvalidExpectOptionError, err_msg unless err_msg.nil?
       end
     end
+    # rubocop:enable Metrics/ModuleLength
   end
 end

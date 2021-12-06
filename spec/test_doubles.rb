@@ -582,6 +582,17 @@ module TestDoubles
     end
   end
 
+  class AddsNumbersWithMultipleDefaults
+    extend LightService::Action
+
+    expects  :first_number, :second_number, :third_number, :default => 10
+    promises :total
+
+    executed do |ctx|
+      ctx.total = ctx.first_number + ctx.second_number + ctx.third_number
+    end
+  end
+
   class AddsNumbersWithOptionalDefaults
     extend LightService::Action
 
@@ -627,6 +638,18 @@ module TestDoubles
     expects :first_number, :validates => { :class => Numeric }
     expects :second_number
     promises :total
+
+    executed do |c|
+      c.total = c.first_number + c.second_number
+    end
+  end
+
+  class AddsNumbersWithPromiseValidations
+    extend LightService::Action
+
+    expects :first_number
+    expects :second_number
+    promises :total, :validates => { :numericality => { :greater_than => 10 } }
 
     executed do |c|
       c.total = c.first_number + c.second_number

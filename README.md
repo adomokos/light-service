@@ -637,9 +637,8 @@ end
 
 ## Runtime Validations
 
-LightService's `:expect` macro has a validation interface built on top of [`ActiveModel::Validations`](https://api.rubyonrails.org/classes/ActiveModel/Validations.html).
-This functionality is helpful for developing and debugging your code. Only a subset of the validations
-are applicable to LightService, so the valid keys have been reduced to the following:
+LightService's `expects` and `promises` macros have a validation interface built on top of [`ActiveModel::Validations`](https://api.rubyonrails.org/classes/ActiveModel/Validations.html).
+Only a subset of the validations are applicable to LightService, so the valid keys have been reduced to the following:
 
 - `:exclusion`
 - `:format`
@@ -665,8 +664,8 @@ class SendSMS
   extend LightService::Action
   # Don't allow empty messages or ones shorter than 5 characters to be sent
   expects :message, validates: { presence: true, length: { minimum: 5 } } 
-  # Don't assume the user was found
-  expects :user, validates: { presence: true } 
+  # Expect that the user is present, and is of class User 
+  expects :user, validates: { presence: true, class_name: User } 
 
   executed do |context|
     sms_api = SMSService.new(key: ENV["SMS_API_KEY"])

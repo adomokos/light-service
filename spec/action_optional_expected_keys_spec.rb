@@ -49,6 +49,18 @@ describe ":expects macro using defaults" do
 
       expect(outcome.total).to eq 23
     end
+
+    it "is expected to assign multiple defaults if configured to do so" do
+      outcome = TestDoubles::AddsNumbersWithMultipleDefaults.execute
+
+      expect(outcome.total).to eq 30
+    end
+
+    it "is expected to assign multiple defaults but not override the context" do
+      outcome = TestDoubles::AddsNumbersWithMultipleDefaults.execute(:first_number => 15)
+
+      expect(outcome.total).to eq 35
+    end
   end
 
   context "when used within an organizer" do

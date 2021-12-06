@@ -1,49 +1,73 @@
-class LightService::Context::Validator
-  include ::ActiveModel::Validations
+require 'active_model'
 
-  attr_reader :action, :context
+module LightService
+  class Context
+    class Validator
+      include ::ActiveModel::Validations
 
-  def initialize(validated_keys, action, context)
-    @action = action
-    @context = context
+      attr_reader :action, :context, :type
 
-    (context.keys & validated_keys).map do |key|
-      class_eval { attr_reader key }
-      eval_validators(key, action, context)
-      instance_variable_set("@#{key}", context[key])
-    end
-  end
+      def initialize(validated_keys, action, context, type)
+        @action = action
+        @context = context
+        @type = type
 
-  def eval_validators(key, action, context)
-    class_eval do
-      if (expected = action.options.dig(key, :validates, :class_name))
-        validate ":class_name_validator_#{key}".to_sym
-
-        define_method ":class_name_validator_#{key}" do
-          actual = context[key].class
-
-          return if expected == actual
-
-          errors.add(
-            :class_name,
-            "must be an instance of #{expected}, got #{actual}"
-          )
+        (context.keys & validated_keys).map do |key|
+          class_eval { attr_reader key }
+          eval_validators(key, action.options.dup, context, type)
+          instance_variable_set("@#{key}", context[key])
         end
-      elsif (expected = action.options.dig(key, :validates, :class))
-        validate ":class_validator_#{key}".to_sym
+      end
 
-        define_method ":class_validator_#{key}" do
-          actual = context[key]
+      private
 
-          return if actual.is_a?(expected)
+      def eval_validators(key, options, context, type)
+        validations = options[key][type][:validates]
+        usable_validations = validations.reject { |k, _v| k.in? %i[class_name class default] }
+        class_eval do
+          eval_class_name_validator(key, validations, context)
+          eval_class_validator(key, validations, context)
 
-          errors.add(
-            :class_name,
-            "must be an instance of #{expected}, got #{actual}"
-          )
+          validates(key, usable_validations) if usable_validations.keys.any?
         end
-      else
-        validates key, action.options[key][:validates]
+      end
+
+      class << self
+        def eval_class_name_validator(key, validations, context)
+          return unless validations[:class_name]
+
+          expected = validations[:class_name]
+          validate ":class_name_validator_#{key}".to_sym
+
+          define_method ":class_name_validator_#{key}" do
+            actual = context[key].class
+
+            return if expected == actual
+
+            errors.add(
+              key,
+              :message => "must be an instance of #{expected}, got #{actual}"
+            )
+          end
+        end
+
+        def eval_class_validator(key, validations, context)
+          return unless validations[:class]
+
+          expected = validations[:class]
+          validate ":class_validator_#{key}".to_sym
+
+          define_method ":class_validator_#{key}" do
+            actual = context[key]
+
+            return if actual.is_a?(expected)
+
+            errors.add(
+              key,
+              :message => "must be an instance of #{expected}, got #{actual}"
+            )
+          end
+        end
       end
     end
   end
