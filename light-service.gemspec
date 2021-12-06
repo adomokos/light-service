@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.6.0'
 
   gem.add_runtime_dependency("activesupport", ">= 4.0.0")
+  gem.add_runtime_dependency("activemodel", ">= 4.0.0")
 
   gem.add_development_dependency("generator_spec", "~> 0.9.4")
   gem.add_development_dependency("test-unit", "~> 3.0") # Needed for generator specs.

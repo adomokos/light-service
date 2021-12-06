@@ -14,14 +14,16 @@ module LightService
     end
 
     module Macros
-      def expects(*args)
-        if expect_key_having_default?(args)
-          available_defaults[args.first] = args.last[:default]
+      VALID_EXPECTS_OPTION_KEYS = %i[default].freeze
 
-          args = [args.first]
+      def expects(*keys, **opts)
+        validate_opts(opts)
+
+        keys.each do |key|
+          options[key] = options[key].merge(opts)
         end
 
-        expected_keys.concat(args)
+        expected_keys.concat(keys)
       end
 
       def promises(*args)
@@ -84,22 +86,13 @@ module LightService
         end
       end
 
-      def available_defaults
-        @available_defaults ||= {}
-      end
-
-      def expect_key_having_default?(key)
-        return false unless key.size == 2 && key.last.is_a?(Hash)
-        return true if key.last.key?(:default)
-
-        bad_key = key.last.keys.first
-        err_msg = "Specify defaults with a `default` key. You have #{bad_key}."
-        raise UnusableExpectKeyDefaultError, err_msg
+      def options
+        @options ||= Hash.new({})
       end
 
       def create_action_context(context)
-        usable_defaults(context).each do |ctx_key, default|
-          context[ctx_key] = extract_default(default, context)
+        usable_defaults(context).each do |ctx_key, options|
+          context[ctx_key] = extract_default(options[:default], context)
         end
 
         LightService::Context.make(context)
@@ -114,8 +107,8 @@ module LightService
       end
 
       def usable_defaults(context)
-        available_defaults.slice(
-          *(missing_expected_keys(context) & available_defaults.keys)
+        options.filter { |_k, v| v[:default] }.slice(
+          *missing_expected_keys(context)
         )
       end
 
@@ -146,6 +139,13 @@ module LightService
       def around_action_context?(context)
         context.instance_of?(Context) &&
           context.around_actions.respond_to?(:call)
+      end
+
+      def validate_opts(opts)
+        if (invalid_opts = opts.keys - VALID_EXPECTS_OPTION_KEYS).any?
+          err_msg = "Invalid options '#{invalid_opts.join(', ')}' passed to expects, valid keys are #{VALID_EXPECTS_OPTION_KEYS.join(', ')}."
+          raise UnusableExpectKeyDefaultError, err_msg
+        end
       end
     end
   end
