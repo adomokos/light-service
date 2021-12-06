@@ -611,10 +611,76 @@ class SendSMS
 end
 ```
 
-**Note** that default values must be specified one at a time on their own line.
-
 You can then call an action or organizer that uses an action with defaults without specifying
 the expected key that has a default.
+
+You can also declare default values for multiple attributes at the same time:
+
+```ruby
+class SendSMS
+  extend LightService::Action
+  expects :message, :user
+  expects :report_to_error_reporter, :allow_failure, default: ->(ctx) { !ctx[:user].admin? } # Admins must always get SMS, and we must always be notified of the failure
+
+  executed do |context|
+    sms_api = SMSService.new(key: ENV["SMS_API_KEY"])
+    status  = sms_api.send(ctx.user.mobile_number, ctx.message)
+
+    if !status.sent_ok?
+      ErrorReporter.error(status.err_msg) if ctx.report_to_error_reporter
+      ctx.fail!(status.err_msg) unless ctx.allow_failure
+    end
+  end
+end
+```
+
+
+## Runtime Validations
+
+LightService's `:expect` macro has a validation interface built on top of [`ActiveModel::Validations`](https://api.rubyonrails.org/classes/ActiveModel/Validations.html).
+This functionality is helpful for developing and debugging your code. Only a subset of the validations
+are applicable to LightService, so the valid keys have been reduced to the following:
+
+- `:exclusion`
+- `:format`
+- `:inclusion`
+- `:length`
+- `:numericality`
+- `:presence`
+- `:absence`
+
+In addition, two custom validators are available:
+
+- `:class_name`
+  - uses `==` to validate that the class of the context value "matches exactly X"
+- `:class`
+  - uses `===` (case equality operator) to validate that the class of the context value "could be considered an X" (i.e. is an instance of the class or a subclass of the class)
+  - for example, `1` is an `Integer`, `1.0` is a `Float`, but both have `Numeric` in the ancestors chain, and `expects :number, validates: { class: Numeric }` would allow both to pass validation.
+- see [this spec](/spec/actions/expects/validates_spec.rb) for more explanation.
+
+To use a validation, simply add the `validates: {}` option to an `expects` declaration:
+
+```ruby
+class SendSMS
+  extend LightService::Action
+  # Don't allow empty messages or ones shorter than 5 characters to be sent
+  expects :message, validates: { presence: true, length: { minimum: 5 } } 
+  # Don't assume the user was found
+  expects :user, validates: { presence: true } 
+
+  executed do |context|
+    sms_api = SMSService.new(key: ENV["SMS_API_KEY"])
+    status  = sms_api.send(ctx.user.mobile_number, ctx.message)
+
+    if !status.sent_ok?
+      ctx.fail!(status.err_msg) unless ctx.allow_failure
+    end
+  end
+end
+```
+
+**Note** - these validations are for *runtime* execution only. There is no way to validate these
+expectations at build time. These validations can facilitate strong testing practices and build good habits in context building.
 
 ## Key Aliases
 The `aliases` macro sets up pairs of keys and aliases in an organizer. Actions can access the context using the aliases.

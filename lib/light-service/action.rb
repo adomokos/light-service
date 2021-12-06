@@ -15,6 +15,8 @@ module LightService
 
     module Macros
       VALID_EXPECTS_OPTION_KEYS = %i[default validates].freeze
+      VALID_VALIDATES_OPTION_KEYS = %i[class class_name exclusion format inclusion length numericality presence
+                                       absence].freeze
 
       def expects(*keys, **opts)
         validate_opts(opts)
@@ -142,11 +144,12 @@ module LightService
       end
 
       def validate_opts(opts)
-        return unless (invalid_opts = opts.keys - VALID_EXPECTS_OPTION_KEYS).any?
-
-        err_msg = "Invalid options '#{invalid_opts.join(', ')}' passed to expects, valid keys are #{VALID_EXPECTS_OPTION_KEYS.join(', ')}."
-
-        raise InvalidExpectOptionError, err_msg
+        if (invalid_opts = opts.keys - VALID_EXPECTS_OPTION_KEYS).any?
+          err_msg = "Invalid options '#{invalid_opts.to_sentence}' passed to expects, valid keys are #{VALID_EXPECTS_OPTION_KEYS.to_sentence}."
+        elsif (invalid_validates_opts = (opts[:validates]&.keys || []) - VALID_VALIDATES_OPTION_KEYS).any?
+          err_msg = "Invalid validates options: '#{invalid_validates_opts.to_sentence}' passed to validates, valid keys are #{VALID_EXPECTS_OPTION_KEYS.to_sentence}"
+        end
+        raise InvalidExpectOptionError, err_msg unless err_msg.nil?
       end
     end
   end
