@@ -49,6 +49,10 @@ module LightService
         ReduceUntil.run(self, condition_block, steps)
       end
 
+      def reduce_when(value_key, cases, els: [])
+        ReduceWhen.run(self, value_key, cases, els)
+      end
+
       def iterate(collection_key, steps)
         Iterate.run(self, collection_key, steps)
       end
