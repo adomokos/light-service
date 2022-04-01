@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu, macos]
-        ruby: [2.6.8, 2.7.4, 3.0.2]
+        ruby: [2.7.4, 3.0.2, 3.1.0]
         gemfile: [activesupport_5, activesupport_6]
     continue-on-error: ${{ endsWith(matrix.ruby, 'head') || matrix.ruby == 'debug' }}
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps

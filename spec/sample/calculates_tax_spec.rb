@@ -10,7 +10,6 @@ describe CalculatesTax do
 
   it "calls the actions in order" do
     allow(LightService::Context).to receive(:make)
-      .with(:order => order)
       .and_return(ctx)
 
     allow(LooksUpTaxPercentageAction).to receive(:execute)

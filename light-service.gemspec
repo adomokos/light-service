@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("rspec", "~> 3.0")
   gem.add_development_dependency("simplecov", "~> 0.17")
   gem.add_development_dependency("codecov", "~> 0.1")
-  gem.add_development_dependency("rubocop", "~> 1.21.0")
+  gem.add_development_dependency("rubocop", "~> 1.26.0")
   gem.add_development_dependency("rubocop-performance", "~> 1.2.0")
   gem.add_development_dependency("pry", "~> 0.12.2")
 end
