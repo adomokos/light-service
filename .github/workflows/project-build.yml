@@ -24,7 +24,5 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
       - run: bundle install
-
-    # Use this step to debug container with tmate
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      - run: bundle exec rspec spec
+      - run: bundle exec rubocop
