@@ -1,5 +1,11 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.18.0
+* [Remove Ruby 2.6, add 3.1 to build](https://github.com/adomokos/light-service/pull/233)
+* [Add reduce_when](https://github.com/adomokos/light-service/pull/232)
+* [Drop Ruby 2.5 version support, add 3.0 build](https://github.com/adomokos/light-service/pull/225)
+* [Support for named argument in Ruby](https://github.com/adomokos/light-service/pull/224)
+
 ### 0.17.0
 * [Fix around_action hook for nested actions](https://github.com/adomokos/light-service/pull/217)
 * [Add ReduceIfElse macro](https://github.com/adomokos/light-service/pull/218)
