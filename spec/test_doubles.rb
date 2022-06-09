@@ -118,6 +118,15 @@ module TestDoubles
     end
   end
 
+  class NamedArgumentOrganiser
+    extend LightService::Organizer
+
+    def self.call(number:)
+      with(number: number) # rubocop:disable Style/HashSyntax
+        .reduce([AddsTwoAction])
+    end
+  end
+
   class NotExplicitlyReturningContextOrganizer
     extend LightService::Organizer
 

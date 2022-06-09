@@ -34,6 +34,8 @@ module LightService
       end
       # rubocop:enable Style/ArgumentsForwarding
 
+      ruby2_keywords :with if RUBY_VERSION >= "2.7"
+
       def initialize(organizer)
         @organizer = organizer
       end
