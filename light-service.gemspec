@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency("activesupport", ">= 4.0.0")
   gem.add_runtime_dependency("i18n")
   gem.add_runtime_dependency("dry-inflector")
+  gem.add_runtime_dependency("structured_warnings")
 
   gem.add_development_dependency("generator_spec", "~> 0.9.4")
   gem.add_development_dependency("test-unit", "~> 3.0") # Needed for generator specs.

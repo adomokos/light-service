@@ -23,5 +23,6 @@ require 'test_doubles'
 require 'stringio'
 require 'fileutils'
 require 'generator_spec'
+require 'structured_warnings_helper'
 
 I18n.enforce_available_locales = true

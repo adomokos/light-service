@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'structured_warnings_helper'
 require 'test_doubles'
 
 RSpec.describe LightService::Context do
@@ -152,9 +153,15 @@ RSpec.describe LightService::Context do
   end
 
   it "warns about the outcome attribute reader being deprecated" do
-    expect(ActiveSupport::Deprecation).to receive(:warn)
+    expected_msg = '`Context#outcome` attribute reader is ' \
+                   'DEPRECATED and will be removed'
 
-    expect(context.outcome).to eq(::LightService::Outcomes::SUCCESS)
+    expect { context.outcome }.to warn_with(StructuredWarnings::DeprecatedMethodWarning, expected_msg)
+
+    # Since the warning is already tested, do not pollute rspec output here
+    StructuredWarnings::DeprecatedMethodWarning.disable do
+      expect(context.outcome).to eq(::LightService::Outcomes::SUCCESS)
+    end
   end
 
   it "can contain false values" do

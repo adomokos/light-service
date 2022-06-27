@@ -1,5 +1,6 @@
 require 'logger'
 require 'i18n'
+require 'structured_warnings'
 
 require 'light-service/version'
 

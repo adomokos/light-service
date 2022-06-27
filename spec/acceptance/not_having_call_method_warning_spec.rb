@@ -4,10 +4,6 @@ require 'test_doubles'
 describe "Organizer should invoke with/reduce from a call method" do
   context "when the organizer does not have a `call` method" do
     it "gives warning" do
-      expect(ActiveSupport::Deprecation)
-        .to receive(:warn)
-        .with(/^The <OrganizerWithoutCallMethod> class is an organizer/)
-
       class OrganizerWithoutCallMethod
         extend LightService::Organizer
 
@@ -15,16 +11,15 @@ describe "Organizer should invoke with/reduce from a call method" do
           reduce([])
         end
       end
-
-      OrganizerWithoutCallMethod.do_something
+      expect { OrganizerWithoutCallMethod.do_something }.to warn_with(
+        StructuredWarnings::DeprecatedMethodWarning,
+        /^The <OrganizerWithoutCallMethod> class is an organizer/
+      )
     end
   end
 
   context "when the organizer has the `call` method" do
     it "does not issue a warning" do
-      expect(ActiveSupport::Deprecation)
-        .not_to receive(:warn)
-
       class OrganizerWithCallMethod
         extend LightService::Organizer
 
@@ -33,7 +28,9 @@ describe "Organizer should invoke with/reduce from a call method" do
         end
       end
 
-      OrganizerWithCallMethod.call
+      expect { OrganizerWithCallMethod.call }.not_to warn_with(
+        StructuredWarnings::DeprecatedMethodWarning
+      )
     end
   end
 end
