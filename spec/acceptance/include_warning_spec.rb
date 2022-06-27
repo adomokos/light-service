@@ -1,16 +1,17 @@
 require 'spec_helper'
+require 'structured_warnings_helper'
 
 describe "Including is discouraged" do
   context "when including LightService::Organizer" do
     it "gives warning" do
       expected_msg = "including LightService::Organizer is deprecated. " \
                      "Please use `extend LightService::Organizer` instead"
-      expect(ActiveSupport::Deprecation).to receive(:warn)
-        .with(expected_msg)
 
-      class OrganizerIncludingLS
-        include LightService::Organizer
-      end
+      expect do
+        class OrganizerIncludingLS
+          include LightService::Organizer
+        end
+      end.to warn_with(StructuredWarnings::DeprecatedMethodWarning, expected_msg)
     end
   end
 
@@ -18,12 +19,12 @@ describe "Including is discouraged" do
     it "gives warning" do
       expected_msg = "including LightService::Action is deprecated. " \
                      "Please use `extend LightService::Action` instead"
-      expect(ActiveSupport::Deprecation).to receive(:warn)
-        .with(expected_msg)
 
-      class ActionIncludingLS
-        include LightService::Action
-      end
+      expect do
+        class ActionIncludingLS
+          include LightService::Action
+        end
+      end.to warn_with(StructuredWarnings::DeprecatedMethodWarning, expected_msg)
     end
   end
 end

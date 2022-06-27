@@ -12,9 +12,8 @@ RSpec.describe "skip_all! has been deprecated" do
 
     expected_msg = "Using skip_all! has been deprecated, " \
                    "please use `skip_remaining!` instead."
-    expect(ActiveSupport::Deprecation).to receive(:warn)
-      .with(expected_msg)
 
-    SkipAllDeprecatedAction.execute
+    expect { SkipAllDeprecatedAction.execute }
+      .to warn_with(StructuredWarnings::DeprecatedMethodWarning, expected_msg)
   end
 end

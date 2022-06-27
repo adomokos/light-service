@@ -26,6 +26,10 @@ module LightService
       end
 
       def create_required_gen_vals_from(name)
+        # Not using dry-inflector here, because generators are used only
+        # within Rails project thus we can relay on ActiveSupport presence.
+        # Maybe plan to split LightService::Generators into a separate
+        # gem (e.g.: light_service-rails-generators)
         path_parts = name.underscore.split('/')
 
         {
