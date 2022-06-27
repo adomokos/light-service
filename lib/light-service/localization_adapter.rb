@@ -1,5 +1,13 @@
+require "dry/inflector"
+
 module LightService
   class LocalizationAdapter
+    attr_reader :inflector
+
+    def initialize
+      @inflector = Dry::Inflector.new
+    end
+
     def failure(message_or_key, action_class, i18n_options = {})
       find_translated_message(message_or_key,
                               action_class,
@@ -38,7 +46,7 @@ module LightService
     end
 
     def i18n_scope_from_class(action_class, type)
-      "#{action_class.name.underscore}.light_service.#{type.to_s.pluralize}"
+      "#{inflector.underscore(action_class.name)}.light_service.#{inflector.pluralize(type.to_s)}"
     end
   end
 end

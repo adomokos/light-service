@@ -1,5 +1,5 @@
 require 'logger'
-require 'active_support/core_ext/string'
+require 'i18n'
 
 require 'light-service/version'
 
