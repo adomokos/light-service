@@ -1,7 +1,7 @@
 require "spec_helper"
 require "test_doubles"
 
-class TestsLocalizationAdapter
+class TestsI18nLocalizationAdapter
   extend LightService::Organizer
 
   def self.call(pass_or_fail, message_or_key, i18n_options = {})
@@ -9,11 +9,11 @@ class TestsLocalizationAdapter
       :pass_or_fail => pass_or_fail,
       :message_or_key => message_or_key,
       :i18n_options => i18n_options
-    ).reduce(TestsLocalizationInvocationOptionsAction)
+    ).reduce(TestsI18nLocalizationInvocationOptionsAction)
   end
 end
 
-class TestsLocalizationInvocationOptionsAction
+class TestsI18nLocalizationInvocationOptionsAction
   extend LightService::Action
   expects :pass_or_fail, :message_or_key, :i18n_options
 
@@ -27,18 +27,18 @@ class TestsLocalizationInvocationOptionsAction
 end
 
 def pass_with(message_or_key, i18n_options = {})
-  TestsLocalizationAdapter.call(true, message_or_key, i18n_options)
+  TestsI18nLocalizationAdapter.call(true, message_or_key, i18n_options)
 end
 
 def fail_with(message_or_key, i18n_options = {})
-  TestsLocalizationAdapter.call(false, message_or_key, i18n_options)
+  TestsI18nLocalizationAdapter.call(false, message_or_key, i18n_options)
 end
 
-describe "Localization Adapter" do
+describe "I18n Localization Adapter" do
   before do
     I18n.backend.store_translations(
       :en,
-      :tests_localization_invocation_options_action =>
+      :tests_i18n_localization_invocation_options_action =>
       {
         :light_service => {
           :failures => {
