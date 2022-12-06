@@ -835,7 +835,7 @@ end
 
 ### Built-in localization adapter
 
-The built-in adapter simply uses a manually created dictionary to search for translations
+The built-in adapter simply uses a manually created dictionary to search for translations.
 
 ```ruby
 # lib/light_service_translations.rb
