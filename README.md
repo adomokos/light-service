@@ -843,7 +843,7 @@ LightService::LocalizationMap.instance[:en] = {
   :foo_action => {
     :light_service => {
       :failures => {
-        :exceeded_api_limit => "API limit for service Foo reached. Please try again later"
+        :exceeded_api_limit => "API limit for service Foo reached. Please try again later."
       },
       :successes => {
         :yay => "Yaaay!"
