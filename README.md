@@ -10,29 +10,38 @@
 LightService is a powerful and flexible service skeleton framework with an emphasis on simplicity
 
 ## Table of Contents
-* [Why LightService?](#why-lightservice)
-* [Getting Started](#getting-started)
-    * [Requirements](#requirements)
-    * [Installation](#installation)
-    * [Your first action](#your-first-action)
-    * [Your first organizer](#your-first-organizer)
-* [Stopping the Series of Actions](#stopping-the-series-of-actions)
-    * [Failing the Context](#failing-the-context)
-    * [Skipping the Rest of the Actions](#skipping-the-rest-of-the-actions)
-* [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
-* [Before and After Action Hooks](#before-and-after-action-hooks)
-* [Expects and Promises](#expects-and-promises)
-    * [Default values for optional Expected keys](#default-values-for-optional-expected-keys)
-* [Key Aliases](#key-aliases)
-* [Logging](#logging)
-* [Error Codes](#error-codes)
-* [Action Rollback](#action-rollback)
-* [Localizing Messages](#localizing-messages)
-* [Orchestrating Logic in Organizers](#orchestrating-logic-in-organizers)
-* [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
-* [Rails support](#rails-support)
-* [Implementations in other languages](#other-implementations)
-* [Contributing](#contributing)
+- [Table of Contents](#table-of-contents)
+- [Why LightService?](#why-lightservice)
+- [Getting started](#getting-started)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Your first action](#your-first-action)
+  - [Your first organizer](#your-first-organizer)
+- [Stopping the Series of Actions](#stopping-the-series-of-actions)
+  - [Failing the Context](#failing-the-context)
+  - [Skipping the rest of the actions](#skipping-the-rest-of-the-actions)
+- [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
+- [Before and After Action Hooks](#before-and-after-action-hooks)
+- [Expects and Promises](#expects-and-promises)
+  - [Default values for optional Expected keys](#default-values-for-optional-expected-keys)
+- [Key Aliases](#key-aliases)
+- [Logging](#logging)
+- [Error Codes](#error-codes)
+- [Action Rollback](#action-rollback)
+- [Localizing Messages](#localizing-messages)
+  - [Built-in localization adapter](#built-in-localization-adapter)
+  - [I18n localization adapter](#i18n-localization-adapter)
+  - [Custom localization adapter](#custom-localization-adapter)
+- [Orchestrating Logic in Organizers](#orchestrating-logic-in-organizers)
+- [ContextFactory for Faster Action Testing](#contextfactory-for-faster-action-testing)
+- [Rails support](#rails-support)
+  - [Organizer generation](#organizer-generation)
+  - [Action generation](#action-generation)
+  - [Advanced action generation](#advanced-action-generation)
+- [Other implementations](#other-implementations)
+- [Contributing](#contributing)
+- [Release Notes](#release-notes)
+- [License](#license)
 
 ## Why LightService?
 
@@ -823,7 +832,61 @@ end
 ```
 
 ## Localizing Messages
-By default LightService provides a mechanism for easily translating your error or success messages via I18n.  You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
+
+### Built-in localization adapter
+
+The built-in adapter simply uses a manually created dictionary to search for translations.
+
+```ruby
+# lib/light_service_translations.rb
+LightService::LocalizationMap.instance[:en] = {
+  :foo_action => {
+    :light_service => {
+      :failures => {
+        :exceeded_api_limit => "API limit for service Foo reached. Please try again later."
+      },
+      :successes => {
+        :yay => "Yaaay!"
+      }
+    }
+  }
+}
+```
+
+```ruby
+class FooAction
+  extend LightService::Action
+
+  executed do |context|
+    unless service_call.success?
+      context.fail!(:exceeded_api_limit)
+
+      # The failure message used here equates to:
+      # LightService::LocalizationMap.instance[:en][:foo_action][:light_service][:failures][:exceeded_api_limit]
+    end
+  end
+end
+```
+
+Nested classes will work too: `App::FooAction`, for example, would be translated to `app/foo_action` hash key.
+
+`:en` is the default locale, but you can switch it whenever you want with
+
+```ruby
+LightService::Configuration.locale = :it
+```
+
+If you have `I18n` loaded in your project the default adapter will automatically be updated to use it.
+But would you want to opt for the built-in localization adapter you can force it with
+
+```ruby
+LightService::Configuration.localization_adapter = LightService::LocalizationAdapter
+```
+
+### I18n localization adapter
+
+If `I18n` is loaded into your project, LightService will automatically provide a mechanism for easily translating your error or success messages via `I18n`.
+
 
 ```ruby
 class FooAction
@@ -881,13 +944,17 @@ module PaymentGateway
 end
 ```
 
+### Custom localization adapter
+
+You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
+
 To provide your own custom adapter, use the configuration setting and subclass the default adapter LightService provides.
 
 ```ruby
 LightService::Configuration.localization_adapter = MyLocalizer.new
 
 # lib/my_localizer.rb
-class MyLocalizer < LightService::LocalizationAdapter
+class MyLocalizer < LightService::I18n::LocalizationAdapter
 
   # I just want to change the default lookup path
   # => "light_service.failures.payment_gateway/capture_funds"
