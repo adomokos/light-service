@@ -876,16 +876,15 @@ Nested classes will work too: `App::FooAction`, for example, would be translated
 LightService::Configuration.locale = :it
 ```
 
-If you have `I18n` loaded in your project the default adapter will automatically be updated to use it.
-But would you want to opt for the built-in localization adapter you can force it with
-
-```ruby
-LightService::Configuration.localization_adapter = LightService::LocalizationAdapter
-```
-
 ### I18n localization adapter
 
-If `I18n` is loaded into your project, LightService will automatically provide a mechanism for easily translating your error or success messages via `I18n`.
+It is provided by `light_service-i18n` extension. Just add it to your bundle and it will automatically self-activate taking place over the built-in adapter.
+
+```ruby
+gem "light_service-i18n"
+```
+
+It provides a mechanism for easily translating your error or success messages via `I18n`.
 
 
 ```ruby
@@ -944,11 +943,17 @@ module PaymentGateway
 end
 ```
 
+To switch locale you're free to use `LightService::Configuration.locale = :it` or directly
+`I18n.locale = :it`: they will both work and will be two-way synced.
+
+> NOTE: it's up to your application to configure `i18n`; if you're working within a framework, then you're probably ready to go.
+> Otherwise follow `i18n`'s official documentation.
+
 ### Custom localization adapter
 
 You can also provide your own custom localization adapter if your application's logic is more complex than what is shown here.
 
-To provide your own custom adapter, use the configuration setting and subclass the default adapter LightService provides.
+To provide your own custom adapter, use the configuration setting and subclass one of the adapters LightService provides.
 
 ```ruby
 LightService::Configuration.localization_adapter = MyLocalizer.new

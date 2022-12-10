@@ -9,11 +9,7 @@ module LightService
       end
 
       def localization_adapter
-        @localization_adapter ||= if Module.const_defined?('I18n')
-                                    LightService::I18n::LocalizationAdapter.new
-                                  else
-                                    LocalizationAdapter.new
-                                  end
+        @localization_adapter ||= LocalizationAdapter.new
       end
 
       def locale
