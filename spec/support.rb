@@ -1,7 +1,7 @@
 RSpec.shared_context 'expect orchestrator warning' do
   before do
-    expect(ActiveSupport::Deprecation)
-      .to receive(:warn)
+    expect(LightService)
+      .to receive(:deprecation_warning)
       .with(/^`Orchestrator#/)
       .at_least(:once)
   end

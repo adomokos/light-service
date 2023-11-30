@@ -114,9 +114,9 @@ module LightService
       end
 
       def issue_deprecation_warning_for(method_name)
-        msg = "`Orchestrator##{method_name}` is DEPRECATED and will be " \
+        warning_msg = "`Orchestrator##{method_name}` is DEPRECATED and will be " \
               "removed, please switch to `Organizer##{method_name} instead. "
-        ActiveSupport::Deprecation.warn(msg)
+        deprecation_warning(warning_msg)
       end
     end
   end

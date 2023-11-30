@@ -152,7 +152,7 @@ RSpec.describe LightService::Context do
   end
 
   it "warns about the outcome attribute reader being deprecated" do
-    expect(ActiveSupport::Deprecation).to receive(:warn)
+    expect(LightService).to receive(:deprecation_warning)
 
     expect(context.outcome).to eq(::LightService::Outcomes::SUCCESS)
   end
