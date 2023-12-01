@@ -6,7 +6,7 @@ module LightService
 
     def self.included(base_class)
       warning_msg = "including LightService::Action is deprecated. " \
-            "Please use `extend LightService::Action` instead"
+                    "Please use `extend LightService::Action` instead"
       LightService::Deprecation.warn(warning_msg)
       base_class.extend Macros
     end

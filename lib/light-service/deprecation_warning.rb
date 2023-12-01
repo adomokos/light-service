@@ -8,7 +8,7 @@ module LightService
         warning_message += "Called from: #{callstack.first}\n" unless callstack.empty?
 
         # Output the warning message to stderr or a log file
-        $stderr.puts warning_message
+        warn warning_message
 
         # Additional logging or actions can be added here
       end

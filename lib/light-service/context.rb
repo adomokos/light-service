@@ -58,7 +58,7 @@ module LightService
 
     def outcome
       warning_msg = '`Context#outcome` attribute reader is ' \
-            'DEPRECATED and will be removed'
+                    'DEPRECATED and will be removed'
       LightService::Deprecation.warn(warning_msg)
       @outcome
     end
