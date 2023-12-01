@@ -1,9 +1,17 @@
 module LightService
-  def deprecation_warning(message, caller_info = caller(1..1).first)
-    warning = "DEPRECATION WARNING: #{message}"
-    warning << " (called from #{caller_info})" if caller_info
-    puts warning
-  end
+  module Deprecation
+    class << self
+      # Basic implementation of a deprecation warning
+      def warn(message, callstack = caller)
+        # Construct the warning message
+        warning_message = "DEPRECATION WARNING: #{message}\n"
+        warning_message += "Called from: #{callstack.first}\n" unless callstack.empty?
 
-  module_function :deprecation_warning
+        # Output the warning message to stderr or a log file
+        $stderr.puts warning_message
+
+        # Additional logging or actions can be added here
+      end
+    end
+  end
 end

@@ -59,7 +59,7 @@ module LightService
     def outcome
       warning_msg = '`Context#outcome` attribute reader is ' \
             'DEPRECATED and will be removed'
-      LightService.deprecation_warning(warning_msg)
+      LightService::Deprecation.warn(warning_msg)
       @outcome
     end
 
@@ -101,7 +101,7 @@ module LightService
     def skip_all!(message = nil)
       warning_msg = "Using skip_all! has been deprecated, " \
                     "please use `skip_remaining!` instead."
-      deprecation_warning(warning_msg)
+      LightService::Deprecation.warn(warning_msg)
 
       skip_remaining!(message)
     end
