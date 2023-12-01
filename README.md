@@ -5,7 +5,6 @@
 [![codecov](https://codecov.io/gh/adomokos/light-service/branch/master/graph/badge.svg)](https://codecov.io/gh/adomokos/light-service)
 [![Code Climate](https://codeclimate.com/github/adomokos/light-service.svg)](https://codeclimate.com/github/adomokos/light-service)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
-[![Download Count](https://ruby-gem-downloads-badge.herokuapp.com/light-service?type=total)](https://rubygems.org/gems/light-service)
 
 LightService is a powerful and flexible service skeleton framework with an emphasis on simplicity
 
