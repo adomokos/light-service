@@ -22,7 +22,7 @@ describe "Organizer should invoke with/reduce from a call method" do
 
   context "when the organizer has the `call` method" do
     it "does not issue a warning" do
-      expect(ActiveSupport::Deprecation)
+      expect(LightService::Deprecation)
         .not_to receive(:warn)
 
       class OrganizerWithCallMethod
