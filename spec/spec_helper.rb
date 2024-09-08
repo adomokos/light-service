@@ -10,8 +10,10 @@ if ENV['RUN_COVERAGE_REPORT']
   end
   SimpleCov.minimum_coverage_by_file 90
 
-  require 'codecov'
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+  require 'simplecov-cobertura'
+  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+  # require 'codecov'
+  # SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 
 require 'light-service'
