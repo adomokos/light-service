@@ -2,7 +2,7 @@
 
 [![Gem Version](https://img.shields.io/gem/v/light-service.svg)](https://rubygems.org/gems/light-service)
 [![CI Tests](https://github.com/adomokos/light-service/actions/workflows/project-build.yml/badge.svg)](https://github.com/adomokos/light-service/actions/workflows/project-build.yml)
-[![Codecov](https://codecov.io/gh/adomokos/light-service/branch/master/graph/badge.svg)](https://codecov.io/gh/adomokos/light-service)
+[![Codecov](https://codecov.io/gh/adomokos/light-service/branch/main/graph/badge.svg)](https://codecov.io/gh/adomokos/light-service)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 [![Download Count](https://img.shields.io/badge/download%3A-~5%20million-blue)](https://rubygems.org/gems/light-service)
 [![Code Climate](https://codeclimate.com/github/adomokos/light-service.svg)](https://codeclimate.com/github/adomokos/light-service)
