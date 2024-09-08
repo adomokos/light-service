@@ -1,5 +1,10 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.19.0
+* [Implement built-in localization adapter](https://github.com/adomokos/light-service/pull/238)
+* [Swap ActiveSupport::Deprecation with built-in LightSupport::Deprecation](https://github.com/adomokos/light-service/pull/241)
+* [Remove Active Support dependency](https://github.com/adomokos/light-service/pull/246)
+
 ### 0.18.0
 * [Remove Ruby 2.6, add 3.1 to build](https://github.com/adomokos/light-service/pull/233)
 * [Add reduce_when](https://github.com/adomokos/light-service/pull/232)
