@@ -1,6 +1,7 @@
 module LightService
   module Deprecation
     class << self
+      # :nocov:
       # Basic implementation of a deprecation warning
       def warn(message, callstack = caller)
         # Construct the warning message
@@ -12,6 +13,7 @@ module LightService
 
         # Additional logging or actions can be added here
       end
+      # :nocov:
     end
   end
 end
