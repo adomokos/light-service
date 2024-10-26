@@ -9,8 +9,6 @@
 
 LightService is a powerful and flexible service skeleton framework with an emphasis on simplicity
 
-🔥 **It now comes with no external gem dependency.** 🔥
-
 ## Table of Contents
 - [Table of Contents](#table-of-contents)
 - [Why LightService?](#why-lightservice)
