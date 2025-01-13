@@ -1,29 +1,25 @@
 module LightService
   module I18n
     class LocalizationAdapter
-      def failure(message_or_key, action_class, i18n_options = {})
+      def failure(message_or_key, action_class, options = {})
         find_translated_message(message_or_key,
                                 action_class,
-                                i18n_options,
-                                :type => :failure)
+                                options.merge(:type => :failure))
       end
 
-      def success(message_or_key, action_class, i18n_options = {})
+      def success(message_or_key, action_class, options = {})
         find_translated_message(message_or_key,
                                 action_class,
-                                i18n_options,
-                                :type => :success)
+                                options.merge(:type => :success))
       end
 
       private
 
       def find_translated_message(message_or_key,
                                   action_class,
-                                  i18n_options,
-                                  type)
+                                  options)
         if message_or_key.is_a?(Symbol)
-          i18n_options.merge!(type)
-          translate(message_or_key, action_class, i18n_options)
+          translate(message_or_key, action_class, options)
         else
           message_or_key
         end
