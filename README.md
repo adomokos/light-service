@@ -882,7 +882,7 @@ If you have `I18n` loaded in your project the default adapter will automatically
 But would you want to opt for the built-in localization adapter you can force it with
 
 ```ruby
-LightService::Configuration.localization_adapter = LightService::LocalizationAdapter
+LightService::Configuration.localization_adapter = LightService::LocalizationAdapter.new
 ```
 
 ### I18n localization adapter

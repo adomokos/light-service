@@ -3,6 +3,7 @@ require 'test_doubles'
 
 RSpec.describe LightService::Context do
   let(:context) { LightService::Context.make }
+  let(:adapter_double) { instance_double("LightService::LocalizationAdapter") }
 
   describe "can be made" do
     context "with no arguments" do
@@ -98,34 +99,74 @@ RSpec.describe LightService::Context do
     expect(context.error_code).to eq(10_005)
   end
 
-  it "uses localization adapter to translate failure message" do
-    action_class = TestDoubles::AnAction
-    expect(LightService::Configuration.localization_adapter)
-      .to receive(:failure)
-      .with(:failure_reason, action_class, {})
-      .and_return("message")
+  context "when I18n is defined" do
+    it "uses localization adapter to translate failure message" do
+      action_class = TestDoubles::AnAction
+      expect(LightService::Configuration.localization_adapter)
+        .to receive(:failure)
+        .with(:failure_reason, action_class, {})
+        .and_return("message")
 
-    context = LightService::Context.make
-    context.current_action = action_class
-    context.fail!(:failure_reason)
+      context = LightService::Context.make
+      context.current_action = action_class
+      context.fail!(:failure_reason)
 
-    expect(context).to be_failure
-    expect(context.message).to eq("message")
+      expect(context).to be_failure
+      expect(context.message).to eq("message")
+    end
+
+    it "uses localization adapter to translate success message" do
+      action_class = TestDoubles::AnAction
+      expect(LightService::Configuration.localization_adapter)
+        .to receive(:success)
+        .with(:action_passed, action_class, {})
+        .and_return("message")
+
+      context = LightService::Context.make
+      context.current_action = action_class
+      context.succeed!(:action_passed)
+
+      expect(context).to be_success
+      expect(context.message).to eq("message")
+    end
   end
 
-  it "uses localization adapter to translate success message" do
-    action_class = TestDoubles::AnAction
-    expect(LightService::Configuration.localization_adapter)
-      .to receive(:success)
-      .with(:action_passed, action_class, {})
-      .and_return("message")
+  context "when I18n is not defined" do
+    before do
+      allow(LightService::Configuration)
+        .to receive(:localization_adapter)
+        .and_return(adapter_double)
+    end
 
-    context = LightService::Context.make
-    context.current_action = action_class
-    context.succeed!(:action_passed)
+    it "uses localization adapter to translate failure message" do
+      action_class = TestDoubles::AnAction
+      expect(LightService::Configuration.localization_adapter)
+        .to receive(:failure)
+        .with(:failure_reason, TestDoubles::AnAction, {})
+        .and_return("message")
 
-    expect(context).to be_success
-    expect(context.message).to eq("message")
+      context = LightService::Context.make
+      context.current_action = action_class
+      context.fail!(:failure_reason)
+
+      expect(context).to be_failure
+      expect(context.message).to eq("message")
+    end
+
+    it "uses localization adapter to translate success message" do
+      action_class = TestDoubles::AnAction
+      expect(LightService::Configuration.localization_adapter)
+        .to receive(:success)
+        .with(:action_passed, action_class, {})
+        .and_return("message")
+
+      context = LightService::Context.make
+      context.current_action = action_class
+      context.succeed!(:action_passed)
+
+      expect(context).to be_success
+      expect(context.message).to eq("message")
+    end
   end
 
   it "can set a flag to skip all subsequent actions" do
