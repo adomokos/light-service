@@ -116,7 +116,7 @@ module LightService
     end
 
     def define_accessor_methods_for_keys(keys)
-      return if keys.blank?
+      return if keys.empty?
 
       Array(keys).each do |key|
         next if respond_to?(key.to_sym)
