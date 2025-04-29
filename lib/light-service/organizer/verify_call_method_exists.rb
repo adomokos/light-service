@@ -15,7 +15,7 @@ module LightService
                       "its entry method (the one that calls with & reduce) " \
                       "should be named `call`. " \
                       "Please use #{klass}.call going forward."
-        LightService.deprecation_warning(warning_msg)
+        LightService::Deprecation.warn(warning_msg)
       end
 
       def self.caller_method(first_caller)
