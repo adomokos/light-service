@@ -1,5 +1,10 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.20.0
+* [Add back ActiveSupport](https://github.com/adomokos/light-service/pull/259)
+* [Fix argument errors of LightService::LocalizationAdapter](https://github.com/adomokos/light-service/pull/263)
+* [Change deprecation_warning method call](https://github.com/adomokos/light-service/pull/265)
+
 ### 0.19.0
 * [Implement built-in localization adapter](https://github.com/adomokos/light-service/pull/238)
 * [Swap ActiveSupport::Deprecation with built-in LightSupport::Deprecation](https://github.com/adomokos/light-service/pull/241)
