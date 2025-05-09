@@ -63,21 +63,19 @@ RSpec.describe LightService::Organizer do
         reduce(actions)
       end
 
-      # rubocop:disable Metrics/AbcSize
       def self.actions
         [
           reduce_if(
             ->(c) { !c.nil? },
             [
               execute(->(c) { c[:first_reduce_if] = true }),
-              execute(->(c) { c.skip_remaining! }),
+              execute(&:skip_remaining!),
               execute(->(c) { c[:second_reduce_if] = true })
             ]
           ),
           execute(->(c) { c[:last_outside] = true })
         ]
       end
-      # rubocop:enable Metrics/AbcSize
     end
 
     result = org.call
