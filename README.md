@@ -437,7 +437,8 @@ Any object passed into `around_each` must respond to #call with two arguments: t
 
 ## Before and After Action Hooks
 
-In case you need to inject code right before and after the actions are executed, you can use the `before_actions` and `after_actions` hooks. It accepts one or multiple lambdas that the Action implementation will invoke. This addition to LightService is a great way to decouple instrumentation from business logic.  One important note is that these only execute on the first call the the organizer.  Subsequent calls will not call the before and after actions.
+In case you need to inject code right before and after the actions are executed, you can use the `before_actions` and `after_actions` hooks. It accepts one or multiple lambdas that the Action implementation will invoke. This addition to LightService is a great way to decouple instrumentation from business logic.
+One important note: these actions only run on the first call to the organizer. Subsequent calls will skip both the before and after actions.
 
 Consider this code:
 
