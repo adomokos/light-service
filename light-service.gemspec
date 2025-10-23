@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency("test-unit", "~> 3.6") # Needed for generator specs.
   gem.add_development_dependency("rspec", "~> 3.13")
   gem.add_development_dependency("simplecov", "~> 0.22")
-  gem.add_development_dependency("simplecov-cobertura", "~> 2.1")
+  gem.add_development_dependency("simplecov-cobertura", "~> 3.1")
   gem.add_development_dependency("rubocop", "~> 1.75")
   gem.add_development_dependency("rubocop-performance", "~> 1.2")
   gem.add_development_dependency("pry", "~> 0.15")
