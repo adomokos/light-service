@@ -10,6 +10,8 @@ module LightService
           collection = ctx[collection_key]
           item_key = collection_key.to_s.singularize.to_sym
           collection.each do |item|
+            break if ctx.stop_processing?
+
             ctx[item_key] = item
             ctx = scoped_reduce(organizer, ctx, steps)
           end

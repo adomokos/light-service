@@ -18,6 +18,7 @@ module LightService
       @message = message
       @error_code = error_code
       @skip_remaining = false
+      @skip_all_remaining = false
 
       context.to_hash.each { |k, v| self[k] = v }
     end
@@ -49,6 +50,10 @@ module LightService
 
     def skip_remaining?
       @skip_remaining
+    end
+
+    def skip_all_remaining?
+      @skip_all_remaining
     end
 
     def reset_skip_remaining!
@@ -111,8 +116,13 @@ module LightService
       @skip_remaining = true
     end
 
+    def skip_all_remaining!(message = nil)
+      @message = message
+      @skip_all_remaining = true
+    end
+
     def stop_processing?
-      failure? || skip_remaining?
+      failure? || skip_remaining? || skip_all_remaining?
     end
 
     def define_accessor_methods_for_keys(keys)
@@ -153,7 +163,8 @@ module LightService
 
     def inspect
       "#{self.class}(#{self}, success: #{success?}, message: #{check_nil(message)}, error_code: " \
-        "#{check_nil(error_code)}, skip_remaining: #{@skip_remaining}, aliases: #{@aliases})"
+        "#{check_nil(error_code)}, skip_remaining: #{@skip_remaining}, " \
+        "skip_all_remaining: #{@skip_all_remaining}, aliases: #{@aliases})"
     end
 
     private

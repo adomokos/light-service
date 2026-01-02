@@ -19,6 +19,7 @@ LightService is a powerful and flexible service skeleton framework with an empha
 - [Stopping the Series of Actions](#stopping-the-series-of-actions)
   - [Failing the Context](#failing-the-context)
   - [Skipping the rest of the actions](#skipping-the-rest-of-the-actions)
+  - [Skipping ALL the rest of the actions](#skipping-all-the-rest-of-the-actions)
 - [Benchmarking Actions with Around Advice](#benchmarking-actions-with-around-advice)
 - [Before and After Action Hooks](#before-and-after-action-hooks)
 - [Expects and Promises](#expects-and-promises)
@@ -396,6 +397,24 @@ end
 
 In the example above the organizer called 4 actions. The first 2 actions got executed successfully. The 3rd decided to skip the rest, the 4th action was not invoked. The context was successful.
 
+### Skipping ALL the rest of the actions
+While `context.skip_remaining!` skips actions in the current scope (e.g. inside a `reduce_if` or `iterate` block), sometimes you want to halt the entire execution of the organizer and any parent organizers. You can do this by calling `context.skip_all_remaining!`.
+
+Consider this example:
+
+```ruby
+def self.actions
+  [
+    reduce_if(->(ctx) { ctx.should_execute_conditional_actions }, [
+      ConditionallyRunAction1, # calls ctx.skip_all_remaining!
+      ConditionallyRunAction2, # skipped
+    ]),
+    AlwaysRunAction, # also skipped with skip_all_remaining!
+  ]
+end
+```
+
+In this case, `AlwaysRunAction` will be skipped if `skip_all_remaining!` was called inside the `reduce_if` block. If `skip_remaining!` had been used instead, `AlwaysRunAction` would still execute because the "skip" state is normally reset when exiting a scoped block.
 
 ## Benchmarking Actions with Around Advice
 Benchmarking your action is needed when you profile the series of actions. You could add benchmarking logic to each and every action, however, that would blur the business logic you have in your actions.
