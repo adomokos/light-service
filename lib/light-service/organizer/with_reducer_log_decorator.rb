@@ -91,7 +91,8 @@ module LightService
       end
 
       def skip_remaining?(context)
-        context.respond_to?(:skip_remaining?) && context.skip_remaining?
+        (context.respond_to?(:skip_remaining?) && context.skip_remaining?) ||
+          (context.respond_to?(:skip_all_remaining?) && context.skip_all_remaining?)
       end
 
       def write_skip_remaining_log(context, action)
