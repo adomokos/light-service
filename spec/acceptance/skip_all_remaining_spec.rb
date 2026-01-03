@@ -62,6 +62,37 @@ RSpec.describe "skip_all_remaining!" do
     end
   end
 
+  context "with a message" do
+    let(:organizer) do
+      Class.new do
+        extend LightService::Organizer
+
+        def self.call(ctx)
+          with(ctx).reduce(actions)
+        end
+
+        def self.actions
+          [
+            reduce_if(
+              ->(_) { true },
+              [
+                execute(->(c) { c.skip_all_remaining!("Skipping with message") })
+              ]
+            ),
+            execute(->(c) { c[:outside] = true })
+          ]
+        end
+      end
+    end
+
+    it "preserves the message when exiting scoped reducers" do
+      result = organizer.call(LightService::Context.make)
+
+      expect(result.message).to eq("Skipping with message")
+      expect(result[:outside]).to be_nil
+    end
+  end
+
   context "with an organizer with nested reducers" do
     let(:organizer) do
       Class.new do
