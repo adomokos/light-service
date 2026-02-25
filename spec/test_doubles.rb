@@ -407,6 +407,24 @@ module TestDoubles
     end
   end
 
+  class ReduceWhileOrganizer
+    extend LightService::Organizer
+
+    def self.call(ctx)
+      with(ctx).reduce(actions)
+    end
+
+    def self.actions
+      [
+        AddsOneAction,
+        reduce_while(->(ctx) { ctx.number < 7 }, [
+                       AddsTwoAction,
+                       AddsThreeAction
+                     ])
+      ]
+    end
+  end
+
   class ReduceIfOrganizer
     extend LightService::Organizer
 

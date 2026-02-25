@@ -1045,19 +1045,22 @@ end
 
 This code is much easier to reason about, it's less noisy and it captures the goal of LightService well: simple, declarative code that's easy to understand.
 
-The 9 different orchestrator constructs an organizer can have:
+The 10 different orchestrator constructs an organizer can have:
 
 1. `reduce_until`
-2. `reduce_if`
-3. `reduce_if_else`
-4. `reduce_case`
-5. `iterate`
-6. `execute`
-7. `with_callback`
-8. `add_to_context`
-9. `add_aliases`
+2. `reduce_while`
+3. `reduce_if`
+4. `reduce_if_else`
+5. `reduce_case`
+6. `iterate`
+7. `execute`
+8. `with_callback`
+9. `add_to_context`
+10. `add_aliases`
 
 `reduce_until` behaves like a while loop in imperative languages, it iterates until the provided predicate in the lambda evaluates to true. Take a look at [this acceptance test](spec/acceptance/organizer/reduce_until_spec.rb) to see how it's used.
+
+`reduce_while` checks the provided predicate before each individual action in its step list. If the predicate evaluates to false, the remaining actions in the block are skipped. Unlike `reduce_until`, it is not a loop — it makes a single pass through the steps with a per-action condition gate. [This acceptance test](spec/acceptance/organizer/reduce_while_spec.rb) describes this functionality.
 
 `reduce_if` will reduce the included organizers and/or actions if the predicate in the lambda evaluates to true. [This acceptance test](spec/acceptance/organizer/reduce_if_spec.rb) describes this functionality.
 
