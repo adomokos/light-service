@@ -1,5 +1,11 @@
 A brief list of new features and changes introduced with the specified version.
 
+### 0.21.0
+* [Add skip_all_remaining!](https://github.com/adomokos/light-service/pull/279)
+* [Fix skip_all_remaining! message preservation](https://github.com/adomokos/light-service/pull/280)
+* [Fix infinite recursion in LightService::Deprecation.warn](https://github.com/adomokos/light-service/pull/283)
+* [Add reduce_while orchestrator construct](https://github.com/adomokos/light-service/pull/284)
+
 ### 0.20.0
 * [Add back ActiveSupport](https://github.com/adomokos/light-service/pull/259)
 * [Fix argument errors of LightService::LocalizationAdapter](https://github.com/adomokos/light-service/pull/263)
