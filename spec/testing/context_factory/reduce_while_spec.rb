@@ -27,7 +27,7 @@ RSpec.describe 'ContextFactory - used with ReduceWhileOrganizer' do
   end
 
   context 'when called with falsey block' do
-    it 'creates a context without executing the steps' do
+    it 'creates a context without executing the reduce_while steps' do
       ctx =
         LightService::Testing::ContextFactory
         .make_from(organizer)
