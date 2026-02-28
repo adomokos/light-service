@@ -89,7 +89,7 @@ RSpec.describe LightService::Organizer do
 
     aggregate_failures do
       expect(result[:first_reduce_while]).to be true
-      expect(result[:second_reduce_while]).to be true
+      expect(result[:second_reduce_while]).to be_nil
       expect(result[:last_outside]).to be true
     end
   end
