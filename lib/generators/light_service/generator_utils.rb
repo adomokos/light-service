@@ -31,11 +31,11 @@ module LightService
         {
           :path_parts => path_parts,
           :file_path => path_parts.reverse.drop(1).reverse,
-          :module_path => path_parts.reverse.drop(1).reverse.join('/').classify,
-          :class_name => path_parts.last.classify,
+          :module_path => path_parts.reverse.drop(1).reverse.map(&:camelize).join('::'),
+          :class_name => path_parts.last.camelize,
           :file_name => "#{path_parts.last}.rb",
           :spec_file_name => "#{path_parts.last}_spec.rb",
-          :full_class_name => name.classify
+          :full_class_name => path_parts.map(&:camelize).join('::')
         }
       end
     end
